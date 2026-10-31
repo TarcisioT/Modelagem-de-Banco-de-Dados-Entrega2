@@ -410,49 +410,212 @@ A relação entre os problemas, as tabelas do banco e as consultas SQL será det
 
 ---
 
-## 1.4 DER Conceitual Revisado
+#### DER Conceitual Revisado
 
-**Software utilizado:** brModelo 3.2.0. Notação de entidades, atributos, relacionamentos e cardinalidades (mín, máx). **Chaves estrangeiras não aparecem no DER conceitual**; estão no modelo lógico (seção 2) e no dicionário.
+##### Como montamos o DER
 
-![DER conceitual revisado](diagramas/der_conceitual.png)
+Usamos a entrevista com o responsável, a visita ao mercado e as confirmações pelo WhatsApp. Além dos problemas P1 e P2, quisemos representar o resto da rotina do mercado: compras, recebimento, vendas, pagamentos, caixa e funcionários.
 
-**Situação:** 13 entidades e 17 relacionamentos; exportado em PNG em `diagramas/der_conceitual.png`.
+O DER foi feito no brModelo Web, na notação pedida pelo professor: entidades em retângulos, relacionamentos em losangos e atributos em círculos, com cardinalidades mínimas e máximas. As chaves estrangeiras não aparecem aqui, porque só entram no modelo lógico.
 
-**Resumo das entidades e relacionamentos:**
+**Ferramenta:** [brModelo Web](https://app.brmodeloweb.com)
 
-| Entidade 1 | Relacionamento | Entidade 2 | Cardinalidade |
-|---|---|---|---|
-| PRODUTO | POSSUI | LOTE | (0,N) / (1,1) |
-| CATEGORIA_PRODUTO | CLASSIFICA | PRODUTO | (0,N) / (1,1) |
-| FORNECEDOR | RECEBE | PEDIDO_COMPRA | (0,N) / (1,1) |
-| PEDIDO_COMPRA | CONTÉM | ITEM_PEDIDO_COMPRA | (1,N) / (1,1) |
-| PRODUTO | APARECE_EM | ITEM_PEDIDO_COMPRA | (0,N) / (1,1) |
-| FUNCIONARIO | REALIZA | VENDA | (0,N) / (1,1) |
-| FUNCIONARIO | CANCELA | VENDA | (0,N) / (0,1) |
-| VENDA | CONTÉM | ITEM_VENDA | (1,N) / (1,1) |
-| PRODUTO | APARECE | ITEM_VENDA | (0,N) / (1,1) |
-| VENDA | POSSUI | PAGAMENTO | (1,N) / (1,1) |
-| LOTE | APRESENTA | PERDA | (0,N) / (1,1) |
-| FUNCIONARIO | REGISTRA | PERDA | (0,N) / (1,1) |
-| ITEM_VENDA | UTILIZA | SAIDA_LOTE | (1,N) / (1,1) |
-| LOTE | ORIGINA | SAIDA_LOTE | (0,N) / (1,1) |
-| PEDIDO_COMPRA | GERA | RECEBIMENTO | (0,N) / (1,1) |
-| RECEBIMENTO | REGISTRA | LOTE | (0,N) / (1,1) |
-| ITEM_PEDIDO_COMPRA | ORIGINA | LOTE | (0,N) / (1,1) |
+**Link do modelo:** [DER do Hortifruti União no brModelo](https://app.brmodeloweb.com/conceptual/6ae380e92407b9c8c2a6db74)
 
-*Cardinalidades na ordem das entidades de cada linha. A participação mínima é regra do modelo conceitual, não garantia do SQL: no script que conferimos, as FKs aceitam `NULL` (até nas relações que no desenho são obrigatórias). A FK no item, por exemplo, não impede uma venda sem nenhum item. Ver seção 1.5.*
+**Arquivo do diagrama:** [Visualizar DER Conceitual](docs/DER_conceitual.png)
 
-**Caso A — mesma organização da Entrega 1. Apontamentos da correção:**
+![DER Conceitual do Hortifruti União](docs/DER_conceitual.png)
+
+##### Entidades e atributos
+
+São **27 entidades**, separadas por assunto. Cada uma tem um identificador, que no diagrama aparece como círculo preenchido.
+
+###### Cadastros e funcionários
+
+| Entidade | Identificador | Principais atributos |
+| :--- | :--- | :--- |
+| SETOR | chave_setor | nome, descricao, dias_alerta_validade |
+| PRODUTO | chave_produto | codigo_interno, codigo_barras, nome, preco_venda, estoque_minimo, tipo_venda, tem_validade_impressa, venda_restrita_idade, ativo |
+| FORNECEDOR | chave_fornecedor | razao_social, cnpj, telefone, email, endereco, ativo |
+| FORNECEDOR_PRODUTO | chave_fornecedor_produto | codigo_no_fornecedor, ultimo_custo |
+| FUNCIONARIO | chave_funcionario | nome, cpf, cargo, telefone, data_admissao, perfil_acesso, ativo |
+| ESCALA | chave_escala | data, tipo, hora_inicio, hora_fim |
+| FORMA_PAGAMENTO | chave_forma | descricao, ativo |
+| CAIXA | chave_caixa | numero, ativo |
+
+- Nem todo produto tem código de barras (os vendidos a granel, por exemplo). Por isso o produto também tem um código interno (PLU), que não se repete. A `chave_produto` é só o identificador usado pelo banco.
+- A FORNECEDOR_PRODUTO existe porque um produto pode ter mais de um fornecedor. O banco não vai deixar cadastrar o mesmo par duas vezes.
+- A ESCALA entrou porque o mercado abre todos os dias e precisa organizar horários e folgas. Não é um dos problemas principais, mas faz parte da rotina.
+
+###### Compras, recebimentos e devoluções
+
+| Entidade | Identificador | Principais atributos |
+| :--- | :--- | :--- |
+| PEDIDO_COMPRA | chave_pedido | data_pedido, status |
+| ITEM_PEDIDO_COMPRA | chave_item_pedido | quantidade, custo_previsto |
+| RECEBIMENTO | chave_recebimento | numero_nf, serie, data_emissao, chave_acesso, data_recebimento, valor_total |
+| ITEM_RECEBIMENTO | chave_item_recebimento | quantidade_nf, quantidade_aceita, quantidade_recusada, custo_unitario_nf, observacao_divergencia |
+| DEVOLUCAO_FORNECEDOR | chave_devolucao | data, tipo, motivo, valor_abatimento, status |
+| ITEM_DEVOLUCAO | chave_item_devolucao | quantidade, observacao |
+| CONTA_PAGAR | chave_conta | data_vencimento, valor, data_pagamento, status |
+
+- Pedido e recebimento ficam separados porque nem tudo chega de uma vez, e também pode haver recebimento sem pedido.
+- O item recebido guarda o que veio na nota e o que o mercado aceitou. Um mesmo item pode gerar mais de um lote, se as validades forem diferentes, e a soma dos lotes tem que bater com a quantidade aceita. Se nada foi aceito, não se cria lote.
+- A devolução entrou porque o responsável contou que mercadoria fora do padrão é trocada ou vira abatimento na próxima nota. Isso não pode se misturar com perda.
+
+###### Estoque, perdas e validade
+
+| Entidade | Identificador | Principais atributos |
+| :--- | :--- | :--- |
+| LOTE | chave_lote | codigo_lote, data_fabricacao, data_validade, quantidade_recebida, quantidade_atual, custo_unitario |
+| SAIDA_LOTE | chave_saida_lote | quantidade, data_hora, tipo |
+| MOTIVO_PERDA | chave_motivo | descricao, ativo |
+| PERDA | chave_perda | data_hora, quantidade, valor_estimado, situacao_lote, observacao |
+| PROMOCAO | chave_promocao | data_inicio, data_fim, preco_normal, preco_promocional |
+
+Essa é a parte mais ligada a P1 e P2.
+
+- A validade fica no **LOTE** e não no produto, porque o leite que chegou hoje pode ter validade diferente do que chegou na semana passada.
+- A **PERDA** guarda o produto, a quantidade, o motivo e quem registrou. O **MOTIVO_PERDA** organiza as ocorrências, como vencimento, maturação excessiva e dano causado por cliente.
+- A **SAIDA_LOTE** registra o que sai do lote por venda ou por perda. O `tipo` pode ser venda, perda ou estorno. Quando uma baixa precisa ser desfeita, a gente não apaga: cria um estorno que devolve a quantidade ao lote.
+- A **PROMOCAO** é para os produtos perto de vencer, ligada ao lote.
+
+###### Vendas e operação de caixa
+
+| Entidade | Identificador | Principais atributos |
+| :--- | :--- | :--- |
+| SESSAO_CAIXA | chave_sessao | data_abertura, data_fechamento, fundo_inicial, valor_esperado, valor_contado, diferenca, status |
+| TROCA_OPERADOR | chave_troca | data_hora |
+| SANGRIA | chave_sangria | data_hora, valor |
+| VENDA | chave_venda | data_hora, valor_total, status, motivo_cancelamento, data_hora_cancelamento |
+| ITEM_VENDA | chave_item_venda | quantidade_ou_peso, preco_unitario, subtotal, status, motivo_cancelamento, data_hora_cancelamento |
+| PAGAMENTO | chave_pagamento | valor |
+| DOCUMENTO_FISCAL | chave_documento | tipo_documento, numero_documento, serie, chave_acesso, data_emissao, situacao |
+
+- A venda e os itens ficam separados porque uma venda tem vários produtos, e o preço da hora pode ser diferente do preço atual do cadastro.
+- O pagamento também é separado, porque uma venda pode ser paga de mais de um jeito (parte no Pix, parte no cartão). O valor registrado é o que foi aplicado à venda, sem o troco.
+- Sessão de caixa, sangria e troca de operador guardam o histórico do caixa. Venda cancelada continua registrada.
+
+O subtotal, o total da venda e a diferença do caixa são **atributos derivados**, porque dá para calcular a partir de outros dados. Outros três também dariam para calcular, mas vamos guardar:
+
+- **quantidade_atual do lote:** para ver o saldo sem somar todas as movimentações toda vez (são cerca de 1.800 vendas por dia). Ela precisa ser atualizada junto com cada baixa ou estorno;
+- **valor_esperado do caixa:** fica gravado como estava no fechamento;
+- **valor_estimado da perda:** calculado pela quantidade e pelo custo do lote. Se o lote ainda não foi identificado, fica vazio até a confirmação.
+
+##### Relacionamentos e cardinalidades
+
+As cardinalidades mostram quantas vezes cada registro pode participar de um relacionamento. Por exemplo, um setor tem vários produtos, mas cada produto tem um único setor principal. O relacionamento 50 liga o estorno à baixa que ele corrige.
+
+| Nº | Relacionamento | Entidade A | Entidade B |
+| :--- | :--- | :--- | :--- |
+| 1 | possui | SETOR (0,n) | PRODUTO (1,1) |
+| 2 | é lotado em | SETOR (0,n) | FUNCIONARIO (1,1) |
+| 3 | possui | FUNCIONARIO (0,n) | ESCALA (1,1) |
+| 4 | fornece | FORNECEDOR (0,n) | FORNECEDOR_PRODUTO (1,1) |
+| 5 | é fornecido por | PRODUTO (0,n) | FORNECEDOR_PRODUTO (1,1) |
+| 6 | recebe | FORNECEDOR (0,n) | PEDIDO_COMPRA (1,1) |
+| 7 | realiza | FUNCIONARIO (0,n) | PEDIDO_COMPRA (1,1) |
+| 8 | contém | PEDIDO_COMPRA (1,n) | ITEM_PEDIDO_COMPRA (1,1) |
+| 9 | é pedido em | PRODUTO (0,n) | ITEM_PEDIDO_COMPRA (1,1) |
+| 10 | entrega | FORNECEDOR (0,n) | RECEBIMENTO (1,1) |
+| 11 | origina | PEDIDO_COMPRA (0,n) | RECEBIMENTO (0,1) |
+| 12 | confere | FUNCIONARIO (0,n) | RECEBIMENTO (1,1) |
+| 13 | contém | RECEBIMENTO (1,n) | ITEM_RECEBIMENTO (1,1) |
+| 14 | é recebido em | PRODUTO (0,n) | ITEM_RECEBIMENTO (1,1) |
+| 15 | gera | ITEM_RECEBIMENTO (0,n) | LOTE (1,1) |
+| 16 | possui | PRODUTO (0,n) | LOTE (1,1) |
+| 17 | gera | RECEBIMENTO (0,n) | CONTA_PAGAR (1,1) |
+| 18 | é paga com | FORMA_PAGAMENTO (0,n) | CONTA_PAGAR (0,1) |
+| 19 | origina | RECEBIMENTO (0,n) | DEVOLUCAO_FORNECEDOR (1,1) |
+| 20 | registra | FUNCIONARIO (0,n) | DEVOLUCAO_FORNECEDOR (1,1) |
+| 21 | contém | DEVOLUCAO_FORNECEDOR (1,n) | ITEM_DEVOLUCAO (1,1) |
+| 22 | é devolvido em | ITEM_RECEBIMENTO (0,n) | ITEM_DEVOLUCAO (1,1) |
+| 23 | gera abatimento em | DEVOLUCAO_FORNECEDOR (0,1) | CONTA_PAGAR (0,n) |
+| 24 | é consumido em | LOTE (0,n) | SAIDA_LOTE (1,1) |
+| 25 | origina | ITEM_VENDA (0,n) | SAIDA_LOTE (0,1) |
+| 26 | origina | PERDA (0,n) | SAIDA_LOTE (0,1) |
+| 27 | sofre | PRODUTO (0,n) | PERDA (1,1) |
+| 28 | registra ocorrência em | SETOR (0,n) | PERDA (1,1) |
+| 29 | classifica | MOTIVO_PERDA (0,n) | PERDA (1,1) |
+| 30 | registra | FUNCIONARIO (0,n) | PERDA (1,1) |
+| 31 | é afetado por | LOTE (0,n) | PERDA (0,1) |
+| 32 | recebe | LOTE (0,n) | PROMOCAO (1,1) |
+| 33 | registra | FUNCIONARIO (0,n) | PROMOCAO (1,1) |
+| 34 | possui | CAIXA (0,n) | SESSAO_CAIXA (1,1) |
+| 35 | abre | FUNCIONARIO (0,n) | SESSAO_CAIXA (1,1) |
+| 36 | possui | SESSAO_CAIXA (0,n) | TROCA_OPERADOR (1,1) |
+| 37 | é operador anterior em | FUNCIONARIO (0,n) | TROCA_OPERADOR (1,1) |
+| 38 | é novo operador em | FUNCIONARIO (0,n) | TROCA_OPERADOR (1,1) |
+| 39 | registra | SESSAO_CAIXA (0,n) | SANGRIA (1,1) |
+| 40 | realiza | FUNCIONARIO (0,n) | SANGRIA (1,1) |
+| 41 | possui | SESSAO_CAIXA (0,n) | VENDA (1,1) |
+| 42 | realiza | FUNCIONARIO (0,n) | VENDA (1,1) |
+| 43 | autoriza cancelamento | FUNCIONARIO (0,n) | VENDA (0,1) |
+| 44 | contém | VENDA (1,n) | ITEM_VENDA (1,1) |
+| 45 | é vendido em | PRODUTO (0,n) | ITEM_VENDA (1,1) |
+| 46 | cancela | FUNCIONARIO (0,n) | ITEM_VENDA (0,1) |
+| 47 | recebe | VENDA (0,n) | PAGAMENTO (1,1) |
+| 48 | classifica | FORMA_PAGAMENTO (0,n) | PAGAMENTO (1,1) |
+| 49 | possui | VENDA (0,1) | DOCUMENTO_FISCAL (1,1) |
+| 50 | estorna (autorrelacionamento) | SAIDA_LOTE original (0,1) | SAIDA_LOTE de estorno (0,1) |
+
+##### Decisões tomadas na modelagem
+
+- **Sem CLIENTE.** Chegamos a considerar, mas o responsável confirmou que o mercado não cadastra clientes nas vendas comuns.
+- **Validade no lote.** Como as mercadorias chegam em dias diferentes, cada lote tem a sua validade. Isso resolve o P2.
+- **Sem entidade ESTOQUE.** O saldo do produto é a soma dos saldos dos seus lotes, para não guardar a mesma informação em dois lugares.
+- **PERDA separada de DEVOLUCAO_FORNECEDOR.** Mercadoria descartada pelo mercado é diferente de mercadoria devolvida ou compensada pelo fornecedor. Misturar as duas esconderia o prejuízo real.
+- **Origem da baixa.** Cada baixa de venda ou de perda tem uma única origem (um item de venda ou uma perda). O estorno não tem origem própria: ele aponta para a baixa que corrige e devolve a quantidade inteira dela. O banco precisa garantir isso e impedir que a mesma baixa seja estornada duas vezes.
+- **Venda e pagamento (0,n).** Uma venda em andamento, ou cancelada antes de pagar, não tem pagamento. Para ser concluída, a venda precisa estar paga, e a soma dos pagamentos tem que bater com o total (RN24).
+- **Entidades de item e de troca de operador.** Cada item precisa guardar quantidade, custo, preço e situação, e a troca de operador precisa de histórico, por isso ficaram separados.
+
+Alguns caminhos se repetem no DER, e deixamos de propósito:
+
+- **PRODUTO – LOTE (16):** o produto também dá para descobrir pelo item recebido. Deixamos a ligação direta para facilitar as consultas por produto. No modelo lógico e no SQL, vamos impedir que o lote aponte para um produto diferente do item recebido.
+- **LOTE – PERDA (31):** a perda aponta para o lote quando ele é conhecido. Se não é, fica como "lote a confirmar" e ainda não tem saída de lote.
+- **SETOR – PERDA (28):** o setor também dá para descobrir pelo produto, mas guardamos na perda para manter o histórico caso o produto mude de setor.
+
+O relacionamento 50 não é um caminho repetido, é um autorrelacionamento de SAIDA_LOTE. Mantivemos (0,1) nas duas pontas porque nem toda baixa tem um estorno, e nem toda baixa aponta para outra (uma baixa de venda ou de perda não tem baixa original). Quando o tipo for estorno, porém, o banco vai exigir a ligação com uma baixa original e impedir que ela seja estornada mais de uma vez.
+
+As validações mais detalhadas, como não repetir pares em FORNECEDOR_PRODUTO e conferir as quantidades recebidas, vão para o dicionário de dados e para o banco.
+
+##### Relação do DER com os problemas
+
+| Problema | Entidades relacionadas | Como o modelo ajuda |
+| :--- | :--- | :--- |
+| **P1 – Perda de produtos** | PERDA, MOTIVO_PERDA, PRODUTO, SETOR, FUNCIONARIO, LOTE, SAIDA_LOTE, DEVOLUCAO_FORNECEDOR e ITEM_DEVOLUCAO | Registra o que foi perdido, a quantidade, o motivo e o setor, e separa perda de devolução ao fornecedor. |
+| **P2 – Validade dos produtos** | PRODUTO, LOTE, ITEM_RECEBIMENTO, SAIDA_LOTE, SETOR e PROMOCAO | Acompanha validade e saldo de cada lote, mostra o que está perto de vencer e registra promoções. |
+
+Com isso, o mercado passa a poder consultar coisas que hoje não ficam registradas, como quais setores perdem mais, quais motivos aparecem mais e quais lotes estão perto de vencer. Os indicadores (KPIs) e a ligação deles com as consultas estão na seção 1.6, e as consultas ficam no script SQL (seção 3).
+
+##### Revisão em relação à Entrega 1
+
+Revisamos o modelo com base nos apontamentos da Entrega 1 e nas informações novas do mercado. A principal mudança foi sair de um modelo focado em produtos, estoque e vendas para um que cobre também os outros processos da organização.
 
 | Apontamento da correção da E1 | O que mudou no trabalho | Por quê |
-|---|---|---|
-| Processos de negócio incompletos | Detalhados vendas, compras, recebimento, estoque, pagamentos, cancelamentos, preços, acesso e fechamento de caixa | Mostrar o mercado e o que o banco cobre |
-| Fluxogramas só como anexo | Imagens no README, na seção de processos | O professor vê o fluxo sem abrir outro arquivo |
-| Regras de negócio incompletas | Incluídas validade, estoque mínimo, FEFO, perdas, pagamentos, permissões, granel e LGPD | Coerência com os processos |
-| Inconsistência no cadastro de clientes | Entidade CLIENTE retirada | O mercado não cadastra cliente para registrar a venda |
-| Cardinalidades e relacionamentos incorretos | Revisadas; criados itens de compra/venda, lote, pagamento e perda | Representar N:N com dados de quantidade e preço |
-| Dicionário incompleto | `Dicionario_Dados.md` com 13 tabelas e 74 colunas | Turma GTI: Markdown separado do README |
-| Justificativas técnicas superficiais | Seções 1.2 a 1.5 | Demonstrar conversão, chaves, normalização e restrições |
+| :--- | :--- | :--- |
+| DER anexado no editor do GitHub | Virou uma imagem referenciada no README | O professor exige o arquivo no repositório. |
+| Cardinalidades só com o máximo | Passaram a ter mínimo e máximo | Mostra o que é obrigatório e o que é opcional. |
+| Chaves estrangeiras no conceitual | Foram retiradas | Pertencem ao modelo lógico. |
+| Venda e produto incompletos | Criamos ITEM_VENDA | Precisamos da quantidade e do preço de cada produto vendido. |
+| Sem entidade de lotes | Criamos LOTE | O controle de validade depende de cada lote. |
+| Compra incompleta | Incluímos pedidos, itens, recebimentos e contas a pagar | Fazem parte da rotina do mercado. |
+| Entidade CLIENTE | Foi retirada | As vendas não têm cadastro de cliente. |
+| Faltava a operação dos caixas | Incluímos caixa, sessão, pagamento, sangria e troca de operador | O banco precisa mostrar o que acontece no atendimento. |
+| Entidade CATEGORIA | Trocada por SETOR | O mercado organiza por setor, e o prazo de alerta de validade varia conforme o setor. A validade de cada produto fica registrada no lote. |
+| Perdas não representadas | Criamos PERDA, MOTIVO_PERDA e as ligações | Foi um dos principais problemas do levantamento. |
+| Sem funcionários e escalas | Incluímos FUNCIONARIO e ESCALA | São cerca de 110 funcionários e a escala é feita em planilha. |
+| Justificativas pouco detalhadas | Passamos a explicar as alternativas e os motivos | Mostra por que cada coisa faz sentido para o mercado. |
+
+Além dos apontamentos, incluímos por conta própria o estorno em SAIDA_LOTE, ligado à baixa original, para corrigir baixas sem apagar o histórico.
+
+##### Considerações sobre o modelo conceitual
+
+O DER agora cobre cadastros, compras, recebimentos, vendas, pagamentos, funcionários, escalas e estoque. Demos mais atenção a lotes e perdas, que são os pontos que o responsável mais destacou. Também deixamos de fora o que o mercado não faz, como fidelidade, vendas online e entrega.
+
+Algumas regras não aparecem no desenho, como impedir saída maior que o saldo do lote, impedir venda de lote vencido, conferir as quantidades recebidas e exigir autorização para cancelar. Elas ficam para o modelo lógico e o script SQL.
+
+O próximo passo é transformar as entidades em tabelas, definir as chaves primárias e estrangeiras e preparar tudo para o MySQL.
 
 ### 1.2 Conversão do Modelo Conceitual para o Modelo Lógico
 
