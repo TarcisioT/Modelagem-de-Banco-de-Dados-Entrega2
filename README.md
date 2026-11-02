@@ -79,6 +79,8 @@
 
 ![Fotografia do estoque](imagens/evidencias/estoque_mercado.jpeg)
 
+![Fotografia do entrevistado](imagens/evidencias/entrevista_videochamada.jpeg).
+
 ### Relato da entrevista
 
 - **Quem:** Guilherme Takemoto, um dos proprietários do Hortifruti União – Tatuapé. A entrevista e a visita foram feitas pelo Tarcisio, que já trabalhou no mercado. Os outros integrantes do grupo não participaram.
