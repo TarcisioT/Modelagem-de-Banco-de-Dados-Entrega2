@@ -11,7 +11,7 @@
 | Tarcisio Santos de Oliveira | 47913061 | TarcisioT |
 | Gabriela Porfírio da Silva | 48017698 | porfiriogabis |
 | Henrique Moura de Oliveira | 47610972 | Bkrusher666 |
-| Victor Hugo dos Santos Maciel | 48037630 | vhugosm |
+| Victor Hugo dos Santos Maciel | 48037630 | vhugo-sm |
 | Guilherme Damasceno dos Santos | 48491683 | damascenogs |
 | Lucas Praxedes da Silva | 47832550 | lucaspraxedes08sil-gif |
 
@@ -462,7 +462,9 @@ A relação entre os problemas, as tabelas do banco e as consultas SQL será det
 
 Usamos a entrevista com o responsável, a visita ao mercado e as confirmações pelo WhatsApp. Além dos problemas P1 e P2, quisemos representar o resto da rotina do mercado: compras, recebimento, vendas, pagamentos, caixa e funcionários.
 
-O DER foi feito no brModelo Web, na notação pedida pelo professor: entidades em retângulos, relacionamentos em losangos e atributos em círculos, com cardinalidades mínimas e máximas. As chaves estrangeiras não aparecem aqui, porque só entram no modelo lógico.
+O DER foi feito no brModelo (aplicativo instalado), na notação pedida pelo professor: entidades em retângulos, relacionamentos em losangos e atributos em círculos, com cardinalidades mínimas e máximas. As chaves estrangeiras não aparecem aqui, porque só entram no modelo lógico.
+
+O DER tem **22 entidades**. Os itens de pedido, de recebimento, de devolução e de venda, além do vínculo entre fornecedor e produto, são representados como associações com atributos, como explicamos mais abaixo. Com essa modelagem, o diagrama possui **48 relacionamentos**.
 
 **Ferramenta:** [brModelo Web](https://app.brmodeloweb.com)
 
