@@ -332,16 +332,10 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 | RNF11 | Usabilidade | O registro de perdas deve ser simples e exigir somente as informações necessárias. |
 | RNF12 | Compatibilidade | O banco será desenvolvido em MySQL, utilizando InnoDB e `utf8mb4`. |
 
-### Requisitos comuns não incluídos
 
-| Requisito comum | Situação no Hortifruti União | Justificativa |
-| :---- | :---- | :---- |
-| Cadastro de clientes | Não realiza | As vendas são anônimas. |
-| Programa de fidelidade | Não possui | Não existe cadastro de clientes. |
-| Vendas pela internet ou aplicativo | Não realiza | O mercado vende somente presencialmente. |
-| Entrega em domicílio | Não realiza | O mercado não faz entregas. |
-| Venda fiado e crediário | Não realiza | Todas as vendas são pagas no caixa. |
-| Troca ou devolução pelo cliente | Existe, mas é rara | É tratada pela gerência ou retaguarda, com os ajustes feitos no sistema utilizado pelo mercado. Por isso, não foi criado um fluxo próprio no caixa. |
+##### Requisitos comuns não incluídos
+
+Os processos que o Hortifruti União não realiza, como cadastro de clientes, fidelidade, vendas online, entregas e venda fiado, já estão registrados na tabela **“Processos comuns que não foram incluídos no levantamento”** desta seção. Por esse motivo, não criamos requisitos funcionais para esses casos. A troca ou devolução pelo cliente existe, mas é rara e continua fora de um fluxo próprio de caixa.
 
 ---
 
@@ -349,6 +343,8 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 
 **[Confirmada]** indica uma prática informada pelo responsável ou observada na visita.  
 **[Proposta]** indica uma regra definida pelo grupo para organizar o banco.
+
+- A numeração segue a ordem em que as regras foram criadas, e não a ordem de leitura. Por isso RN08A, RN52 a RN57 aparecem dentro dos grupos por assunto.
 
 ### Cadastros
 
