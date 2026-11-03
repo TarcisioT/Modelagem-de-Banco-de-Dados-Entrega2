@@ -861,6 +861,45 @@ Os 60 produtos formam um catálogo demonstrativo. Não consideramos essa quantid
 
 As demais quantidades acompanham os relacionamentos do banco: as vendas possuem itens e pagamentos, os recebimentos possuem itens e lotes, e os cancelamentos geram estornos das saídas de estoque.
 
+#### Volume da massa
+
+A carga contém os seguintes registros, desconsiderando o produto e a escala temporários que são inseridos e excluídos nos exemplos de manutenção:
+
+| Tabela | Registros |
+| :--- | ---: |
+| SETOR | 8 |
+| PRODUTO | 60 |
+| FORNECEDOR | 12 |
+| FORNECEDOR_PRODUTO | 90 |
+| FUNCIONARIO | 16 |
+| ESCALA | 112 |
+| FORMA_PAGAMENTO | 7 |
+| CAIXA | 7 |
+| PEDIDO_COMPRA | 12 |
+| ITEM_PEDIDO_COMPRA | 70 |
+| RECEBIMENTO | 12 |
+| ITEM_RECEBIMENTO | 66 |
+| DEVOLUCAO_FORNECEDOR | 6 |
+| ITEM_DEVOLUCAO | 6 |
+| CONTA_PAGAR | 12 |
+| LOTE | 126 |
+| MOTIVO_PERDA | 8 |
+| PERDA | 24 |
+| PROMOCAO | 5 |
+| SESSAO_CAIXA | 49 |
+| TROCA_OPERADOR | 5 |
+| SANGRIA | 16 |
+| VENDA | 200 |
+| ITEM_VENDA | 810 |
+| PAGAMENTO | 220 |
+| DOCUMENTO_FISCAL | 200 |
+
+A tabela `SAIDA_LOTE` reúne as baixas das vendas, as baixas das perdas confirmadas e os estornos gerados pelos cancelamentos. O script inclui uma consulta para conferir sua quantidade após a carga.
+
+Das **200 vendas**, 196 estão concluídas e 4 canceladas. Os **810 itens de venda** incluem 800 ativos e 10 cancelados.
+
+As **24 perdas** estão divididas em 18 confirmadas e 6 com lote a confirmar. Das **49 sessões de caixa**, 47 estão fechadas e 2 permanecem abertas.
+
 #### Período simulado
 
 As vendas estão distribuídas entre **26/10/2026 e 01/11/2026**, totalizando sete dias consecutivos.
