@@ -861,6 +861,16 @@ Os 60 produtos formam um catálogo demonstrativo. Não consideramos essa quantid
 
 As demais quantidades acompanham os relacionamentos do banco: as vendas possuem itens e pagamentos, os recebimentos possuem itens e lotes, e os cancelamentos geram estornos das saídas de estoque.
 
+#### Período simulado
+
+As vendas estão distribuídas entre **26/10/2026 e 01/11/2026**, totalizando sete dias consecutivos.
+
+Também existem recebimentos entre **15/10/2026 e 25/10/2026**, utilizados para formar o estoque da semana simulada.
+
+As consultas que dependem de uma data de referência utilizam **01/11/2026**, escrita diretamente no SQL. Isso permite repetir a demonstração sem depender do dia em que o script for executado.
+
+Como a semana atravessa outubro e novembro, as consultas agrupadas por mês podem apresentar esses dois meses. Esses resultados representam somente os dias da amostra, e não meses completos de operação.
+
 ---
 
 ## 5. Repositório GitHub
