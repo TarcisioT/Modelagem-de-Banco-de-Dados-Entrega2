@@ -849,6 +849,17 @@ Para fechar esta parte, falta alinhar README, dicionário e `docs/script.sql`, c
 
 A massa de dados é fictícia e foi criada para este trabalho. Os cadastros e as movimentações foram montados para representar as principais atividades do Hortifruti União, sem utilizar registros reais de funcionários, fornecedores ou vendas. O apoio de IA nessa etapa está registrado na seção 6.
 
+#### Justificativa do volume da massa
+
+Na entrevista, o responsável informou que o mercado tem cerca de **110 funcionários, 7 caixas e 340 fornecedores**, além de realizar aproximadamente **1.800 vendas por dia**. Também mencionou um faturamento mensal próximo de **R$ 5 milhões** e cerca de **6 mil itens diferentes vendidos por mês**. Como esses números foram informados de memória, nós os tratamos como estimativas.
+
+Nesse ritmo, uma semana teria aproximadamente **12.600 vendas**. Para o trabalho, usamos **200 vendas fictícias distribuídas em sete dias**, o equivalente a cerca de **1,6% desse volume semanal estimado**. Escolhemos uma quantidade menor para facilitar a apresentação do SQL e a conferência dos resultados.
+
+A redução não foi igual em todas as tabelas. Mantivemos os **7 caixas** informados pelo responsável e usamos **16 funcionários, 12 fornecedores e 60 produtos** para representar diferentes funções, setores e operações.
+
+Os 60 produtos formam um catálogo demonstrativo. Não consideramos essa quantidade como uma proporção confirmada do catálogo real, porque ainda seria necessário esclarecer se os “6 mil itens” mencionados na entrevista correspondem a produtos distintos.
+
+
 ---
 
 ## 5. Repositório GitHub
