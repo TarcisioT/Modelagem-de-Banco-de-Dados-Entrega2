@@ -185,6 +185,43 @@ Essa mesma conversa também confirmou a devolução e troca com fornecedores e a
 
 <img src="fluxograma_estoque.png" alt="Fluxograma do processo de estoque" width="450">
 
+Os fluxos do ciclo de compra e do fechamento de caixa representam as rotinas descritas pelo responsável sobre compras, recebimento e conferência do caixa. Eles estão escritos em Mermaid porque o GitHub renderiza esse formato diretamente no README.
+
+**Fluxograma do ciclo de compra:**
+
+```mermaid
+flowchart TD
+    A[Olhar o giro e os dias de estoque] --> B[Fazer o pedido de compra ao fornecedor]
+    B --> C[Carga chega ao mercado]
+    C --> D[Conferir a nota fiscal e os itens]
+    D --> E{Algum item fora do padrão?}
+    E -- Não --> H[Dar entrada no estoque]
+    E -- Sim --> F[Separar o que veio ruim e chamar o fornecedor]
+    F --> G{Fornecedor troca ou abate?}
+    G -- Troca --> G1[Mercadoria nova chega depois]
+    G -- Abatimento --> G2[Desconto na próxima nota]
+    F --> H
+    G1 --> C
+    H --> I[Conta a pagar da nota no financeiro]
+    G2 --> I
+    I --> J[Pagar o fornecedor no vencimento]
+```
+
+**Fluxograma do fechamento de caixa:**
+
+```mermaid
+flowchart TD
+    A[Fim do turno ou do dia] --> B[Operador para de registrar vendas]
+    B --> C[Contar o dinheiro do caixa]
+    C --> D[Conferir com o valor esperado pelo sistema]
+    D --> E{Bateu?}
+    E -- Sim --> F[Fechar o caixa]
+    E -- Não --> G[Anotar a diferença]
+    G --> F
+    F --> H[Sistema junta as vendas do dia]
+    H --> I[Atualiza estoque, relatórios e fiscal]
+```
+
 ---
 
 ## Requisitos do Sistema
