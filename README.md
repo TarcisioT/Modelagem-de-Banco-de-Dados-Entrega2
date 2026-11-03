@@ -859,6 +859,7 @@ A redução não foi igual em todas as tabelas. Mantivemos os **7 caixas** infor
 
 Os 60 produtos formam um catálogo demonstrativo. Não consideramos essa quantidade como uma proporção confirmada do catálogo real, porque ainda seria necessário esclarecer se os “6 mil itens” mencionados na entrevista correspondem a produtos distintos.
 
+As demais quantidades acompanham os relacionamentos do banco: as vendas possuem itens e pagamentos, os recebimentos possuem itens e lotes, e os cancelamentos geram estornos das saídas de estoque.
 
 ---
 
