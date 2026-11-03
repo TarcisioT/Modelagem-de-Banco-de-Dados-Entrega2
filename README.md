@@ -1084,6 +1084,11 @@ Uso de IA **não declarado é penalizado**. Abaixo, os usos relevantes. Entrega 
 | **Reflexão crítica** | Uma resposta sobre uma cópia antiga não comprova o que está no arquivo publicado. Precisamos conferir a mesma versão do SQL que vai junto com o README. Deixar a escrita mais natural também não pode mudar o sentido do que foi levantado ou testado. |
 
 ---
+**Pontos de atenção:**
+
+- O vínculo entre o funcionário e a conta do MySQL não é modelado. Os perfis e `GRANT`s estão no script, mas `perfil_acesso` é só descritivo.
+- Funcionários inativos mantêm o histórico e não são excluídos (RN05 e RN50).
+- O documento do cliente em vendas com restrição de idade não é armazenado (RN27).
 
 ### 11. Observações finais
 
