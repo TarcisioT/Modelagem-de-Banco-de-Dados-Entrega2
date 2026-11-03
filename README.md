@@ -350,12 +350,13 @@ Os processos que o Hortifruti União não realiza, como cadastro de clientes, fi
 
 - **RN01 [Confirmada + Proposta]** O mercado cadastra produtos com código de barras, preço, setor e forma de venda. No banco, todo produto também terá um código interno único e nome.
 - **RN02 [Confirmada + Proposta]** Produtos pesados podem utilizar etiqueta de código de barras e produtos a granel podem ser informados pelo código interno (PLU). O código interno será único.
-- **RN03 [Proposta]** Cada produto terá um setor principal.
-- **RN04 [Proposta]** O preço deve ser maior que zero e o estoque mínimo não pode ser negativo.
+- **RN03 [Proposta]** Cada produto terá um setor principal, e esse setor precisa ser um setor que vende produto. Caixa e Retaguarda existem só para organizar os funcionários e não recebem produto nem perda.
+- **RN04 [Proposta]** O preço deve ser maior que zero e o estoque mínimo não pode ser negativo. O estoque mínimo também serve para apontar os produtos que precisam de reposição: quando o saldo disponível fica abaixo dele, o produto entra na consulta de estoque baixo (RF20), que mostra se já existe pedido de compra em aberto.
 - **RN05 [Proposta]** Produtos, fornecedores, funcionários e caixas com histórico não serão excluídos, apenas inativados.
 - **RN06 [Proposta]** O CNPJ do fornecedor não poderá se repetir.
 - **RN07 [Proposta]** O CPF do funcionário não poderá se repetir.
 - **RN08 [Confirmada]** O mercado aceita pagamento em dinheiro, débito, crédito, Pix e vale-alimentação (VA). Essas formas serão registradas no cadastro de formas de pagamento do banco.
+- **RN08A [Proposta]** Cada forma de pagamento tem um uso: venda, fornecedor ou ambos. A venda só aceita formas de uso "venda" ou "ambos", e a conta a pagar só aceita "fornecedor" ou "ambos". Por exemplo, boleto e transferência ficam só para fornecedor, e o Pix vale para os dois lados. O `uso` não pode ser alterado depois que a forma tiver algum pagamento ou conta registrada: para mudar, a forma é inativada e uma nova é cadastrada, assim o histórico continua válido.
 
 ### Compras e recebimento
 
@@ -369,25 +370,29 @@ Os processos que o Hortifruti União não realiza, como cadastro de clientes, fi
 
 - **RN14 [Proposta]** Todo lote estará relacionado a um produto recebido e terá quantidade positiva.
 - **RN15 [Confirmada + Proposta]** Frutas, legumes e verduras geralmente não possuem validade impressa e são avaliados visualmente. Produtos que possuem validade impressa terão essa informação registrada no lote. Os demais serão acompanhados pelo controle de estoque e perdas.
-- **RN16 [Proposta]** O saldo do produto será a soma dos saldos dos seus lotes.
+- **RN16 [Proposta]** O saldo do produto será a soma dos saldos dos seus lotes. O saldo disponível para venda é esse saldo menos as perdas que ainda estão com lote a confirmar (RN42).
 - **RN17 [Proposta]** Nenhuma saída poderá ultrapassar o saldo disponível do lote. Cancelamentos geram estorno, e não exclusão.
-- **RN18 [Proposta]** Nas vendas, o sistema poderá priorizar o lote que vence primeiro ou, quando não houver validade, o lote mais antigo.
+- **RN18 [Proposta]** Nas vendas, o sistema prioriza o lote que vence primeiro, seguindo a lógica FEFO (*First Expire, First Out*). Quando o produto não tiver validade registrada, prioriza o lote mais antigo.
 - **RN19 [Proposta]** Neste banco, a baixa de estoque será registrada quando a venda for concluída. No mercado, a baixa pode ser imediata ou após a conferência do dia, conforme o controle online esteja ativado ou não.
+- **RN53 [Proposta]** Na conclusão da venda, a quantidade de cada produto não pode passar do saldo disponível. A procedure `concluir_venda` escolhe os lotes pela regra FEFO e usa `SELECT ... FOR UPDATE` no lote selecionado enquanto a transação está aberta. Assim, aquele lote fica bloqueado até a operação terminar. Como não fizemos um teste com várias conexões ao mesmo tempo, não dá para dizer que a concorrência foi testada; o que foi implementado foi o bloqueio previsto no fluxo.
+- **RN57 [Proposta]** Enquanto a venda está em andamento, cada item é registrado com o produto, a quantidade ou o peso e o preço normal do cadastro, ainda sem lote. O lote só é escolhido na conclusão, pela procedure concluir_venda (RN18). Se o item sai de um lote só, a linha fica como está. Se precisa de mais de um, a procedure divide a linha, deixando uma para cada lote. O preço de cada linha é o promocional quando o lote tem promoção vigente (RN47 e RN48) e o normal quando não tem. O lote de cada linha fica na baixa (SAIDA_LOTE), que aponta para o item de venda. Os itens cancelados durante a venda (RN26) saem antes dessa etapa e não entram na escolha de lote. O produto do item e o produto do lote têm que ser o mesmo.
 
 ### Vendas e pagamentos
 
-- **RN20 [Proposta]** Toda venda estará ligada a uma sessão de caixa aberta e a um operador.
+- **RN20 [Proposta]** Toda venda estará ligada a uma sessão de caixa aberta e a um operador. O operador da venda precisa ser o operador da sessão naquele momento: quem abriu o caixa ou, se houve troca, o novo operador da última troca (RN29). O trigger de VENDA confere isso.
 - **RN21 [Confirmada]** As vendas são anônimas, sem cadastro de clientes.
-- **RN22 [Confirmada + Proposta]** Produtos vendidos por quilo aceitam quantidade decimal e produtos por unidade utilizam quantidade inteira.
-- **RN23 [Proposta]** O total da venda será a soma dos itens que não estiverem cancelados.
+- **RN22 [Confirmada + Proposta]** Produtos vendidos por quilo aceitam quantidade decimal e produtos por unidade utilizam quantidade inteira. O banco guarda o peso informado na venda.
+- **RN23 [Proposta]** O total da venda será a soma dos itens que não estiverem cancelados. O total fica definitivo na conclusão da venda.
 - **RN24 [Confirmada]** O mercado não vende fiado e as vendas são pagas no caixa, podendo utilizar uma ou mais formas de pagamento na mesma venda.
 
 ### Cancelamentos e vendas restritas
 
-- **RN25 [Confirmada + Proposta]** O cancelamento de uma venda exige autorização de supervisor. A venda cancelada permanece registrada e não entra nos totais.
+- **RN25 [Confirmada + Proposta]** O cancelamento de uma venda exige autorização de supervisor, e o funcionário que autoriza precisa ter perfil de supervisor. A venda cancelada permanece registrada e não entra nos totais.
 - **RN26 [Proposta]** Um ou mais itens podem ser cancelados enquanto a venda estiver em andamento. O item permanece registrado, mas deixa de fazer parte do total.
 - **RN27 [Confirmada + Proposta]** Produtos com venda restrita por idade serão identificados no cadastro e o sistema mostrará um aviso ao operador. O banco não armazenará documento do cliente.
 - **RN28 [Proposta]** Cancelamento, perda e devolução ao fornecedor são situações diferentes. Uma mercadoria de venda cancelada não será registrada como perda.
+- **RN54 [Proposta]** Quando uma venda já concluída é cancelada, todas as baixas de estoque dos itens ativos dela são estornadas na mesma transação, e cada baixa só pode ser estornada uma vez (RN17). Se algum passo falhar, nada é gravado (RNF04).
+- **RN55 [Proposta]** Os pagamentos de uma venda cancelada continuam no histórico, mas a venda não entra no faturamento nem no valor esperado do caixa (RN25). O banco não registra a devolução do dinheiro ao cliente: cancelar é desfazer a venda inteira. Por isso o valor esperado do caixa considera que o dinheiro dessa venda voltou ao cliente ou nunca ficou lá. Como essa saída de dinheiro não é rastreada, uma diferença no fechamento causada por ela apareceria no banco sem explicação. Se um dia for preciso separar o que foi recebido do que foi devolvido, o pagamento vai precisar de uma coluna de situação. Isso ficou fora do nosso trabalho.
 
 ### Caixa e fiscal
 
@@ -400,12 +405,12 @@ Os processos que o Hortifruti União não realiza, como cadastro de clientes, fi
 ### Financeiro
 
 - **RN34 [Confirmada + Proposta]** Contas a pagar relacionadas às compras terão vencimento, valor e recebimento de origem.
-- **RN35 [Proposta]** Uma conta poderá estar aberta, paga ou cancelada.
-- **RN36 [Proposta]** As contas a pagar devem manter o valor original da nota, e eventuais abatimentos do fornecedor serão registrados separadamente.
+- **RN35 [Proposta]** Uma conta poderá estar aberta, paga ou cancelada. O modelo não registra pagamento parcial: a conta é paga de uma vez, pelo saldo a pagar.
+- **RN36 [Proposta]**A conta a pagar mantém o valor original da nota. Os abatimentos do fornecedor ficam em DEVOLUCAO_FORNECEDOR e são ligados à conta. O saldo a pagar é o valor da conta menos a soma dos abatimentos ligados a ela. A soma dos abatimentos de uma conta não pode passar do valor dela, e só dá para ligar abatimento a conta aberta.
 
 ### Devoluções e abatimentos
 
-- **RN37 [Proposta]** A devolução estará ligada ao recebimento e não poderá ultrapassar a quantidade recusada.
+- **RN37 [Proposta]** O responsável confirmou por WhatsApp que o mercado trabalha com devolução, troca e abatimento junto ao fornecedor quando há problema na mercadoria. No banco, a devolução fica ligada ao recebimento e não pode passar da quantidade recusada. Quando o fornecedor troca o produto, o que chega no lugar entra como um novo recebimento, sem pedido (RN11), e a devolução é registrada como troca (RF16). Quando há abatimento, aplica-se a RN38. O abatimento não altera o custo_unitario do lote, para que o custo histórico da mercadoria permaneça igual ao da nota de origem.
 - **RN38 [Confirmada + Proposta]** O abatimento concedido pelo fornecedor será relacionado a uma conta do mesmo fornecedor.
 - **RN39 [Proposta]** Uma mercadoria devolvida, trocada ou compensada pelo fornecedor não será registrada também como perda.
 
@@ -413,38 +418,39 @@ Os processos que o Hortifruti União não realiza, como cadastro de clientes, fi
 
 - **RN40 [Confirmada + Proposta]** O levantamento identificou perdas por vencimento, maturação excessiva e danos causados por clientes. Esses casos formarão a lista inicial de motivos, além da opção "Outros".
 - **RN41 [Proposta]** Toda perda terá produto, quantidade, motivo, setor, funcionário, data e situação do lote.
-- **RN42 [Proposta]** Quando o lote da perda for conhecido, a quantidade perdida será baixada desse lote. Se o lote não for conhecido, a perda ficará como "lote a confirmar" até que essa informação seja conferida.
-- **RN43 [Proposta]** Uma perda registrada não será apagada. Correções manterão o registro original.
+- **RN42 [Proposta]** Quando o lote da perda for conhecido, a quantidade perdida será baixada desse lote. Se o lote não for conhecido, a perda ficará como "lote a confirmar" até que essa informação seja conferida. Enquanto estiver pendente, a quantidade é descontada do saldo disponível do produto (RN16), e uma perda pendente não pode ser maior que esse saldo disponível.
+- **RN43 [Proposta]** Uma perda registrada não será apagada. Para corrigir uma perda (por exemplo, 15 kg registrados que eram 12 kg) ou dividi-la em lotes (RN52), o registro original passa para a situação substituida, deixa de entrar nos totais e nas pendências, e a perda nova (ou as novas) aponta para ele. Se o original já tinha baixa em lote, essa baixa é estornada (RN17) e a perda nova gera a sua própria baixa. Só as perdas com situação valida contam nos indicadores.
 - **RN44 [Proposta]** O valor da perda será calculado com base na quantidade e no custo do lote. Perdas sem lote confirmado ficarão sem valor até a identificação.
+- **RN52 [Proposta]** Quando o lote de uma perda pendente é confirmado, o banco faz tudo de uma vez, na mesma transação: baixa a quantidade no lote (saída do tipo perda), marca a perda como confirmada e calcula o valor. A partir daí ela deixa de ser descontada como pendente, então a quantidade sai uma única vez do saldo disponível. A quantidade não pode passar do saldo do lote. Uma perda confirmada pertence a um lote só. Se a mercadoria perdida veio de mais de um lote do mesmo produto, a pendência original passa a `substituida` (RN43) e é trocada por uma perda para cada lote, todas ligadas a ela, e a soma das partes tem que dar a quantidade original. Como só as perdas válidas entram nos totais, nada é contado duas vezes.
+
 
 ### Validade e promoções
 
-- **RN45 [Confirmada + Proposta]** O prazo de alerta varia conforme o setor. No banco, cada setor terá um número de dias definido para identificar lotes próximos do vencimento.
-- **RN46 [Proposta]** Lotes vencidos não poderão ser vendidos nem entrar em promoção.
+- **RN45 [Confirmada + Proposta]** O prazo de alerta de validade varia conforme o setor. Cada setor que trabalha com validade impressa tem um número de dias definido. Os setores com dias_alerta_validade vazio (hortifruti, Caixa e Retaguarda) não geram alerta pelo setor. Se um produto desses setores tiver validade impressa (RN15), o lote dele usa um prazo padrão de 7 dias, definido pelo grupo. Esse prazo não é coluna do banco: ele aparece como constante na consulta G03, e para mudar o prazo basta editar o valor lá.
+- **RN46 [Proposta]** Lote vencido na data da venda não pode ser vendido nem entrar em promoção. A conferência usa a data da operação e não a data de hoje.
 - **RN47 [Confirmada + Proposta]** Produtos próximos do vencimento podem entrar em promoção, com preço inferior ao preço normal.
 - **RN48 [Proposta]** A promoção terminará na data definida ou no vencimento do lote, o que acontecer primeiro.
 
-### Funcionários e escala
+### FuncionárioS, escala e rastreabilidade
 
 - **RN49 [Confirmada + Proposta]** O mercado funciona todos os dias e organiza a escala em planilha. No banco, dias de trabalho terão horário de início e fim; folgas terão apenas a data.
 - **RN50 [Proposta]** Funcionários inativos não poderão realizar novas operações, mas seu histórico será mantido.
-- **RN51 [Proposta]** Dados pessoais dos funcionários serão acessíveis somente a usuários autorizados.
+- **RN51 [Proposta]** Dados pessoais dos funcionários, e os contatos de fornecedor que for pessoa física ou MEI, serão acessíveis somente a usuários autorizados, por causa da LGPD.
+- **RN56 [Proposta]** Todo fechamento de sessão de caixa e todo pagamento de conta a pagar guardam o funcionário que fez a operação, além da data e da hora (por isso `data_pagamento` e `data_fechamento` são `DATETIME`). Esse funcionário precisa estar ativo (RN50).
 
 ### Regras comuns não incluídas
 
-| Regra comum | Situação no Hortifruti União | Justificativa |
-| :---- | :---- | :---- |
-| Pontos ou descontos para clientes cadastrados | Não possui programa de fidelidade | Não existe cadastro de clientes. |
-| Frete e taxa de entrega | Não realiza entregas | A regra não se aplica. |
-| Limite de crédito e venda a prazo | Não realiza | O mercado não vende fiado. |
-| Troca ou devolução pelo cliente | Existe, mas é rara | É tratada pela gerência ou retaguarda e não possui fluxo próprio no caixa deste modelo. |
+As regras ligadas a cadastro de clientes, fidelidade, entrega, venda a prazo e troca pelo cliente seguem as situações já registradas na tabela **“Processos comuns que não foram incluídos no levantamento”**. Como esses processos não fazem parte do fluxo modelado, não criamos regras de negócio específicas para eles.
+
+A aferição da balança (Inmetro) também ficou fora do modelo. O banco apenas guarda o peso informado na venda (RN22), e o grupo não confirmou com o responsável como a aferição é realizada. Por isso, não foi criada uma regra para um processo que o banco não controla.
+
 
 ### Rastreabilidade dos problemas P1 e P2
 
 | Problema | Requisitos funcionais | Regras de negócio | Como contribuem |
 | :---- | :---- | :---- | :---- |
-| **P1 – Falta de controle sobre a perda de produtos** | RF07, RF14, RF16, RF19, RF37 a RF39 | RN12, RN13, RN17, RN28 e RN37 a RN44 | Permitem registrar e consultar as perdas por produto, quantidade, motivo e setor, além de separar perdas de devoluções e compensações de fornecedores. |
-| **P2 – Falta de controle de validade dos produtos** | RF01, RF02, RF15, RF18 e RF40 a RF43 | RN14 a RN16, RN18 e RN45 a RN48 | Permitem registrar a validade dos lotes, identificar produtos próximos do vencimento ou vencidos e acompanhar promoções antes do vencimento. |
+| **P1 – Falta de controle sobre a perda de produtos** | RF07, RF14, RF16, RF19, RF37 a RF39 | RN12, RN13, RN17, RN28, RN37 a RN44 e RN52 | Permitem registrar e consultar as perdas por produto, quantidade, motivo e setor, além de separar perdas de devoluções e compensações de fornecedores. |
+| **P2 – Falta de controle de validade dos produtos** | RF01, RF02, RF15, RF18 e RF40 a RF43 | RN14 a RN16, RN18, RN45 a RN48 e RN57 | Permitem registrar a validade dos lotes, identificar produtos próximos do vencimento ou vencidos e acompanhar promoções antes do vencimento. |
 
 A relação entre os problemas, as tabelas do banco e as consultas SQL será detalhada posteriormente na seção 1.6.
 
