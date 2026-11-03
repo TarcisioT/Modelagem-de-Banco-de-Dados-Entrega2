@@ -1036,26 +1036,11 @@ Uso de IA **não declarado é penalizado**. Abaixo, os usos relevantes. Entrega 
 
 ---
 
-## 7. Apresentação Corporativa Final
+### 11. Observações finais
 
-O roteiro está pronto. **Falta confirmar na `main` os slides e a evidência do SQL rodando.** São 8 minutos, slide limpo, sem ler parágrafo.
-
-**Pitch de 8 minutos (ordem obrigatória):**
-
-| # | Tempo | Conteúdo do esqueleto |
-|---|---|---|
-| 1 | 1 min | Contextualização do problema P1 (validade/lote) no Hortifruti União |
-| 2 | 1 min | Solução: `LOTE`, `SAIDA_LOTE`, `PERDA`; dizer o que **não** está automatizado (FEFO, baixa de saldo) |
-| 3 | 1 min 30 s | Modelo lógico (13 tabelas, chaves, rastreio do lote) |
-| 4 | 1 min | Demonstração do SQL rodando (criar/usar a base) |
-| 5 | 1 min 30 s | Consultas G01–G05 e uma auditoria (A02 ou A05) |
-| 6 | 1 min | Potencial de BI/IA e KPIs |
-| 7 | 30 s | Benefícios para decisão: menos perda, reposição, o que o gerente passa a ver |
-
-**Defesa:** depois do pitch, fora dos 8 minutos. **Só responde quem foi perguntado.**
-
-**Participação:** não precisa todo mundo falar no pitch; **é obrigatório** todo mundo estar na defesa. Falta reduz nota, salvo justificativa legal.
-
-**Proposta de falas (confirmar no grupo):** Tarcisio — itens 1 e 2; Gabriela e Henrique — item 3; Victor Hugo — itens 4 e 5; Guilherme — itens 6 e 7.
-
-**Ensaio:** usar uma base de testes separada e vazia, rodar `docs/script.sql` do zero e anotar G01–G05 e A01–A05. Cada um tem que saber responder, sozinho, sobre a redundância em `LOTE`, FK nula, FEFO, soma dos pagamentos e o tamanho pequeno da massa. Roupa de apresentação: sem boné, bermuda, chinelo ou camisa de time.
+- O dicionário foi montado a partir da estrutura `CREATE TABLE` do `script.sql` final.
+- O banco usa `InnoDB` e foi escrito para MySQL 8.0.16 ou superior.
+- Campos gerados (`SESSAO_CAIXA.diferenca`, `SESSAO_CAIXA.caixa_aberto_unico` e `ITEM_VENDA.subtotal`) não devem ser preenchidos manualmente.
+- Alguns valores calculáveis são guardados de propósito (`LOTE.quantidade_atual`, `PERDA.valor_estimado`, `SESSAO_CAIXA.valor_esperado` e as quantidades de `ITEM_RECEBIMENTO`). A justificativa está na seção 1.4 do README.
+- O modelo conceitual possui 22 entidades e 48 relacionamentos; as cinco associações com atributos viram tabelas no modelo lógico, que totaliza 27 tabelas.
+- Este arquivo documenta a implementação acadêmica, e não o banco de produção do Hortifruti União.
