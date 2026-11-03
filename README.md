@@ -910,6 +910,27 @@ As consultas que dependem de uma data de referência utilizam **01/11/2026**, es
 
 Como a semana atravessa outubro e novembro, as consultas agrupadas por mês podem apresentar esses dois meses. Esses resultados representam somente os dias da amostra, e não meses completos de operação.
 
+#### Variedade dos dados
+
+Além da quantidade, procuramos incluir situações diferentes para demonstrar as consultas e os relacionamentos do banco.
+
+| Cenário da massa | O que permite demonstrar |
+| :--- | :--- |
+| Produtos de diferentes setores, vendidos por quilo e por unidade | Cadastro de produtos e registro de quantidades ou pesos nas vendas. |
+| Perdas com diferentes motivos e setores | Consultas G01 e G02, relacionadas ao controle de perdas. |
+| Seis perdas com lote a confirmar | Consulta G11 e auditoria A01, para acompanhar pendências. |
+| Lotes com e sem validade, próximos do vencimento e vencidos com saldo | Consultas G03 e G04. |
+| Promoções vinculadas a lotes | Consulta G12 e acompanhamento dos períodos promocionais. |
+| Produtos abaixo do estoque mínimo | Consulta G07 e identificação da necessidade de reposição. |
+| Vendas concluídas e canceladas | Consultas G05, G06 e G08. |
+| Cancelamentos com estorno de estoque | Preservação do histórico e reversão das baixas correspondentes. |
+| Itens cancelados mantidos no histórico | Separação entre itens ativos e cancelados no cálculo da venda. |
+| Quantidades recusadas no recebimento | Consulta G09 e conferência das mercadorias recebidas. |
+| Devoluções, trocas e abatimentos de fornecedores | Relacionamento entre recebimentos, devoluções e contas a pagar. |
+| Pagamentos em uma ou mais modalidades | Registro de pagamentos simples e mistos. |
+| Contas pagas e contas abertas | Consulta G10 e acompanhamento dos vencimentos. |
+| Sessões abertas e fechadas, trocas de operador e sangrias | Histórico das operações de caixa. |
+
 ---
 
 ## 5. Repositório GitHub
