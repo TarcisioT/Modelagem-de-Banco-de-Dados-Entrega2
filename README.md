@@ -222,13 +222,13 @@ flowchart TD
     H --> I[Atualiza estoque, relatórios e fiscal]
 ```
 
----
 
-## Requisitos do Sistema
+
+#### Requisitos do Sistema
 
 Os requisitos abaixo foram definidos a partir da entrevista de 22/09/2026, da visita de 30/09/2026 e das confirmações por WhatsApp de 26/10 e 29/10/2026. O que foi informado pelo responsável ou observado na visita é tratado como **levantamento**. Já os campos, validações e controles definidos pelo grupo para organizar o banco são tratados como **proposta**.
 
-O banco será desenvolvido em MySQL e funcionará de forma independente do VR Software, sem integração ou carga automática de dados do sistema atual.
+O banco será desenvolvido em MySQL como uma implementação acadêmica, independente do VR Software, com dados fictícios. Não há integração nem carga automática de dados do sistema atual, então o banco representa os processos do mercado, mas não acompanha a operação real.
 
 ### Requisitos Funcionais
 
