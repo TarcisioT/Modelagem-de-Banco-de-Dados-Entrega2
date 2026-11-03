@@ -12,7 +12,7 @@
 | Victor Hugo dos Santos Maciel | 48037630 | vhugosm |
 | Guilherme Damasceno dos Santos | 48491683 | damascenogs |
 | Lucas Praxedes da Silva | 47832550 | lucaspraxedes08sil-gif |
- |
+
 &nbsp;
 
 ## 1.1 Revisão do Modelo Conceitual
