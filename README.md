@@ -470,7 +470,7 @@ O DER tem **22 entidades**. Os itens de pedido, de recebimento, de devolução e
 
 **Link do modelo:** [DER do Hortifruti União no brModelo](https://app.brmodeloweb.com/conceptual/6ae380e92407b9c8c2a6db74)
 
-**Arquivo do diagrama:** [Visualizar DER Conceitual](diagramas/DER_conceitual.png)
+**Arquivo do diagrama:** [Visualizar DER Conceitual](diagramas/der_conceitual.png)
 
 ![DER Conceitual do Hortifruti União](docs/DER_conceitual.png)
 
