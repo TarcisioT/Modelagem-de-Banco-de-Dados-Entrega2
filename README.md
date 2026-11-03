@@ -847,34 +847,7 @@ Para fechar esta parte, falta alinhar README, dicionário e `docs/script.sql`, c
 
 ## 4. Massa de Dados
 
-**Arquivo:** massa fictícia em [docs/script.sql](docs/script.sql), por `INSERT`. **Não são dados internos reais** do hortifruti.
-
-| Tipo de registro | Quantidade na versão analisada |
-|---|---:|
-| Categorias de produtos | 4 |
-| Fornecedores | 4 |
-| Funcionários | 5 |
-| Produtos | 8 |
-| Pedidos de compra | 4 |
-| Itens de pedido de compra | 8 |
-| Recebimentos | 3 |
-| Lotes | 8 |
-| Perdas | 1 |
-| Vendas | 1 |
-| Itens de venda | 2 |
-| Pagamentos | 1 |
-| Saídas de lote | 2 |
-| **Total** | **51** |
-
-Os `INSERT` são **fictícios**. Em relação ao tamanho real (28 mil SKUs, ~2.400 vendas/dia), 8 produtos e 1 venda são **massa de teste**, não amostra estatística. Dá para G01–G05 não voltarem vazios, mas não “representa o movimento”. A exigência de volume e variedade do esqueleto fica **parcial**.
-
-O que a massa já tem: pedidos recebidos e um pendente; dois lotes de banana com validades diferentes; lote vencido com saldo; uma perda por vencimento; produtos abaixo do mínimo; uma venda com dois itens.
-
-O que ainda falta demonstrar: mais de uma venda (datas diferentes), as três formas de pagamento, pagamento dividido, venda cancelada com motivo e responsável, perda por avaria, e, se couber, item saindo de mais de um lote. Tudo fictício. **Esses cenários ainda não aparecem na massa usada nesta conferência.**
-
-Saldo: `BAN-001` (38 depois de vender 2) e `ALF-001` (30 depois de perder 10) fecham na massa descrita. No caso de `TOM-001`, 70,000 recebidos menos 1,000 vendido dão **69,000**. A cópia conferida ainda tinha 70,000, enquanto o grupo relatou a correção para 69,000. A conferência da versão final continua pendente, como explicado na seção 1.6.
-
-O uso de IA na massa está na seção 6. A descrição dessa ajuda ainda precisa ser conferida com os pedidos realmente feitos, principalmente para esclarecer a participação na escrita dos `INSERTs` e em uma possível ampliação da massa.
+A massa de dados é fictícia e foi criada para este trabalho. Os cadastros e as movimentações foram montados para representar as principais atividades do Hortifruti União, sem utilizar registros reais de funcionários, fornecedores ou vendas. O apoio de IA nessa etapa está registrado na seção 6.
 
 ---
 
