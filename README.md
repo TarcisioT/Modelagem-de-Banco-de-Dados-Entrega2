@@ -633,10 +633,11 @@ As validações mais detalhadas, como não repetir pares em FORNECEDOR_PRODUTO e
 
 | Problema | Entidades relacionadas | Como o modelo ajuda |
 | :--- | :--- | :--- |
-| **P1 – Perda de produtos** | PERDA, MOTIVO_PERDA, PRODUTO, SETOR, FUNCIONARIO, LOTE, SAIDA_LOTE, DEVOLUCAO_FORNECEDOR e ITEM_DEVOLUCAO | Registra o que foi perdido, a quantidade, o motivo e o setor, e separa perda de devolução ao fornecedor. |
-| **P2 – Validade dos produtos** | PRODUTO, LOTE, ITEM_RECEBIMENTO, SAIDA_LOTE, SETOR e PROMOCAO | Acompanha validade e saldo de cada lote, mostra o que está perto de vencer e registra promoções. |
+| **P1 – Perda de produtos** | PERDA, MOTIVO_PERDA, PRODUTO, SETOR, FUNCIONARIO, LOTE, SAIDA_LOTE, DEVOLUCAO_FORNECEDOR e a associação de devolução (ITEM_DEVOLUCAO no lógico) | Registra o que foi perdido, a quantidade, o motivo e o setor, e separa perda de devolução ao fornecedor. |
+| **P2 – Validade dos produtos** | PRODUTO, LOTE, SAIDA_LOTE, SETOR, PROMOCAO e a associação de recebimento (ITEM_RECEBIMENTO no lógico) | Acompanha validade e saldo de cada lote, mostra o que está perto de vencer e registra promoções. |
 
 Com isso, o mercado passa a poder consultar coisas que hoje não ficam registradas, como quais setores perdem mais, quais motivos aparecem mais e quais lotes estão perto de vencer. Os indicadores (KPIs) e a ligação deles com as consultas estão na seção 1.6, e as consultas ficam no script SQL (seção 3).
+
 
 ##### Revisão em relação à Entrega 1
 
