@@ -297,7 +297,7 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 
 ##### Requisitos comuns não incluídos
 
-Os requisitos ligados a cadastro de clientes, fidelidade, vendas online, entregas e venda fiado não foram criados porque o mercado não realiza esses processos (tabela acima). Também não criamos requisitos para os processos que o mercado faz fora do banco: inventário, controle sanitário, folha e ponto, despesas gerais e precificação. Nesses casos, o dado fica no VR Software, na contabilidade ou em planilhas, e não é necessário para resolver P1 e P2. Do lado técnico, não incluímos requisitos de integração com o VR Software nem de aplicação para os operadores: o banco é uma implementação acadêmica, independente do sistema atual (seção 1.1, Escopo do sistema).
+Os requisitos ligados a cadastro de clientes, fidelidade, vendas online, entregas e venda fiado não foram criados porque o mercado não realiza esses processos (tabela acima). Também não criamos requisitos para inventário, controle sanitário, folha e ponto, despesas gerais e precificação. O grupo não levantou como o mercado faz esses processos, e eles não são necessários para resolver P1 e P2. Do lado técnico, não incluímos requisitos de integração com o VR Software nem de aplicação para os operadores: o banco é uma implementação acadêmica, independente do sistema atual (seção 1.1, Escopo do sistema).
 
 ---
 
@@ -638,6 +638,8 @@ Revisamos o modelo com base nos apontamentos da Entrega 1 e nas informações no
 | Anexos no GitHub | DER, modelo lógico, script, fotos, prints e levantamento ficam em pastas do repositório e têm link no README | O professor corrige pelo repositório. |
 | Forma de pagamento Pix | Entrou no cadastro de formas de pagamento | O responsável confirmou que o mercado aceita Pix. |
 | Integrantes | Victor Hugo, Guilherme e Lucas entraram, Henrico e Nicole saíram | Mudança do grupo desde a Entrega 1. |
+
+Além dos apontamentos, incluímos por conta própria o estorno em SAIDA_LOTE, ligado à baixa original, para corrigir baixas sem apagar o histórico, e as ligações que dizem quem fechou o caixa e quem pagou a conta (relacionamentos 46 e 47) e a que liga uma perda corrigida à original (48).
 
 ##### Considerações sobre o modelo conceitual
 
