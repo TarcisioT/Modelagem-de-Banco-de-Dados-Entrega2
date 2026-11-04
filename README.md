@@ -1089,7 +1089,9 @@ Existem recebimentos entre **15/10/2026 e 25/10/2026**, utilizados para formar o
 
 As procedures utilizam transações e executam `ROLLBACK` nas condições de erro tratadas explicitamente. Todas têm também um `EXIT HANDLER FOR SQLEXCEPTION`, que desfaz a transação e repassa o erro quando acontece uma falha inesperada.
 
-As procedures foram mantidas no script para demonstrar os fluxos transacionais do projeto. Na `concluir_venda`, os lotes são escolhidos pela ordem FEFO, o lote selecionado é lido com `FOR UPDATE` e o preço é definido de acordo com a promoção daquele lote, quando houver. Se for preciso usar mais de um lote, o item é dividido. O bloqueio está no script, mas não fizemos teste com várias conexões ao mesmo tempo. Por isso, não afirmamos que a concorrência foi testada.
+As procedures demonstram os fluxos transacionais do projeto. Na `concluir_venda`, o produto é bloqueado antes da conferência do saldo disponível, os lotes são escolhidos pela ordem FEFO e o lote selecionado é lido com `FOR UPDATE`. O preço considera a promoção vigente daquele lote, quando houver. Se for necessário utilizar mais de um lote, o item é dividido.
+
+As procedures usam `READ COMMITTED` e controlam suas próprias transações. O teste com duas conexões confirmou a espera por um produto bloqueado durante uma chamada a `registrar_perda_pendente`. Esse teste não equivale à validação de duas conclusões de venda simultâneas ou de todas as combinações entre vendas, perdas e estornos.
 
 ### Limitações identificadas na implementação
 
