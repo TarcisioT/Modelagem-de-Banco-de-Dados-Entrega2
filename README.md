@@ -4,7 +4,7 @@
 
 ## 1. Relatório Técnico Final
 
-## Integrantes
+### Integrantes
 
 | Nome completo do aluno | RGM | Usuário do GitHub |
 | :---- | :---- | :---- |
@@ -878,7 +878,7 @@ A tabela abaixo mostra como cada restrição foi pensada e como as regras de int
 | Pagamento de venda cancelada fica no histórico mas não entra nos totais | As consultas de faturamento e o cálculo do valor esperado do caixa só consideram venda concluída | RN25, RN55 |
 | Item cancelado continua registrado | `status` do item e `CHECK` exigindo motivo e data quando cancelado | RN26 |
 | Aviso de venda restrita por idade | Coluna `venda_restrita_idade` em PRODUTO, que o atendimento consulta | RN27 |
-| Uma sessão aberta por caixa | Coluna gerada com `IF(status = 'aberta', id_caixa, NULL)` e `UNIQUE` nela (o MySQL não tem índice parcial) | RN29 |
+| Uma sessão aberta por caixa | Coluna gerada com `CASE WHEN status = 'aberta' THEN id_caixa ELSE NULL END` e `UNIQUE` nela (o MySQL não tem índice parcial) | RN29 |
 | Sangria positiva e fundo inicial sem valor negativo | `CHECK`, e validação de sessão aberta na sangria | RN30, RN31 |
 | Diferença do caixa | Calculada no fechamento: contado menos esperado | RN32 |
 | Fechamento de caixa com responsável | `id_funcionario_fechamento` e `CHECK` que exige o preenchimento quando a sessão está fechada | RN56, RNF02 |
@@ -903,8 +903,8 @@ A tabela abaixo mostra como cada restrição foi pensada e como as regras de int
 
 Algumas regras não dá para garantir só com PK, FK e `CHECK`, porque precisam comparar várias linhas ou tabelas. É o caso da soma dos pagamentos, da soma dos lotes de um recebimento e de a venda concluída ter pelo menos um item. Para essas decidimos o seguinte:
 
-- **Triggers** (`BEFORE INSERT` e `BEFORE UPDATE`) para as conferências curtas, que olham uma ou duas linhas: saída dentro do saldo, devolução até o limite recusado, produto do lote igual ao do item recebido, setor da perda, forma de pagamento conforme o uso, funcionário ativo.
-- **Procedures com transação** para os fluxos de vários passos previstos pela RNF04, com rollback nas condições tratadas explicitamente e tratamento geral de exceções ainda pendente: concluir uma venda, cancelar uma venda já concluída, registrar um recebimento com um item e seu lote, confirmar o lote de uma perda, estornar uma baixa e fechar uma sessão de caixa. Quando o mesmo item recebido tiver outros lotes, eles podem ser incluídos pela procedure `adicionar_lote_recebimento`, que confere se a soma dos lotes não ultrapassa a quantidade aceita.
+- **Triggers** (a maioria `BEFORE INSERT` e `BEFORE UPDATE`) para as conferências curtas, que olham uma ou duas linhas: saída dentro do saldo, devolução até o limite recusado, produto do lote igual ao do item recebido, setor da perda, forma de pagamento conforme o uso, funcionário ativo. Onze dos 38 triggers só são criados depois da carga histórica, e a partir daí toda venda nova começa com status `em_andamento` e total zero.
+- **Procedures com transação** para os fluxos de vários passos previstos pela RNF04, com rollback nas condições tratadas explicitamente e também nos erros inesperados (`EXIT HANDLER FOR SQLEXCEPTION`): concluir uma venda, cancelar uma venda já concluída, registrar um recebimento com um item e seu lote, confirmar o lote de uma perda, estornar uma baixa e fechar uma sessão de caixa. Quando o mesmo item recebido tiver outros lotes, eles podem ser incluídos pela procedure `adicionar_lote_recebimento`, que confere se a soma dos lotes não ultrapassa a quantidade aceita.
 - **Consultas de auditoria** (A01 a A12) para conferir depois o que o banco não consegue impedir sozinho.
 
 #### Quem fez cada operação (RNF02 e RNF06)
@@ -927,7 +927,7 @@ Para o volume de cerca de 1.800 vendas por dia (RNF09), além das chaves, criamo
 - `ITEM_VENDA (id_venda)` e `ITEM_VENDA (id_produto)`, para os itens e o giro;
 - `PAGAMENTO (id_venda)`, para conferir o pagamento de cada venda;
 - `SAIDA_LOTE (id_lote)`, para a conferência do saldo;
-- `PRODUTO (codigo_barras)`, para a consulta de preço no caixa;
+- `PRODUTO (codigo_barras)`, para a consulta de preço no caixa (esse já vem do `UNIQUE` da coluna, por isso não entra nos 12 índices adicionais da seção 3);
 - `CONTA_PAGAR (data_vencimento, status)`, para contas por vencimento.
 
 #### Alternativas que descartamos
@@ -1018,8 +1018,8 @@ A perda guarda o setor da época em que aconteceu, mas as vendas por setor usam 
 | KPI02 — Ocorrências de perda por motivo | PERDA, MOTIVO_PERDA | G02 |
 | KPI03 — Lotes perto do vencimento | LOTE, PRODUTO, SETOR, PROMOCAO | G03 |
 | KPI04 — Lotes vencidos | LOTE, PRODUTO, SETOR | G04 |
-| KPI05 — Faturamento diário | VENDA, ITEM_VENDA | G05 |
-| KPI06 — Ticket médio | VENDA, ITEM_VENDA | G06 |
+| KPI05 — Faturamento diário | VENDA | G05 |
+| KPI06 — Ticket médio | VENDA | G06 |
 | KPI07 — Produtos com estoque baixo | PRODUTO, LOTE, PERDA, PEDIDO_COMPRA, ITEM_PEDIDO_COMPRA | G07 |
 | KPI08 — Taxa de cancelamentos | VENDA | G08 |
 | KPI09 — Mercadorias recusadas | ITEM_RECEBIMENTO, RECEBIMENTO, FORNECEDOR | G09 |
@@ -1053,7 +1053,7 @@ O modelo lógico relacional do Hortifruti União foi desenvolvido a partir do DE
 
 As tabelas representam os cadastros e as operações do mercado, incluindo funcionários, fornecedores, produtos, compras, recebimentos, lotes, perdas, vendas, pagamentos e sessões de caixa. As chaves estrangeiras relacionam esses registros e impedem referências a registros inexistentes.
 
-A implementação está no [script SQL](docs/script.sql), desenvolvido para **MySQL 8.0.16 ou superior**, no banco `hortifruti_uniao`. A implementação está no script SQL, desenvolvido para MySQL 8.0.16 ou superior, no banco hortifruti_uniao Os detalhes da execução e as limitações identificadas estão na seção 3.
+A implementação está no [script SQL](docs/script.sql), desenvolvido para **MySQL 8.0.16 ou superior**, no banco `hortifruti_uniao`. Os detalhes da execução e as limitações identificadas estão na seção 3.
 
 O [Dicionário de Dados](docs/dicionario_dados.md) detalha os campos e as restrições das tabelas. As regras que não aparecem no desenho, como `CHECK`, `DEFAULT` e validações entre tabelas, estão descritas no dicionário e no SQL. A imagem e o dicionário devem acompanhar a mesma versão do script, com **27 tabelas e 53 chaves estrangeiras**; a revisão textual não substitui a conferência desses arquivos.
 
@@ -1069,7 +1069,7 @@ O script utiliza o banco `hortifruti_uniao`. Cada execução completa apaga e re
 
 ### Execução e conferência
 
-O script foi executado em ambiente isolado no MySQL 8.0.46, com apoio de IA, pelo mecanismo de inicialização de scripts e com ajuste de DEFINER somente na cópia de teste. A carga confirmou 200 vendas, 27 tabelas, 53 chaves estrangeiras, 38 triggers e 9 procedures, e as consultas terminaram sem erro de execução. As auditorias retornaram seis perdas pendentes em A01 e nenhum registro nas demais condições verificadas. A execução no ambiente de apresentação deve usar este mesmo arquivo. Os limites dessa validação estão descritos abaixo.
+O script foi executado em ambiente isolado no MySQL 8.0.46, com apoio de IA, pelo mecanismo de inicialização de scripts e com ajuste de DEFINER somente na cópia de teste. A carga confirmou 200 vendas, 27 tabelas, 53 chaves estrangeiras, 38 triggers e 9 procedures, e as consultas terminaram sem erro de execução. O teste do fechamento de caixa comparou o valor esperado gravado em cada sessão fechada com o fundo inicial mais os pagamentos em dinheiro das vendas concluídas, menos as sangrias, e a consulta voltou vazia, sem divergências. As auditorias retornaram seis perdas pendentes em A01 e nenhum registro nas demais condições verificadas. A execução no ambiente de apresentação deve usar este mesmo arquivo. Os limites dessa validação estão descritos abaixo.
 
 As demais conferências abaixo descrevem a estrutura e a massa definidas no script. As consultas gerenciais e de auditoria ficam no próprio arquivo SQL e podem ser executadas novamente durante a demonstração.
 
@@ -1099,16 +1099,16 @@ Existem recebimentos entre **15/10/2026 e 25/10/2026**, utilizados para formar o
 | Procedure | Finalidade |
 | :--- | :--- |
 | `concluir_venda` | Confere a venda, realiza as baixas por lote, calcula o total e verifica se os pagamentos correspondem ao valor final. |
-| `cancelar_venda` | Valida o perfil de supervisor ou gerência, registra o cancelamento e estorna as baixas de estoque. Na carga, o documento fiscal é cancelado por um `UPDATE` separado. |
+| `cancelar_venda` | Valida o perfil de supervisor ou gerência, registra o cancelamento, estorna as baixas de estoque e marca o documento fiscal da venda como cancelado. |
 | `confirmar_lote_perda` | Vincula uma perda pendente ao lote informado, calcula seu valor e registra a baixa correspondente. |
 | `estornar_saida` | Registra o estorno de uma saída, mantendo o movimento original no histórico. |
-| `fechar_sessao` | Calcula o valor esperado somando o fundo inicial aos pagamentos das vendas concluídas e subtraindo as sangrias. Na versão atual, soma todas as formas de pagamento, não apenas dinheiro. |
+| `fechar_sessao` | Calcula o valor esperado somando o fundo inicial aos pagamentos em dinheiro das vendas concluídas e subtraindo as sangrias. Depois grava o valor contado e quem fechou a sessão. |
 | `adicionar_lote_recebimento` | Adiciona um lote vinculado a um item de recebimento. |
 | `registrar_recebimento` | Registra o recebimento de mercadorias. |
 | `registrar_perda_pendente` | Registra uma perda com lote a confirmar. |
 | `registrar_abatimento_fornecedor` | Registra um abatimento concedido pelo fornecedor. |
 
-As procedures utilizam transações e executam `ROLLBACK` nas condições de erro tratadas explicitamente. Não possuem tratamento geral de exceções com `EXIT HANDLER FOR SQLEXCEPTION`; por isso, ainda é necessário ajustar o código para desfazer toda a transação quando ocorrer um erro inesperado.
+As procedures utilizam transações e executam `ROLLBACK` nas condições de erro tratadas explicitamente. Todas têm também um `EXIT HANDLER FOR SQLEXCEPTION`, que desfaz a transação e repassa o erro quando acontece uma falha inesperada.
 
 As procedures foram mantidas no script para demonstrar os fluxos transacionais do projeto. Na `concluir_venda`, os lotes são escolhidos pela ordem FEFO, o lote selecionado é lido com `FOR UPDATE` e o preço é definido de acordo com a promoção daquele lote, quando houver. Se for preciso usar mais de um lote, o item é dividido. O bloqueio está no script, mas não fizemos teste com várias conexões ao mesmo tempo. Por isso, não afirmamos que a concorrência foi testada.
 
@@ -1116,14 +1116,10 @@ As procedures foram mantidas no script para demonstrar os fluxos transacionais d
 
 A carga foi executada, mas a revisão encontrou pontos que ainda precisam de ajuste no SQL:
 
-- **Fechamento de caixa:** `fechar_sessao` soma dinheiro, Pix, cartões e outras formas. Ao comparar o valor esperado com o dinheiro físico, as 47 sessões fechadas apresentaram diferença. Se a conferência for da gaveta de dinheiro, somente os pagamentos em dinheiro devem entrar nesse cálculo.
-- **Cancelamento fiscal:** o `UPDATE` do documento está separado de `cancelar_venda`. Chamar somente a procedure não atualiza o documento fiscal.
-- **Tratamento de erros:** as procedures precisam de um tratamento geral de exceções para garantir rollback integral diante de falhas inesperadas.
 - **Consulta G09:** é necessário separar kg e unidade para comparar as quantidades recusadas.
-- **Auditoria A04:** a condição precisa detectar também diferenças de exatamente um centavo.
 - **Uso direto das tabelas:** algumas validações acumuladas dependem das procedures; não há garantia de que todos os caminhos de alteração direta apliquem as mesmas regras. Concorrência e correção ou divisão de perdas precisam de testes próprios.
 
-Esses pontos descrevem a versão atual. A correção do relatório não altera o funcionamento do SQL.
+Esses pontos descrevem a versão atual do script.
 
 ### Consultas com JOIN, UPDATE e DELETE
 
@@ -1152,7 +1148,7 @@ O script contém as consultas gerenciais **G01 a G12** e as auditorias **A01 a A
 | G11 | Identifica perdas com lote a confirmar e calcula o tempo de pendência. Na massa, são 6 perdas pendentes entre 24 perdas válidas, equivalentes a 25%. |
 | G12 | Apresenta as promoções como vigentes ou encerradas em relação à data de referência. |
 | A01 | Foi preparada para localizar as 6 perdas com lote a confirmar, que são pendências intencionais da massa. |
-| A04 | Procura diferenças maiores que R$ 0,01 entre o total pago e o valor da venda concluída. A condição atual deixa passar uma diferença de exatamente um centavo e precisa ser ajustada para detectar qualquer divergência. |
+| A04 | Procura vendas concluídas em que o total pago é diferente do valor da venda, inclusive quando a diferença é de apenas um centavo. |
 | A02, A03 e A05 a A12 | Verificam as demais condições de integridade e devem retornar vazio quando não houver inconsistência no cenário analisado. |
 
 A ausência de registros em uma consulta de auditoria é o resultado esperado quando nenhum dado viola a condição investigada. Isso não comprova, isoladamente, o atendimento a todas as regras de negócio do sistema.
@@ -1167,11 +1163,11 @@ As chaves estrangeiras mantêm os relacionamentos entre os registros, enquanto a
 
 Os cancelamentos de venda mantêm o histórico e geram estornos das saídas de estoque. Os pagamentos dessas vendas permanecem registrados, mas não entram nos totais de vendas concluídas.
 
-Além dos `UPDATE`s usados na carga (como marcar como cancelado o documento fiscal de uma venda cancelada), o script traz exemplos de `UPDATE` e `DELETE` na seção 7 do script SQL. Os `DELETE`s só atingem registros criados na hora, sem nenhum histórico. Os exemplos de manutenção não apagam vendas, perdas ou lotes com histórico. A execução completa do arquivo, porém, apaga e recria o banco; a seção de recarga também limpa os dados de demonstração.
+O script traz exemplos de `UPDATE` e `DELETE` na seção 7 do script SQL. Os `DELETE`s só atingem registros criados na hora, sem nenhum histórico. Os exemplos de manutenção não apagam vendas, perdas ou lotes com histórico. A execução completa do arquivo, porém, apaga e recria o banco; a seção de recarga também limpa os dados de demonstração.
 
 ### Ordem e características da carga
 
-As tabelas, restrições, triggers e procedures são criadas antes da carga dos dados.
+As tabelas, restrições, procedures e 27 dos 38 triggers são criados antes da carga dos dados. Os outros 11 triggers são criados depois dela, porque a carga é uma importação histórica de vendas já concluídas. A partir deles, toda venda nova começa como `em_andamento` e só passa a `concluida` ou `cancelada` pelo fluxo previsto.
 
 A massa é carregada como uma **carga histórica demonstrativa**: as vendas são inseridas como concluídas, acompanhadas de itens, pagamentos e saídas de lote. As procedures `cancelar_venda` e `fechar_sessao` são chamadas durante a carga para gerar os cancelamentos e fechamentos previstos.
 
@@ -1322,8 +1318,7 @@ imagens/
     confirmacao_whatsapp_26-10.png
     confirmacao_whatsapp_29-10.png
   fluxogramas/
-    fluxograma_vendas.png
-    fluxograma_estoque.png
+    fluxograma_venda.jpeg
 apresentacao/
   pitch_final.pptx
 ```
