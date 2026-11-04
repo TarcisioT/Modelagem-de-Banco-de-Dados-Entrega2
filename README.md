@@ -1243,7 +1243,7 @@ A quantidade das demais tabelas decorre desses números: 4 itens por venda em m�
 
 Dentro dessa redução, forçamos os casos que as consultas precisam mostrar: 4 vendas canceladas com estorno, 24 perdas (18 com lote confirmado e 6 pendentes), lotes vencidos e próximos do vencimento, produtos abaixo do mínimo, promoções vigentes e encerradas, devoluções, trocas e abatimentos, e contas abertas, vencidas e pagas. Essas proporções (por exemplo, 2% de cancelamento) foram escolhidas para a demonstração e não refletem o mercado real.
 
-Esta massa valida regras e consultas. Ela não serve para teste de desempenho com o volume real.
+Esta massa de 200 vendas foi utilizada para validar as regras e as consultas do projeto e não representa o volume real de operação do mercado. O teste específico de desempenho do RNF09 foi feito separadamente, com uma base sintética de 54.000 registros, equivalente a 1.800 vendas por dia durante 30 dias, conforme descrito na seção 1.5.
 
 ### Período simulado
 
