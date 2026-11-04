@@ -1105,6 +1105,23 @@ Uso de IA **não declarado é penalizado**. Abaixo, os usos relevantes. Entrega 
 | **Reflexão crítica** | Uma resposta sobre uma cópia antiga não comprova o que está no arquivo publicado. Precisamos conferir a mesma versão do SQL que vai junto com o README. Deixar a escrita mais natural também não pode mudar o sentido do que foi levantado ou testado. |
 
 ---
+### 10. Proteção de dados pessoais (LGPD)
+
+O banco usa somente dados fictícios (RNF07). As vendas são anônimas e não existe cadastro de clientes (RN21), então nenhuma coluna guarda dado pessoal de consumidor. Os dados pessoais que sobram são os de funcionários e os contatos de fornecedores. O acesso a eles é restrito por perfis (roles) do MySQL com `GRANT` por coluna, criados no script (RN51, RNF01).
+
+| Tabela | Coluna | Titular | Classificação | Tratamento |
+|---|---|---|---|---|
+| `FUNCIONARIO` | `nome` | Funcionário | Dado pessoal | Acesso restrito a perfis autorizados. |
+| `FUNCIONARIO` | `cpf` | Funcionário | Dado pessoal (identificador) | Acesso restrito; `UNIQUE`; não usado como chave de ligação. |
+| `FUNCIONARIO` | `telefone` | Funcionário | Dado pessoal | Acesso restrito. |
+| `FUNCIONARIO` | `data_admissao` | Funcionário | Dado pessoal (vínculo trabalhista) | Acesso restrito. |
+| `FUNCIONARIO` | `cargo`, `perfil_acesso` | Funcionário | Dado funcional | Acesso restrito. |
+| `ESCALA` | `data`, `tipo`, `hora_inicio`, `hora_fim` | Funcionário | Dado pessoal quando associado ao funcionário | Acesso restrito. |
+| `FORNECEDOR` | `telefone`, `email`, `endereco` | Fornecedor pessoa física ou MEI | Pode ser dado pessoal | Mesma restrição de acesso por perfil (RN51). |
+| `FORNECEDOR` | `razao_social`, `cnpj` | Fornecedor pessoa jurídica | Dado empresarial | Sem restrição especial; em MEI a razão social pode conter o nome da pessoa. |
+
+As colunas `id_funcionario*` de `VENDA`, `SESSAO_CAIXA`, `PERDA`, `SANGRIA` e outras guardam só o identificador interno, para rastreabilidade (RNF02 e RNF06). O nome só aparece para quem tem permissão de leitura em `FUNCIONARIO`.
+
 **Pontos de atenção:**
 
 - O vínculo entre o funcionário e a conta do MySQL não é modelado. Os perfis e `GRANT`s estão no script, mas `perfil_acesso` é só descritivo.
