@@ -1111,6 +1111,25 @@ Uso de IA **não declarado é penalizado**. Abaixo, os usos relevantes. Entrega 
 | **Reflexão crítica** | Uma resposta sobre uma cópia antiga não comprova o que está no arquivo publicado. Precisamos conferir a mesma versão do SQL que vai junto com o README. Deixar a escrita mais natural também não pode mudar o sentido do que foi levantado ou testado. |
 
 ---
+### 7. Índices adicionais
+
+Além dos índices criados automaticamente pelas PKs, FKs e `UNIQUE`, o script cria 12 índices para as consultas mais usadas (RNF09).
+
+| Índice | Tabela | Coluna(s) | Para que serve |
+|---|---|---|---|
+| `idx_lote_validade` | `LOTE` | `data_validade` | Lotes próximos do vencimento e vencidos (G03, G04). |
+| `idx_lote_produto` | `LOTE` | `id_produto` | Saldo por produto. |
+| `idx_perda_data` | `PERDA` | `data_hora` | Perdas por período. |
+| `idx_perda_setor` | `PERDA` | `id_setor` | Perdas por setor (G01). |
+| `idx_perda_motivo` | `PERDA` | `id_motivo` | Perdas por motivo (G02). |
+| `idx_venda_data` | `VENDA` | `data_hora` | Faturamento e ticket médio por dia (G05, G06). |
+| `idx_venda_sessao` | `VENDA` | `id_sessao` | Fechamento de caixa. |
+| `idx_item_venda_venda` | `ITEM_VENDA` | `id_venda` | Itens de cada venda. |
+| `idx_item_venda_produto` | `ITEM_VENDA` | `id_produto` | Giro por produto. |
+| `idx_pagamento_venda` | `PAGAMENTO` | `id_venda` | Conferência do pagamento de cada venda. |
+| `idx_saida_lote_lote` | `SAIDA_LOTE` | `id_lote` | Conferência do saldo do lote. |
+| `idx_conta_venc_status` | `CONTA_PAGAR` | `data_vencimento, status` | Contas por vencimento (G10). |
+
 ### 8. Objetos de integridade e operação
 
 O `script.sql` contém **27 triggers** e **9 procedures**. Eles não entram na contagem de tabelas e colunas, mas complementam as restrições declarativas (`PK`, `FK`, `UNIQUE` e `CHECK`) nas regras que dependem de outras linhas ou tabelas.
