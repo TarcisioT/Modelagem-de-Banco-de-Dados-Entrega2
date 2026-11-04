@@ -8,13 +8,12 @@
 
 | Nome completo do aluno | RGM | Usuário do GitHub |
 | :---- | :---- | :---- |
-| Tarcisio Santos de Oliveira | 47913061 | TarcisioT |
 | Gabriela Porfírio da Silva | 48017698 | porfiriogabis |
-| Henrique Moura de Oliveira | 47610972 | HenriMoura666 |
-| Victor Hugo dos Santos Maciel | 48037630 | vhugo-sm |
 | Guilherme Damasceno dos Santos | 48491683 | damascenogs |
+| Henrique Moura de Oliveira | 47610972 | HenriMoura666 |
 | Lucas Praxedes da Silva | 47832550 | lucaspraxedes08sil-gif |
-
+| Victor Hugo dos Santos Maciel | 48037630 | vhugo-sm |
+| Tarcisio Santos de Oliveira | 47913061 | TarcisioT |
 &nbsp;
 
 ### 1.1 Revisão do Modelo Conceitual
