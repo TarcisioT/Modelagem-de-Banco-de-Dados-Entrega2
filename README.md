@@ -1111,6 +1111,21 @@ Uso de IA **não declarado é penalizado**. Abaixo, os usos relevantes. Entrega 
 | **Reflexão crítica** | Uma resposta sobre uma cópia antiga não comprova o que está no arquivo publicado. Precisamos conferir a mesma versão do SQL que vai junto com o README. Deixar a escrita mais natural também não pode mudar o sentido do que foi levantado ou testado. |
 
 ---
+### 6. View auxiliar
+
+#### vw_saldo_produto
+
+**Finalidade:** consolidar o saldo dos lotes por produto, descontando as perdas válidas que ainda estão com lote a confirmar (RN16, RN42).
+
+| Coluna | Origem / cálculo |
+|---|---|
+| `id_produto` | `PRODUTO.id_produto` |
+| `nome` | `PRODUTO.nome` |
+| `saldo_lotes` | Soma de `LOTE.quantidade_atual` do produto. |
+| `perdas_pendentes` | Soma das perdas com `status = 'valida'` e `situacao_lote = 'lote_a_confirmar'`. |
+| `saldo_disponivel` | `saldo_lotes - perdas_pendentes`. |
+
+
 ### 7. Índices adicionais
 
 Além dos índices criados automaticamente pelas PKs, FKs e `UNIQUE`, o script cria 12 índices para as consultas mais usadas (RNF09).
