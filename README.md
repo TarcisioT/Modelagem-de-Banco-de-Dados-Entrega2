@@ -14,7 +14,7 @@
 | Lucas Praxedes da Silva | 47832550 | lucaspraxedes08sil-gif |
 | Victor Hugo dos Santos Maciel | 48037630 | vhugo-sm |
 | Tarcisio Santos de Oliveira | 47913061 | TarcisioT |
-&nbsp;
+
 
 ### 1.1 Revisão do Modelo Conceitual
 
