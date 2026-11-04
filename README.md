@@ -850,11 +850,104 @@ O esqueleto pede um `.sql` que rode numa base vazia, nesta ordem: `CREATE DATABA
 | A04 | A soma das retiradas por lote é igual à quantidade vendida? | RN18, parcialmente |
 | A05 | O banco rejeita venda vinculada a funcionário inexistente? | FK de `VENDA.codigo_funcionario` |
 
-Cada consulta precisa ter, no próprio `.sql`, um cabeçalho com código, pergunta em português e RN/KPI atendido. As listas de G01, G02 e G04 e o detalhamento de perdas de G03 são úteis para a gestão. **Para atender aos KPIs definidos na seção 1.6, ainda precisamos acrescentar as contagens e totalizações correspondentes**, sem retirar essas listas. As auditorias ainda não cobrem venda sem pagamento, pagamento diferente do total, quantidade inválida e lote vencido vendido. Regras que envolvem várias linhas precisam de validações nas operações, não apenas de um `CHECK`.
+### Resultados e validação das consultas
 
-A cópia conferida do SQL **não** faz sozinha: FEFO, baixa de saldo, cancelamento, permissão por cargo e conferência da soma dos pagamentos com o total da venda. Também não vimos `NOT NULL` nas FKs obrigatórias, `UNIQUE` além das PKs nem `CHECK` de quantidade e forma de pagamento.
+Os testes foram realizados pelo grupo no MySQL Workbench, conectado ao MySQL Server 8.0.46. Após a execução do script completo, conferimos a estrutura do banco, a carga de dados, as consultas gerenciais G01 a G12 e as auditorias A01 a A12.
 
-Para fechar esta parte, falta alinhar README, dicionário e `docs/script.sql`, confirmar no arquivo final o saldo de `TOM-001` descrito na seção 1.6 e testar essa mesma versão numa base vazia. Mudar o texto do README não substitui executar o script no banco.
+A massa utilizada é fictícia e contém 200 vendas distribuídas entre 26/10/2026 e 01/11/2026. Desse total, 196 vendas estão concluídas e 4 canceladas.
+
+#### Estrutura e carga conferidas
+
+| Verificação | Resultado |
+| :--- | :--- |
+| Versão do MySQL Server | 8.0.46 |
+| Tabelas | 27 |
+| Chaves estrangeiras | 53 |
+| Triggers | 38 |
+| Procedures | 9 |
+| Total de vendas | 200 |
+| Vendas concluídas | 196 |
+| Vendas canceladas | 4 |
+| Período das vendas | 26/10/2026 a 01/11/2026 |
+| Perdas válidas com lote a confirmar | 6 |
+
+A distribuição das vendas também foi conferida:
+
+| Dia | Total de vendas | Vendas concluídas | Faturamento das vendas concluídas |
+| :--- | ---: | ---: | ---: |
+| 26/10/2026 | 25 | 25 | R$ 2.074,35 |
+| 27/10/2026 | 27 | 26 | R$ 2.200,99 |
+| 28/10/2026 | 28 | 28 | R$ 2.359,07 |
+| 29/10/2026 | 30 | 29 | R$ 2.494,98 |
+| 30/10/2026 | 32 | 32 | R$ 2.649,93 |
+| 31/10/2026 | 33 | 32 | R$ 2.701,35 |
+| 01/11/2026 | 25 | 24 | R$ 2.059,21 |
+| **Total** | **200** | **196** | **R$ 16.539,88** |
+
+#### Resultados das consultas gerenciais
+
+| Consulta | Resultado observado |
+| :--- | :--- |
+| G01 | Apresentou vendas, perdas confirmadas e percentual de perdas por setor e mês. Em novembro, Embalados apresentou R$ 322,00 em vendas e R$ 14,50 em perdas (4,50%); Frios apresentou R$ 424,11 em vendas e R$ 7,48 em perdas (1,76%). A consulta considera os setores que tiveram vendas no mês. |
+| G02 | Apresentou 24 ocorrências de perdas válidas, sendo 22 em outubro e 2 em novembro, distribuídas por motivo. |
+| G03 | Identificou 7 lotes próximos do vencimento em 01/11/2026, dos quais 4 estavam com promoção vigente. |
+| G04 | Identificou 2 lotes vencidos com saldo: Biscoito Integral, vencido em 25/10/2026, e Queijo Mussarela 500g, vencido em 31/10/2026. Ambos apresentaram saldo de 10. |
+| G05 | Apresentou o faturamento das 196 vendas concluídas nos sete dias, totalizando R$ 16.539,88. As vendas canceladas ficaram fora do cálculo. |
+| G06 | Apresentou o ticket médio diário, com valores entre R$ 82,81 e R$ 86,03. |
+| G07 | Identificou 7 produtos abaixo do estoque mínimo. Seis possuíam pedido de compra aberto; Água de Coco apresentou saldo de 50, mínimo de 60 e nenhum pedido aberto. |
+| G08 | Apresentou 3 cancelamentos em 175 vendas de outubro (1,71%) e 1 cancelamento em 25 vendas de novembro (4%). No período completo, foram 4 cancelamentos em 200 vendas (2%). |
+| G09 | Identificou 6 fornecedores com mercadorias recusadas. Os fornecedores 01 e 02 apresentaram quantidade acumulada de 3 cada; os fornecedores 03 a 06 apresentaram 2 cada. A consulta não separa kg e unidades, portanto esses totais não devem ser usados como uma comparação uniforme entre fornecedores. |
+| G10 | Apresentou 2 contas abertas vencidas, com saldo de R$ 6.290,20, e 4 contas abertas a vencer, com saldo de R$ 5.312,51. O saldo total a pagar foi de R$ 11.602,71, após descontar os abatimentos não cancelados vinculados às contas. |
+| G11 | Listou 6 perdas com lote a confirmar, equivalentes a 25% das 24 perdas válidas. Na referência de 01/11/2026, as pendências tinham entre 1 e 6 dias. |
+| G12 | Apresentou 5 promoções: 4 vigentes e 1 encerrada em 01/11/2026. A promoção encerrada era a de Queijo Mussarela 500g, finalizada em 31/10/2026. |
+
+As consultas de validade, vencimento de contas, idade das pendências e situação das promoções utilizam a data fixa de 01/11/2026 para permitir a reprodução dos resultados.
+
+A taxa de cancelamento de 2% supera a meta sugerida de até 1%. Essa diferença é intencional na massa demonstrativa, que inclui cancelamentos para testar a rotina e os estornos. Ela não representa a taxa real nem o desempenho desejado do mercado.
+
+#### Resultados das consultas de auditoria
+
+| Consulta | Verificação | Resultado |
+| :--- | :--- | :--- |
+| A01 | Perdas válidas com lote a confirmar | Retornou 6 pendências previstas na massa. |
+| A02 | Pedidos não cancelados sem itens | Nenhuma inconsistência encontrada. |
+| A03 | Vendas concluídas sem itens ativos | Nenhuma inconsistência encontrada. |
+| A04 | Diferença entre o total da venda concluída e seus pagamentos | Nenhuma inconsistência encontrada. |
+| A05 | Produto do lote diferente do produto recebido | Nenhuma inconsistência encontrada. |
+| A06 | Saldo de lote negativo ou superior à quantidade recebida | Nenhuma inconsistência encontrada. |
+| A07 | Quantidade da nota diferente da soma das quantidades aceita e recusada | Nenhuma inconsistência encontrada. |
+| A08 | Quantidade devolvida superior à quantidade recusada | Nenhuma inconsistência encontrada. |
+| A09 | Origem da saída de lote incompatível com seu tipo | Nenhuma inconsistência encontrada. |
+| A10 | Baixas de vendas canceladas sem estorno | Nenhuma inconsistência encontrada. |
+| A11 | Sessões fechadas sem os dados obrigatórios de fechamento | Nenhuma inconsistência encontrada. |
+| A12 | Contas pagas sem forma, data ou funcionário responsável pelo pagamento | Nenhuma inconsistência encontrada. |
+
+O retorno da A01 representa uma pendência operacional prevista: são perdas já registradas cujo lote ainda precisa ser identificado. Por isso, esse resultado não foi tratado como erro de integridade.
+
+#### Conferências complementares
+
+Também executamos consultas para comparar valores armazenados com os valores calculados a partir das movimentações.
+
+| Verificação | Resultado |
+| :--- | :--- |
+| Total das vendas comparado à soma dos itens ativos | Nenhuma divergência. |
+| Saldo dos lotes comparado às quantidades recebidas, saídas e estornos | Nenhuma divergência. |
+| Saldo disponível dos produtos após descontar perdas pendentes | Nenhum saldo negativo. |
+| Valor esperado dos caixas fechados comparado a fundo inicial + pagamentos em dinheiro − sangrias | Nenhuma divergência. |
+| Documentos fiscais das vendas canceladas | As vendas 50, 100, 150 e 200 apresentaram documentos cancelados. |
+| Soma das quantidades dos lotes por item recebido | Nenhum total acima da quantidade aceita. |
+| Soma dos abatimentos não cancelados por conta | Nenhum total acima do valor original da conta. |
+
+A conferência do caixa valida o cálculo do valor esperado. Ela não significa que o valor contado pelo operador seja necessariamente igual ao esperado, pois a massa pode incluir diferenças de fechamento.
+
+#### Alcance dos testes
+
+Os resultados confirmam a consistência da massa nos critérios consultados e demonstram a execução das consultas gerenciais e de auditoria no ambiente do grupo.
+
+Esta etapa não incluiu testes de desempenho, operações simultâneas ou autenticação com usuários reais. A ausência de inconsistências nas consultas também não comprova, isoladamente, que todas as operações inválidas seriam bloqueadas. Os testes que provocam erros nas regras de negócio devem ser documentados separadamente.
+
+Os valores apresentados correspondem à massa utilizada nesta execução e podem mudar caso os dados sejam alterados.
+
 
 ---
 
