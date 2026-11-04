@@ -1105,6 +1105,20 @@ Uso de IA **não declarado é penalizado**. Abaixo, os usos relevantes. Entrega 
 | **Reflexão crítica** | Uma resposta sobre uma cópia antiga não comprova o que está no arquivo publicado. Precisamos conferir a mesma versão do SQL que vai junto com o README. Deixar a escrita mais natural também não pode mudar o sentido do que foi levantado ou testado. |
 
 ---
+### 9. Versão e ambiente
+
+| Item | Informação |
+|---|---|
+| SGBD | MySQL 8.0 |
+| Versão mínima exigida | 8.0.16 (a partir dela as restrições `CHECK` são aplicadas) |
+| Versão em que o script foi executado | MySQL 8.0.46 |
+| Data da execução e da conferência | **[preencher: dd/mm/aaaa]** |
+| Mecanismo de armazenamento | InnoDB |
+| Conjunto de caracteres | `utf8mb4` |
+| Banco | `hortifruti_uniao` (cada execução completa apaga e recria o banco) |
+| Resultado da conferência após a carga | 200 vendas, 27 tabelas, 53 chaves estrangeiras, 27 triggers e 9 procedures |
+
+
 ### 10. Proteção de dados pessoais (LGPD)
 
 O banco usa somente dados fictícios (RNF07). As vendas são anônimas e não existe cadastro de clientes (RN21), então nenhuma coluna guarda dado pessoal de consumidor. Os dados pessoais que sobram são os de funcionários e os contatos de fornecedores. O acesso a eles é restrito por perfis (roles) do MySQL com `GRANT` por coluna, criados no script (RN51, RNF01).
