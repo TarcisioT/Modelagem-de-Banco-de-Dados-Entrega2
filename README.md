@@ -289,7 +289,7 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 | RNF06 | Auditoria | Cancelamentos devem permitir identificar quem realizou e, quando necessário, quem autorizou a operação. |
 | RNF07 | Proteção de dados | Dados pessoais de funcionários devem ter acesso restrito e a massa de testes deve utilizar dados fictícios. |
 | RNF08 | Recuperação | O banco deve permitir cópia de segurança, restauração e recriação por meio do script SQL. |
-| RNF09 | Desempenho | As consultas mais utilizadas devem possuir índices nas colunas mais usadas em filtros e relacionamentos, considerando o volume aproximado de 1.800 vendas por dia informado pelo responsável. O desempenho com esse volume real não foi testado nessa entrega |
+| RNF09 | Desempenho | As consultas mais utilizadas devem possuir índices nas colunas mais usadas em filtros e relacionamentos, considerando o volume aproximado de 1.800 vendas por dia informado pelo responsável. A consulta de vendas por data foi testada com volume equivalente a 1.800 vendas por dia, acumulado por 30 dias, mas esse teste não representa o desempenho completo do sistema. |
 | RNF10 | Disponibilidade | O banco deve poder ser utilizado durante o funcionamento do mercado, inclusive domingos e feriados. |
 | RNF11 | Usabilidade | O registro de perdas deve ser simples e exigir somente as informações necessárias. |
 | RNF12 | Compatibilidade | O banco será desenvolvido em MySQL, utilizando InnoDB e `utf8mb4`. |
