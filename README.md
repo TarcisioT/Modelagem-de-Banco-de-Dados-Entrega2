@@ -185,7 +185,7 @@ Essa mesma conversa também confirmou a devolução e troca com fornecedores e a
 ![Fluxograma de Vendas](imagens/fluxogramas/fluxograma_venda.jpeg)
 
 
-Os fluxos do ciclo de compra e do fechamento de caixa representam as rotinas descritas pelo responsável sobre compras, recebimento e conferência do caixa. Eles estão escritos em Mermaid porque o GitHub renderiza esse formato diretamente no README.
+O fluxograma acima mostra como uma venda acontece no caixa. As rotinas de compra, recebimento e fechamento de caixa estão descritas no resumo do levantamento e na lista de processos.
 
 **Fluxograma do ciclo de compra:**
 
@@ -635,13 +635,13 @@ Revisamos o modelo com base nos apontamentos da Entrega 1 e nas informações no
 | Perdas não representadas | Criamos PERDA, MOTIVO_PERDA e as ligações | Foi um dos principais problemas do levantamento. |
 | Sem funcionários e escalas | Incluímos FUNCIONARIO e ESCALA | São cerca de 110 funcionários e a escala é feita em planilha. |
 | Justificativas pouco detalhadas | Passamos a explicar as alternativas e os motivos | Mostra por que cada coisa faz sentido para o mercado. |
-| Processos: faltava o fluxo do ciclo de compra e do fechamento de caixa | Acrescentamos os dois fluxogramas na seção de processos | São rotinas reais do mercado e estavam só no texto. |
+| Processos: faltava o fluxo do ciclo de compra e do fechamento de caixa |Acrescentamos o fluxograma do processo de venda. A compra, o recebimento e o fechamento de caixa estão descritos em texto, na seção de processos | A venda é o processo principal do caixa, e os outros dois estão explicados no levantamento |
 | Regras: Inmetro, LGPD, estoque mínimo e permissões | LGPD, estoque mínimo e permissões já estavam previstos nas regras e requisitos (RN51, RN04, RN25 e RNF01), então o grupo apenas ajustou o texto. A aferição da balança (Inmetro) ficou de fora de propósito | O banco não controla a balança, e o grupo não confirmou com o responsável como a aferição é feita. O motivo está na tabela de regras comuns não incluídas. |
 | Entrevista e evidências | Nova entrevista (22/09), visita (30/09) e confirmações por WhatsApp (26/10 e 29/10), com fotos e prints no repositório | A comprovação ficou mais completa e os registros ficaram reunidos no repositório. |
 | Dicionário de dados | Ficou em um arquivo Markdown separado, `docs/dicionario_dados.md` | A turma é GTI. |
 | Anexos no GitHub | DER, modelo lógico, script, fotos, prints e levantamento ficam em pastas do repositório e têm link no README | O professor corrige pelo repositório. |
 | Forma de pagamento Pix | Entrou no cadastro de formas de pagamento | O responsável confirmou que o mercado aceita Pix. |
-| Integrantes | Victor Hugo e Guilherme entraram, Henrico e Nicole saíram | Mudança do grupo desde a Entrega 1. |
+| Integrantes | Victor Hugo, Guilherme e Lucas entraram, Henrico e Nicole saíram | Mudança do grupo desde a Entrega 1. |
 
 Além dos apontamentos, incluímos por conta própria o estorno em SAIDA_LOTE, ligado à baixa original, para corrigir baixas sem apagar o histórico, e as ligações que dizem quem fechou o caixa e quem pagou a conta (relacionamentos 46 e 47) e a que liga uma perda corrigida à original (48).
 
@@ -1300,8 +1300,6 @@ levantamento/
   levantamento.md
 README.md
 ```
-
-Os fluxogramas do ciclo de compra e do fechamento de caixa não têm arquivo de imagem: estão em Mermaid, direto no README.
 
 **Dicionário de dados:** [docs/dicionario_dados.md](docs/Dicionario_Dados.md). Como a turma é GTI, o dicionário é um único arquivo Markdown, separado do README. Ele traz as 27 tabelas com os campos, tipos, obrigatoriedade, unicidade, valores permitidos e valor padrão, além da versão do MySQL com data, dos índices e da parte de LGPD (que inclui os contatos de fornecedor que são pessoa física ou MEI).
 
