@@ -1093,22 +1093,19 @@ As procedures demonstram os fluxos transacionais do projeto. Na `concluir_venda`
 
 As procedures usam `READ COMMITTED` e controlam suas próprias transações. O teste com duas conexões confirmou a espera por um produto bloqueado durante uma chamada a `registrar_perda_pendente`. Esse teste não equivale à validação de duas conclusões de venda simultâneas ou de todas as combinações entre vendas, perdas e estornos.
 
-### Limitações identificadas na implementação
+### Correções realizadas e limites da implementação
 
-A carga foi executada, mas a revisão encontrou pontos que ainda precisam de ajuste no SQL:
+A revisão corrigiu a G01 para incluir setores sem vendas nos meses com movimentação considerada pela consulta. Quando o faturamento do setor é zero, o percentual de perdas fica `NULL`, indicando que não é aplicável.
 
-- **Consulta G09:** é necessário separar kg e unidade para comparar as quantidades recusadas.
-- **Uso direto das tabelas:** algumas validações acumuladas dependem das procedures; não há garantia de que todos os caminhos de alteração direta apliquem as mesmas regras. Concorrência e correção ou divisão de perdas precisam de testes próprios.
+A G09 passou a separar as quantidades recusadas por fornecedor e unidade de medida (`kg` ou `unidade`), evitando somar medidas diferentes em um mesmo total.
 
-Esses pontos descrevem a versão atual do script.
+Também foram acrescentados bloqueios por produto e ajustada a leitura dos saldos dentro das transações. O teste de concorrência cobriu um cenário com duas conexões: uma bloqueando o produto e outra chamando `registrar_perda_pendente`.
 
-### Consultas com JOIN, UPDATE e DELETE
+Permanecem os seguintes limites:
 
-Logo depois da carga, o script traz três consultas com `JOIN` (produtos com seus setores, recebimentos com seus fornecedores e vendas com o operador) e os exemplos de manutenção, escolhidos para respeitar as regras de histórico:
-
-- **`UPDATE` de cadastro:** reajuste do preço de um produto. As vendas antigas não mudam, porque o item vendido guarda o preço praticado na hora da venda.
-- **`UPDATE` de inativação:** um fornecedor que já tem movimentação é inativado (`ativo = 0`) em vez de apagado (RN05).
-- **`DELETE` sem histórico:** só em registros criados na hora para o teste, sem nenhuma ligação com outras tabelas: um produto cadastrado por engano e uma linha de escala.
+- Não foram testadas todas as combinações de operações simultâneas.
+- Alterações diretas nas tabelas, fora das procedures e das permissões previstas, podem não aplicar todas as validações acumuladas.
+- A correção e a divisão de perdas entre lotes ainda precisam de testes específicos.
 
 ### Resultados e validação das consultas
 
