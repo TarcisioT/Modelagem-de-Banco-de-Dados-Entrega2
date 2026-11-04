@@ -1159,7 +1159,7 @@ Na organização da massa:
 - as perdas com lote a confirmar permanecem identificadas como pendências;
 - os totais das vendas, os pagamentos e os saldos foram conferidos.
 
-A validação realizada é funcional e voltada à demonstração acadêmica. Ela não representa um teste de desempenho, concorrência ou cobertura integral de todas as regras de negócio.
+Os testes foram feitos para conferir o funcionamento do banco na demonstração do projeto. Executamos as operações uma de cada vez e também testamos uma situação com duas conexões ao mesmo tempo. Não avaliamos o desempenho com grandes volumes de dados nem testamos todas as situações possíveis das regras de negócio e das operações simultâneas.
 
 ---
 
