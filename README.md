@@ -176,22 +176,6 @@ Em mercados e hortifrutis costumam existir outros processos além dos listados a
 | Despesas que não vêm de fornecedor de mercadoria (aluguel, energia, impostos) | Existe, fora do banco | São controladas pelo setor financeiro, no sistema usado pela empresa. O modelo cobre só as contas a pagar ligadas a recebimento de mercadoria (RN34). |
 | Precificação e curva ABC | Preço definido pela gerência | A gerência define o preço conforme a necessidade comercial e cadastra no sistema. O banco guarda só o preço no produto (RN04) e o preço praticado em cada venda. O responsável não falou de curva ABC, então ela não entrou. |
 
-##### Fluxogramas
-
-**Fluxograma do processo de venda:**
-
-[Fluxograma de Vendas](imagens/fluxogramas/fluxograma_venda.jpeg)
-
-**Fluxograma de Compra e Recebimento:**
-
-[Fluxograma de Compra e Recebimento](imagens/fluxogramas/fluxograma_compra_recebimento.jpeg)
-
-**Fluxograma de Fechamento de Caixa:**
-
-[Fluxograma de Fechamento de Caixa](imagens/fluxogramas/fluxograma_fechamento_caixa.jpeg)
-
-
-Os três fluxogramas acima mostram a venda no caixa, a compra e o recebimento de mercadorias e o fechamento de caixa. Os detalhes de cada processo estão no levantamento completo.
 
 #### Requisitos do sistema
 
