@@ -662,11 +662,11 @@ Além dos apontamentos, incluímos por conta própria o estorno em SAIDA_LOTE, l
 
 ##### Considerações sobre o modelo conceitual
 
-O DER agora cobre cadastros, compras, recebimentos, vendas, pagamentos, funcionários, escalas e estoque. Demos mais atenção a lotes e perdas, que são os pontos que o responsável mais destacou. Também deixamos de fora o que o mercado não faz, como fidelidade, vendas online e entrega.
+O DER passou a cobrir o mercado todo, e não só estoque e vendas: cadastros, compras, recebimentos, pagamentos, funcionários e escalas também estão nele. Mesmo assim, o maior cuidado foi com lotes e perdas, que foram os pontos que o responsável mais destacou. O que o mercado não faz, como fidelidade, venda online e entrega, ficou de fora.
 
 Algumas regras não aparecem no desenho, como impedir saída maior que o saldo do lote, impedir venda de lote vencido, conferir as quantidades recebidas e exigir autorização para cancelar. Elas ficam para o modelo lógico e o script SQL.
 
-O próximo passo é transformar as entidades em tabelas, definir as chaves primárias e estrangeiras e preparar tudo para o MySQL.
+Na seção seguinte mostramos a conversão das entidades e associações em tabelas, com as chaves primárias e estrangeiras usadas no MySQL.
 
 ### 1.2 Conversão do Modelo Conceitual para o Modelo Lógico
 
