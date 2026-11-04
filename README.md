@@ -317,7 +317,7 @@ Já cadastro de clientes, programa de fidelidade, vendas online, entregas e vend
 - **RN01 [Confirmada + Proposta]** O mercado cadastra produtos com código de barras, preço, setor e forma de venda. No banco, todo produto também terá um código interno único e nome.
 - **RN02 [Confirmada + Proposta]** Produtos pesados podem utilizar etiqueta de código de barras e produtos a granel podem ser informados pelo código interno (PLU). O código interno será único.
 - **RN03 [Proposta]** Cada produto terá um setor principal, e esse setor precisa ser um setor que vende produto. Caixa e Retaguarda existem só para organizar os funcionários e não recebem produto nem perda.
-- **RN04 [Proposta]** O preço deve ser maior que zero e o estoque mínimo não pode ser negativo. O estoque mínimo também serve para apontar os produtos que precisam de reposição: quando o saldo disponível fica abaixo dele, o produto entra na consulta de estoque baixo (RF20), que mostra se já existe pedido de compra em aberto.
+- **RN04 [Proposta]** O preço deve ser maior que zero e o estoque mínimo não pode ser negativo. O estoque mínimo também mostra quais produtos precisam de reposição: quando a quantidade disponível fica abaixo dele, o produto aparece na consulta de estoque baixo (RF20), que também informa se já existe pedido de compra em aberto.
 - **RN05 [Proposta]** Produtos, fornecedores, funcionários e caixas com histórico não serão excluídos, apenas inativados.
 - **RN06 [Proposta]** O CNPJ do fornecedor não poderá se repetir.
 - **RN07 [Proposta]** O CPF do funcionário não poderá se repetir.
