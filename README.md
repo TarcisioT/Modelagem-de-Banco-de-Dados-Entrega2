@@ -1271,8 +1271,8 @@ O relatório técnico está neste arquivo `README.md`, localizado na raiz da bra
 
 #### Estrutura do repositório
 
-```text
 README.md
+README_Entrega1.md
 apresentação/
   Hortifruti União — Apresentação Acadêmica — Entrega 2.pdf
 diagramas/
@@ -1292,7 +1292,7 @@ imagens/
     fluxograma_venda.jpeg
 levantamento/
   levantamento.md
-README.md
+  
 ```
 
 **Dicionário de dados:** [docs/dicionario_dados.md](docs/Dicionario_Dados.md). Como a turma é GTI, o dicionário é um único arquivo Markdown, separado do README. Ele traz as 27 tabelas com os campos, tipos, obrigatoriedade, unicidade, valores permitidos e valor padrão, além da versão do MySQL com data, dos índices e da parte de LGPD (que inclui os contatos de fornecedor que são pessoa física ou MEI).
