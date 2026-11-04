@@ -1140,6 +1140,33 @@ Uso de IA **não declarado é penalizado**. Abaixo, os usos relevantes. Entrega 
 | **Reflexão crítica** | Uma resposta sobre uma cópia antiga não comprova o que está no arquivo publicado. Precisamos conferir a mesma versão do SQL que vai junto com o README. Deixar a escrita mais natural também não pode mudar o sentido do que foi levantado ou testado. |
 
 ---
+#### 4.26 DOCUMENTO_FISCAL
+
+**Finalidade:** Registrar os dados do documento fiscal ligado a uma venda. A emissão continua no sistema atual (RN33).
+
+| Coluna | Tipo | Chave | Permite NULL | Padrão / geração | Descrição |
+|---|---|---|---|---|---|
+| `id_documento` | `INT UNSIGNED` | PK | Não | — | Identificador do documento. |
+| `id_venda` | `INT UNSIGNED` | FK + UQ | Não | — | Venda do documento. No máximo um documento por venda. |
+| `tipo_documento` | `VARCHAR(10)` | — | Não | — | `NFCe`, `SAT` ou `OUTRO`. |
+| `numero_documento` | `VARCHAR(30)` | — | Não | — | Número do documento. |
+| `serie` | `VARCHAR(10)` | — | Sim | — | Série do documento. |
+| `chave_acesso` | `VARCHAR(44)` | UQ | Sim | — | Chave de acesso, quando disponível. |
+| `data_emissao` | `DATETIME` | — | Não | — | Data e hora de emissão. |
+| `situacao` | `VARCHAR(12)` | — | Não | — | `emitido` ou `cancelado`. |
+
+**Chaves estrangeiras:**
+- `id_venda` → `VENDA.id_venda` (`ON DELETE RESTRICT`).
+
+**Unicidade:**
+- `id_venda` possui `UNIQUE`.
+- `chave_acesso` possui `UNIQUE`.
+
+**Restrições `CHECK`:**
+- `(tipo_documento IN ('NFCe','SAT','OUTRO'))`
+- `(situacao IN ('emitido','cancelado'))`
+
+
 #### 4.27 SAIDA_LOTE
 
 **Finalidade:** Registrar as baixas de estoque por lote (venda, perda ou estorno), mantendo o histórico das movimentações.
