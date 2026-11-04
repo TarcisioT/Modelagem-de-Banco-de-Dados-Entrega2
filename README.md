@@ -322,7 +322,7 @@ Já cadastro de clientes, programa de fidelidade, vendas online, entregas e vend
 - **RN06 [Proposta]** O CNPJ do fornecedor não poderá se repetir.
 - **RN07 [Proposta]** O CPF do funcionário não poderá se repetir.
 - **RN08 [Confirmada]** O mercado aceita pagamento em dinheiro, débito, crédito, Pix e vale-alimentação (VA). Essas formas serão registradas no cadastro de formas de pagamento do banco.
-- **RN08A [Proposta]** Cada forma de pagamento tem um uso: venda, fornecedor ou ambos. A venda só aceita formas de uso "venda" ou "ambos", e a conta a pagar só aceita "fornecedor" ou "ambos". Por exemplo, boleto e transferência ficam só para fornecedor, e o Pix vale para os dois lados. O `uso` não pode ser alterado depois que a forma tiver algum pagamento ou conta registrada: para mudar, a forma é inativada e uma nova é cadastrada, assim o histórico continua válido.
+- **RN08A [Proposta]** Cada forma de pagamento tem um uso: venda, fornecedor ou ambos. A venda só aceita formas de uso "venda" ou "ambos", e a conta a pagar só aceita "fornecedor" ou "ambos". Por exemplo, boleto e transferência ficam só para fornecedor, e o Pix vale para os dois lados. Depois que a forma já foi usada em algum pagamento ou conta, o uso não pode mais ser mudado. Se precisar mudar, a forma antiga é desativada e uma nova é cadastrada, assim o histórico continua certo.
 
 ##### Compras e recebimento
 
