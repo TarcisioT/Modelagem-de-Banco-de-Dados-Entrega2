@@ -1042,7 +1042,13 @@ O script utiliza o banco `hortifruti_uniao`. Cada execução completa apaga e re
 
 ### Execução e conferência
 
-O script foi executado em ambiente isolado no MySQL 8.0.46, com apoio de IA, pelo mecanismo de inicialização de scripts e com ajuste de DEFINER somente na cópia de teste. A carga confirmou 200 vendas, 27 tabelas, 53 chaves estrangeiras, 38 triggers e 9 procedures, e as consultas terminaram sem erro de execução. O teste do fechamento de caixa comparou o valor esperado gravado em cada sessão fechada com o fundo inicial mais os pagamentos em dinheiro das vendas concluídas, menos as sangrias, e a consulta voltou vazia, sem divergências. As auditorias retornaram seis perdas pendentes em A01 e nenhum registro nas demais condições verificadas. A execução no ambiente de apresentação deve usar este mesmo arquivo. Os limites dessa validação estão descritos abaixo.
+A versão corrigida foi executada em ambiente isolado no MySQL 8.0.46, com apoio de IA, pelo mecanismo de inicialização de scripts e com ajuste de `DEFINER` somente na cópia de teste. A carga e as consultas terminaram sem erro de execução. Foram confirmadas 200 vendas, 27 tabelas, 53 chaves estrangeiras, 38 triggers e 9 procedures.
+
+Nesse ambiente, passaram 57 verificações sequenciais. Elas abrangeram operações válidas e inválidas, regras de estoque, recebimentos, perdas, vendas, pagamentos, cancelamentos, estornos e rollback. Também incluíram os cenários de setor com perdas e sem vendas na G01 e de fornecedor com recusas em kg e unidades na G09. Os scripts auxiliares dessa revisão não foram incluídos no repositório nesta entrega.
+
+O grupo também executou a carga, as consultas gerenciais e as auditorias em seu ambiente MySQL 8.0.46. A conferência do fechamento comparou o valor esperado gravado com o fundo inicial mais os pagamentos em dinheiro das vendas concluídas, menos as sangrias, sem encontrar divergências. A A01 apresentou seis perdas pendentes previstas na massa; as demais auditorias verificadas não apontaram inconsistências.
+
+Foi realizado um teste com duas conexões simultâneas, identificadas pelos IDs 26 e 27. A primeira bloqueou o produto com `SELECT ... FOR UPDATE`. A segunda chamou `registrar_perda_pendente` e aguardou a liberação do bloqueio. Após o `ROLLBACK` na primeira conexão, a segunda prosseguiu e rejeitou a quantidade superior ao saldo disponível. Esse resultado confirma a espera pelo bloqueio nesse cenário, sem comprovar todas as combinações de operações simultâneas.
 
 As demais conferências abaixo descrevem a estrutura e a massa definidas no script. As consultas gerenciais e de auditoria ficam no próprio arquivo SQL e podem ser executadas novamente durante a demonstração.
 
