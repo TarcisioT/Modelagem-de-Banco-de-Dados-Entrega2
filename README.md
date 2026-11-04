@@ -629,7 +629,6 @@ Revisamos o modelo com base nos apontamentos da Entrega 1 e nas informações no
 | Perdas não representadas | Criamos PERDA, MOTIVO_PERDA e as ligações | Foi um dos principais problemas do levantamento. |
 | Sem funcionários e escalas | Incluímos FUNCIONARIO e ESCALA | São cerca de 110 funcionários e a escala é feita em planilha. |
 | Justificativas pouco detalhadas | Passamos a explicar as alternativas e os motivos | Mostra por que cada coisa faz sentido para o mercado. |
-| Processos: faltava o fluxo do ciclo de compra e do fechamento de caixa | Incluímos os fluxogramas de compra e recebimento e de fechamento de caixa, além do de vendas | O apontamento pedia os fluxos que faltavam. |
 | Regras: Inmetro, LGPD, estoque mínimo e permissões | LGPD, estoque mínimo e permissões passaram a constar explicitamente nas regras e requisitos do projeto (RN04, RN25, RN51, RNF01 e RNF07). A aferição da balança pelo Inmetro ficou fora do banco e foi justificada no texto de regras comuns não incluídas. | Os três primeiros pontos foram incorporados ao projeto. O Inmetro não foi modelado porque o banco apenas recebe o peso informado pela venda e o grupo não confirmou com o responsável como é feita a aferição da balança. |
 | Entrevista e evidências | Nova entrevista (22/09), visita (30/09) e confirmações por WhatsApp (26/10), com fotos e prints no repositório | A comprovação ficou mais completa e os registros ficaram reunidos no repositório. |
 | Dicionário de dados | Ficou em um arquivo Markdown separado, `docs/Dicionario_Dados.md` | A turma é GTI. |
@@ -1333,10 +1332,6 @@ imagens/
     interior_mercado.jpeg
     resposta_proprietario1.jpeg
     resposta_proprietario2.jpeg
-  fluxogramas/
-    fluxograma_compra_recebimento.jpeg
-    fluxograma_fechamento_caixa.jpeg
-    fluxograma_venda.jpeg
 interface/
   assets/
     style.css
@@ -1447,7 +1442,6 @@ Usamos IA como apoio na organização, revisão e validação do trabalho. As in
 | **Trechos corrigidos ou rejeitados** | Foram corrigidas referências duplicadas, regras antigas, contagens, rastreabilidade de fechamento de caixa e pagamento de contas, tratamento de perdas corrigidas, forma de pagamento e relação entre KPIs e consultas. Na revisão final, o grupo também aceitou os ajustes de texto sobre Pix, FEFO, operador da sessão, porte, títulos e repetições. Na conferência final com o Claude, aplicamos as correções da linha do KPI10, do texto dos fluxogramas, do nome da apresentação, do link das respostas do proprietário e do Uso 1. As sugestões que mudariam decisões já sustentadas pelo levantamento foram rejeitadas; por isso PAGAMENTO, SAIDA_LOTE e TROCA_OPERADOR permaneceram como entidades. |
 | **Justificativa da escolha final** | O objetivo foi fazer com que README, DER, modelo lógico, regras e SQL descrevessem a mesma solução, e que o README seguisse o esqueleto do professor. |
 | **Reflexão crítica** | A IA foi útil para localizar divergências, mas as contagens e as decisões finais foram revisadas pela equipe com base nos artefatos do projeto. A IA só viu o README e o esqueleto, e não o script SQL, o dicionário nem o repositório, então não conferiu o conteúdo desses arquivos nem o histórico de commits. Ela também sugeriu mudar PAGAMENTO, SAIDA_LOTE e TROCA_OPERADOR, mas a equipe rejeitou porque o levantamento sustentava o modelo atual. |
-
 
 #### Uso 7 — ChatGPT: organização e revisão da apresentação final
 
