@@ -1140,6 +1140,36 @@ Uso de IA **não declarado é penalizado**. Abaixo, os usos relevantes. Entrega 
 | **Reflexão crítica** | Uma resposta sobre uma cópia antiga não comprova o que está no arquivo publicado. Precisamos conferir a mesma versão do SQL que vai junto com o README. Deixar a escrita mais natural também não pode mudar o sentido do que foi levantado ou testado. |
 
 ---
+#### 4.27 SAIDA_LOTE
+
+**Finalidade:** Registrar as baixas de estoque por lote (venda, perda ou estorno), mantendo o histórico das movimentações.
+
+| Coluna | Tipo | Chave | Permite NULL | Padrão / geração | Descrição |
+|---|---|---|---|---|---|
+| `id_saida_lote` | `INT UNSIGNED` | PK | Não | — | Identificador da baixa. |
+| `id_lote` | `INT UNSIGNED` | FK | Não | — | Lote que sofreu a baixa. |
+| `id_item_venda` | `INT UNSIGNED` | FK | Sim | — | Item de venda de origem. Preenchido só no tipo `venda`. |
+| `id_perda` | `INT UNSIGNED` | FK | Sim | — | Perda de origem. Preenchida só no tipo `perda`. |
+| `id_saida_original` | `INT UNSIGNED` | FK + UQ | Sim | — | Baixa que este estorno desfaz. Preenchida só no tipo `estorno`; `UNIQUE` impede estornar duas vezes (RN17). |
+| `quantidade` | `DECIMAL(10,3)` | — | Não | — | Quantidade baixada ou devolvida ao lote. |
+| `data_hora` | `DATETIME` | — | Não | — | Momento da movimentação. |
+| `tipo` | `VARCHAR(10)` | — | Não | — | `venda`, `perda` ou `estorno`. |
+
+**Chaves estrangeiras:**
+- `id_lote` → `LOTE.id_lote` (`ON DELETE RESTRICT`).
+- `id_item_venda` → `ITEM_VENDA.id_item_venda` (`ON DELETE RESTRICT`).
+- `id_perda` → `PERDA.id_perda` (`ON DELETE RESTRICT`).
+- `id_saida_original` → `SAIDA_LOTE.id_saida_lote` (`ON DELETE RESTRICT`).
+
+**Unicidade:**
+- `id_saida_original` possui `UNIQUE`.
+
+**Restrições `CHECK`:**
+- `(quantidade > 0)`
+- `(tipo IN ('venda','perda','estorno'))`
+- `((tipo='venda' AND id_item_venda IS NOT NULL AND id_perda IS NULL AND id_saida_original IS NULL) OR (tipo='perda' AND id_item_venda IS NULL AND id_perda IS NOT NULL AND id_saida_original IS NULL) OR (tipo='estorno' AND id_item_venda IS NULL AND id_perda IS NULL AND id_saida_original IS NOT NULL))`
+
+
 ### 5. Domínios e valores permitidos
 
 Resumo dos campos de situação, tipo e uso, todos garantidos por `CHECK`.
