@@ -945,6 +945,14 @@ Na conferência, os totais das vendas corresponderam à soma dos itens ativos. A
 
 Isso não significa que todas as regras do sistema estejam comprovadas. A revisão também identificou limitações no SQL, descritas na seção 3. Entre elas, o fechamento de caixa soma pagamentos de todas as modalidades, e não somente dinheiro físico.
 
+#### Limite da amostra
+
+A massa foi criada para demonstrar os principais processos e facilitar a conferência dos dados. Ela não representa toda a movimentação do Hortifruti União e não serve como teste de desempenho.
+
+Os índices foram definidos considerando as consultas e o porte informado pelo responsável, mas a capacidade de atender ao volume real depende de testes específicos de carga e concorrência.
+
+Na carga demonstrativa, as sessões são abertas antes das vendas e das sangrias e fechadas posteriormente. As vendas são inseridas com seu histórico de itens, pagamentos e baixas, enquanto os cancelamentos previstos são realizados por chamadas à procedure correspondente.
+
 ---
 
 ## 5. Repositório GitHub
