@@ -1140,6 +1140,25 @@ Uso de IA **não declarado é penalizado**. Abaixo, os usos relevantes. Entrega 
 | **Reflexão crítica** | Uma resposta sobre uma cópia antiga não comprova o que está no arquivo publicado. Precisamos conferir a mesma versão do SQL que vai junto com o README. Deixar a escrita mais natural também não pode mudar o sentido do que foi levantado ou testado. |
 
 ---
+#### 4.25 PAGAMENTO
+
+**Finalidade:** Registrar uma ou mais formas de pagamento usadas em uma venda.
+
+| Coluna | Tipo | Chave | Permite NULL | Padrão / geração | Descrição |
+|---|---|---|---|---|---|
+| `id_pagamento` | `INT UNSIGNED` | PK | Não | — | Identificador do pagamento. |
+| `id_venda` | `INT UNSIGNED` | FK | Não | — | Venda paga. |
+| `id_forma` | `INT UNSIGNED` | FK | Não | — | Forma de pagamento. Precisa ter uso `venda` ou `ambos` (RN08A). |
+| `valor` | `DECIMAL(10,2)` | — | Não | — | Valor aplicado à venda, sem o troco. A soma dos pagamentos tem que bater com o total (RN24). |
+
+**Chaves estrangeiras:**
+- `id_venda` → `VENDA.id_venda` (`ON DELETE RESTRICT`).
+- `id_forma` → `FORMA_PAGAMENTO.id_forma` (`ON DELETE RESTRICT`).
+
+**Restrições `CHECK`:**
+- `(valor > 0)`
+
+
 #### 4.26 DOCUMENTO_FISCAL
 
 **Finalidade:** Registrar os dados do documento fiscal ligado a uma venda. A emissão continua no sistema atual (RN33).
