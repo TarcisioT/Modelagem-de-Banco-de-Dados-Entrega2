@@ -78,11 +78,11 @@
   - **Função:** um dos proprietários do Hortifruti União – Tatuapé
   - **Telefone de contato autorizado:** (11) 99317-0906
 
-![Fotografia da fachada](imagens/evidencias/fachada_mercado.jpg)
+![Fotografia da fachada](imagens/evidencias/estoque_mercado.jpeg)
 
-![Fotografia do interior](imagens/evidencias/interior_mercado.jpg)
+![Fotografia do interior](imagens/evidencias/interior_mercado.jpeg)
 
-![Fotografia do estoque](imagens/evidencias/estoque_mercado.jpg)
+![Fotografia do estoque](imagens/evidencias/estoque_mercado.jpeg)
 
 #### Relato da entrevista
 
