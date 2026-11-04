@@ -90,8 +90,7 @@
 
 - **Quando e onde:** A entrevista inicial foi realizada em **22/09/2026**, por videochamada no WhatsApp. Depois, em **30/09/2026**, o Tarcisio foi até o mercado, na Rua Filipe Camarão, 67, no Tatuapé, para observar o funcionamento do local, tirar fotos e conversar presencialmente com o responsável.
   
-- **O que foi levantado:** Conversamos sobre como o mercado funciona, quantos funcionários e fornecedores tem, o que vende e quais são os principais problemas. Também falamos sobre o VR Software, o controle de estoque, a validade, as perdas, as compras, as vendas e os pagamentos.Depois, no dia 26/10/2026, confirmamos com o responsável, por WhatsApp, alguns detalhes sobre pedidos, notas fiscais, formas de pagamento, fechamento de caixa, cadastro de clientes, fidelidade, vendas online, entregas, devoluções a fornecedores, escala dos funcionários, cancelamento de vendas, venda restrita por idade, validade dos produtos por setor, venda fiado e troca ou devolução feita pelo cliente.
-Na visita de 30/09, conversamos também, presencialmente, sobre inventário, controle sanitário, folha e ponto, despesas gerais e definição de preços.
+- **O que foi levantado:** Conversamos sobre como o mercado funciona, quantos funcionários e fornecedores tem, o que vende e quais são os principais problemas. Também falamos sobre o VR Software, o controle de estoque, a validade, as perdas, as compras, as vendas e os pagamentos. Na visita de 30/09/2026, conversamos presencialmente sobre inventário, controle sanitário, folha e ponto, despesas gerais e definição de preços. Depois, em 26/10/2026, confirmamos com o responsável, por WhatsApp, alguns detalhes sobre pedidos, notas fiscais, formas de pagamento, fechamento de caixa, cadastro de clientes, fidelidade, vendas online, entregas, devoluções a fornecedores, escala dos funcionários, cancelamento de vendas, venda restrita por idade, validade dos produtos por setor, venda fiado e troca ou devolução feita pelo cliente.
 
 - **O que o responsável contou:**
   - O mercado perde produtos frescos e de outros setores (padaria, frios e laticínios) por vencimento, por maturação excessiva ou por danos causados por clientes. Essas perdas não são registradas de forma organizada (P1).
@@ -161,7 +160,7 @@ Os principais processos identificados foram:
 
 ##### Processos comuns que não foram incluídos no modelo
 
-Em mercados e hortifrutis costumam existir outros processos além dos listados acima. Durante a visita de 30/09/2026 e nas confirmações feitas por WhatsApp em 26/10/2026..., conversamos com o responsável sobre como o Hortifruti União lida com esses processos. Os que não foram incluídos no modelo, e os motivos, são:
+Em mercados e hortifrutis costumam existir outros processos além dos listados acima. Durante a visita de 30/09/2026 e nas confirmações feitas por WhatsApp em 26/10/2026, conversamos com o responsável sobre como o Hortifruti União lida com esses processos. Os que não foram incluídos no modelo, e os motivos, são:
 
 | Processo comum | Situação no Hortifruti União | Motivo de não entrar no modelo |
 | :---- | :---- | :---- |
@@ -1034,9 +1033,11 @@ Para isso dar resultado, o mercado teria que registrar lotes, validades e perdas
 
 O modelo lógico relacional do Hortifruti União foi desenvolvido a partir do DER conceitual revisado. A estrutura implementada no SQL atual contém **27 tabelas e 53 restrições de chave estrangeira**, além dos atributos, tipos de dados, chaves primárias e restrições de integridade. As associações com atributos do modelo conceitual foram convertidas em tabelas, conforme as seções 1.2 e 1.3.
 
-**Arquivo do modelo lógico:** [Visualizar modelo lógico](diagramas/Modelo_Logico_Hortifruti.png)
+**Visualização do modelo lógico:** [Abrir imagem](diagramas/Modelo_Logico_Hortifruti.png)
 
 ![Modelo Lógico do Hortifruti União](diagramas/Modelo_Logico_Hortifruti.png)
+
+**Arquivo editável do modelo lógico:** [Abrir no brModelo](docs/modelo_logico.brM3)
 
 As tabelas representam os cadastros e as operações do mercado, incluindo funcionários, fornecedores, produtos, compras, recebimentos, lotes, perdas, vendas, pagamentos e sessões de caixa. As chaves estrangeiras relacionam esses registros e impedem referências a registros inexistentes.
 
@@ -1193,6 +1194,9 @@ Esse teste maior serviu para verificar o uso do índice e o comportamento dessa 
 A massa de dados é totalmente fictícia e foi criada exclusivamente para fins acadêmicos.
 
 Utilizamos uma amostra demonstrativa do funcionamento do Hortifruti União, com volume reduzido para facilitar a execução do SQL, a conferência dos resultados e a apresentação do projeto.
+
+A massa de dados está incluída no [script SQL completo](docs/script.sql), junto com a criação das tabelas, regras e consultas utilizadas no projeto.
+
 
 ### Volume da massa
 
