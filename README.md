@@ -1024,9 +1024,9 @@ Para isso dar resultado, o mercado teria que registrar lotes, validades e perdas
 
 O modelo lógico relacional do Hortifruti União foi desenvolvido a partir do DER conceitual revisado. A estrutura implementada no SQL atual contém **27 tabelas e 53 restrições de chave estrangeira**, além dos atributos, tipos de dados, chaves primárias e restrições de integridade. As associações com atributos do modelo conceitual foram convertidas em tabelas, conforme as seções 1.2 e 1.3.
 
-**Arquivo do modelo lógico:** [Visualizar modelo lógico](docs/modelo_logico.png)
+**Arquivo do modelo lógico:** [Visualizar modelo lógico](diagramas/Modelo_Logico_Hortifruti.png)
 
-![Modelo Lógico do Hortifruti União](docs/modelo_logico.png)
+![Modelo Lógico do Hortifruti União](diagramas/Modelo_Logico_Hortifruti.png)
 
 As tabelas representam os cadastros e as operações do mercado, incluindo funcionários, fornecedores, produtos, compras, recebimentos, lotes, perdas, vendas, pagamentos e sessões de caixa. As chaves estrangeiras relacionam esses registros e impedem referências a registros inexistentes.
 
