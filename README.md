@@ -979,7 +979,7 @@ Nos indicadores de perda (KPI01, KPI02 e KPI11) só contam as perdas com `status
 
 **Observação sobre o KPI08:** A G08 calcula a taxa por mês, então devolve duas linhas: outubro com 3 canceladas em 175 vendas (≈ 1,71%) e novembro com 1 em 25 (4,00%). A taxa total da massa é 4/200 = 2%, obtida somando os dois meses. Ambos os meses ficam acima da meta sugerida de 1% apenas para deixar casos de cancelamento e estorno na demonstração; não representam a taxa real do Hortifruti União.
 
-A consulta G12 complementa a análise de validade e mostra as promoções vigentes e encerradas. Não tratamos o número de promoções como indicador de resultado, porque isso sozinho não prova que houve menos perda.
+As consultas gerenciais vão de G01 a G12. As consultas G01 a G11 estão ligadas aos KPIs da seção 1.6. A G12 é uma consulta complementar para acompanhar promoções vigentes e encerradas, por isso não foi tratada como KPI.
 
 Os valores de referência de faturamento e ticket médio são contas feitas com os números que o responsável informou de memória, então são aproximados.
 
