@@ -1333,6 +1333,8 @@ levantamento/
 
 As fotos da organização e o registro da videochamada ficam em `imagens/evidencias/`. O levantamento completo fica separado, em `levantamento/levantamento.md`. O DER, o modelo lógico, o script e o dicionário de dados ficam em `diagramas/` e `docs/`, e a apresentação final fica em `apresentação/`.
 
+Ao longo do trabalho, cada integrante fez seus próprios commits no repositório usando sua conta do GitHub. As contribuições ficaram distribuídas entre as diferentes partes do projeto, e os usuários de cada integrante estão informados na tabela no início do README.
+
 ---
 
 ## 6. Uso de Inteligência Artificial
