@@ -909,13 +909,13 @@ Para o volume de cerca de 1.800 vendas por dia (RNF09), além das chaves, criamo
 - `PRODUTO (codigo_barras)`, para a consulta de preço no caixa (esse já vem do `UNIQUE` da coluna, por isso não entra nos 12 índices adicionais da seção 3);
 - `CONTA_PAGAR (data_vencimento, status)`, para contas por vencimento.
 
-**Teste dos índices (RNF09):** também fizemos testes com `EXPLAIN ANALYZE` para verificar se o MySQL realmente utilizava os índices em consultas por validade e por data.
+**Teste dos índices (RNF09):** foram realizados testes com `EXPLAIN ANALYZE` para verificar o uso dos índices nas consultas.
 
-Na consulta de vendas por data, foi criada uma base sintética com **54.000 vendas**, representando aproximadamente **1.800 vendas por dia durante 30 dias**. Ao consultar um único dia, o MySQL utilizou o índice `idx_venda_data` e leu os **1.800 registros** correspondentes à data selecionada. Nessa execução, o operador final apresentou tempo aproximado de **2,93 ms**.
+Na consulta de vendas por data, foi utilizada uma base sintética com **54.000 registros**, representando aproximadamente **1.800 vendas por dia durante 30 dias**. Ao consultar apenas um dos dias, o MySQL utilizou o índice `idx_venda_data` e leu os **1.800 registros** correspondentes à data selecionada. Nessa execução, o operador final apresentou tempo aproximado de **2,93 ms**.
 
-O teste confirma o uso do índice nessa consulta com um volume equivalente ao informado pelo responsável. Porém, os registros utilizados eram sintéticos e estavam em uma tabela isolada. Não foram testados nesse mesmo volume os itens das vendas, pagamentos, movimentações de estoque ou vários usuários acessando o banco ao mesmo tempo.
+Esse teste mostra que o índice foi utilizado corretamente nesse cenário com volume equivalente ao informado pelo responsável. Porém, ele foi feito em uma tabela isolada e com dados sintéticos. Não foram avaliados, nesse mesmo volume, os itens das vendas, pagamentos, movimentações de estoque ou vários usuários utilizando o banco ao mesmo tempo.
 
-Por isso, o resultado é uma evidência favorável para essa consulta, mas não comprova o desempenho de todo o sistema.
+Por isso, o resultado serve como evidência favorável para essa consulta, mas não comprova o desempenho de todo o sistema.
 
 #### Alternativas que descartamos
 
