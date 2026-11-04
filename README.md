@@ -119,7 +119,7 @@
 
 [Resposta 1](imagens/evidencias/resposta_proprietario1.jpeg)
 
-[Resposta 2](imagens/evidencias/resposta_proprietário2.jpeg)
+[Resposta 2](imagens/evidencias/resposta_proprietario2.jpeg)
   
 - **Resumo do levantamento:** Pelo que o responsável explicou, a rotina do mercado funciona assim:
   - **De manhã (retaguarda):** cadastro dos produtos (código de barras, preço, setor, venda por quilo ou por unidade), conferência da nota do fornecedor e entrada no estoque quando a carga chega, e pedidos de compra feitos olhando o giro e os dias de estoque. O fiscal e o financeiro (notas e contas a pagar) também passam pelo sistema. Quando chega algum item fora do padrão, ele pode ser devolvido ou trocado pelo fornecedor, ou então gerar um abatimento na próxima nota.
@@ -196,7 +196,7 @@ Em mercados e hortifrutis costumam existir outros processos além dos listados a
 [Fluxograma de Fechamento de Caixa](imagens/fluxogramas/fluxograma_fechamento_caixa.jpeg)
 
 
-Os três fluxogramas acima mostram a venda no caixa, a compra e o recebimento de mercadorias e o fechamento de caixa. Os detalhes de cada processo estão no levantamento completo.”
+Os três fluxogramas acima mostram a venda no caixa, a compra e o recebimento de mercadorias e o fechamento de caixa. Os detalhes de cada processo estão no levantamento completo.
 
 #### Requisitos do sistema
 
@@ -1000,7 +1000,7 @@ Nos indicadores de perda (KPI01, KPI02 e KPI11) só contam as perdas com `status
 | KPI07 | Produtos abaixo do mínimo: produtos com saldo disponível (soma dos lotes menos as perdas com lote a confirmar) menor que o estoque mínimo, separando os que já têm pedido de compra em aberto dos que não têm | Diário | Zero produtos abaixo do mínimo sem pedido de compra em aberto | G07 |
 | KPI08 | Taxa de cancelamento: vendas canceladas ÷ total de vendas registradas (concluídas + canceladas) × 100 | Mensal | Até 1% | G08 |
 | KPI09 | Quantidade recusada no recebimento, agrupada por fornecedor e unidade de medida (`kg` ou `unidade`). As quantidades são comparadas somente dentro da mesma unidade de medida. | Por período | Comparar fornecedores dentro da mesma unidade de medida e acompanhar as recusas | G09 |
-| KPI10 | Contas em aberto e vencidas | Contas em aberto e vencidas: saldo a pagar (valor da conta menos abatimentos) das contas abertas, separando vencidas e a vencer | Diário | Zero contas vencidas sem pagamento | G10 |
+| KPI10 | Contas em aberto e vencidas: saldo a pagar (valor da conta menos abatimentos) das contas abertas, separando vencidas e a vencer | Diário | Zero contas vencidas sem pagamento | G10 |
 | KPI11 | Perdas com lote a confirmar: perdas válidas pendentes ÷ total de perdas válidas × 100, com a idade de cada pendência (data da consulta menos data da perda) | Mensal | Resolver as pendências em até 7 dias, ou seja, nenhuma pendência com mais de 7 dias | G11 |
 
 **Observação sobre o KPI08:** A G08 calcula a taxa por mês, então devolve duas linhas: outubro com 3 canceladas em 175 vendas (≈ 1,71%) e novembro com 1 em 25 (4,00%). A taxa total da massa é 4/200 = 2%, obtida somando os dois meses. Ambos os meses ficam acima da meta sugerida de 1% apenas para deixar casos de cancelamento e estorno na demonstração; não representam a taxa real do Hortifruti União.
@@ -1381,7 +1381,7 @@ levantamento/
 
 **Dicionário de dados:** [docs/Dicionario_Dados.md](docs/Dicionario_Dados.md). Como a turma é GTI, o dicionário é um único arquivo Markdown, separado do README. Ele traz as 27 tabelas com os campos, tipos, obrigatoriedade, unicidade, valores permitidos e valor padrão, além da versão do MySQL com data, dos índices e da parte de LGPD (que inclui os contatos de fornecedor que são pessoa física ou MEI).
 
-As fotos da organização, o registro da videochamada e os prints das confirmações por WhatsApp ficam em `imagens/evidencias/`. O levantamento completo fica separado, em `levantamento/levantamento.md`. O DER, o modelo lógico, o script e o dicionário de dados ficam em `diagramas/` e `docs/`, a apresentação final fica em `apresentação/` e a interface demonstrativa utilizada como complemento visual fica em `interface/`.
+As fotos da organização, o registro da videochamada e os prints das confirmações por WhatsApp ficam em `imagens/evidencias/`. O levantamento completo fica separado, em `levantamento/levantamento.md`. O DER, o modelo lógico, o script e o dicionário de dados ficam em `diagramas/` e `docs/`, a apresentação final fica em `apresentacao/` e a interface demonstrativa utilizada como complemento visual fica em `interface/`.
 
 Ao longo do trabalho, cada integrante fez seus próprios commits no repositório usando sua conta do GitHub. As contribuições ficaram distribuídas entre as diferentes partes do projeto, e os usuários de cada integrante estão informados na tabela no início do README.
 
@@ -1514,6 +1514,6 @@ O pitch tem **8 minutos**, com pouco texto nos slides e a demonstração do banc
 | 6. BI e IA | Indicadores de perdas, lotes perto de vencer e a ideia de prever risco de perda. | 1 min |
 | 7. Benefícios | Mais controle, menos produto perdido e decisões com base em dados. | 1 min |
 
-**Arquivo da apresentação:** `apresentação/Hortifruti União — Apresentação Acadêmica — Entrega 2.pdf`
+**Arquivo da apresentação:** `apresentacao/Apresentacao_HortifrutiUniao_Entrega2.pptx`
 
 Depois do pitch todos os integrantes ficam para a defesa do modelo lógico, e cada um responde o que foi perguntado a ele. Cada aluno precisa saber explicar as partes do modelo, principalmente chaves, cardinalidades e as decisões de normalização.
