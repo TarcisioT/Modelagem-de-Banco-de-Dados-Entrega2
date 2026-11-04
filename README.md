@@ -1231,15 +1231,15 @@ A carga contempla:
 | `ESCALA` | 112 | Sete dias de escala para os 16 funcionários da amostra. |
 | `FORMA_PAGAMENTO` | 7 | Dinheiro, débito, crédito, Pix, VA, boleto e transferência, conforme o uso em venda/fornecedor. |
 | `CAIXA` | 7 | Corresponde aos 7 caixas informados pelo responsável. |
-| `PEDIDO_COMPRA` | 12 | Pedidos fictícios suficientes para demonstrar compras e reposição. |
+| `PEDIDO_COMPRA` | 12 | Dez pedidos recebidos, um aberto e um cancelado, permitindo demonstrar compra, reposição e situações diferentes do pedido. |
 | `ITEM_PEDIDO_COMPRA` | 70 | Distribui vários produtos entre os 12 pedidos. |
-| `RECEBIMENTO` | 12 | Recebimentos fictícios que formam o estoque inicial e cobrem conferência de mercadoria. |
+| `RECEBIMENTO` | 12 | Dez recebimentos ligados a pedidos e dois recebimentos sem pedido, demonstrando uma das situações previstas na RN11. |
 | `ITEM_RECEBIMENTO` | 66 | Itens das notas, incluindo quantidades aceitas e recusadas. |
 | `CONTA_PAGAR` | 12 | Uma conta por recebimento na amostra, com situações pagas e abertas. |
-| `DEVOLUCAO_FORNECEDOR` | 6 | Casos de devolução, troca e abatimento para demonstrar o processo com fornecedores. |
+| `DEVOLUCAO_FORNECEDOR` | 6 | Os seis casos foram incluídos propositalmente para demonstrar devolução, troca e abatimento. Essa quantidade é didática e não representa a frequência real informada pelo responsável. |
 | `ITEM_DEVOLUCAO` | 6 | Itens específicos vinculados às seis ocorrências de devolução/troca/abatimento. |
 | `LOTE` | 126 | Mais de um lote para parte dos itens, permitindo variar validade, saldo e FEFO. |
-| `MOTIVO_PERDA` | 8 | Motivos fictícios para classificar as perdas demonstradas. |
+| `MOTIVO_PERDA` | 8 | Inclui vencimento, maturação excessiva e dano causado por cliente, confirmados no levantamento, a opção "Outros" e quatro motivos fictícios adicionais definidos pelo grupo para variar os testes. |
 | `PERDA` | 24 | Casos em diferentes setores, sendo 18 confirmados e 6 com lote a confirmar. |
 | `PROMOCAO` | 5 | Promoções de lotes com validade para demonstrar o P2. |
 | `SESSAO_CAIXA` | 49 | Sessões distribuídas pelos 7 caixas e pelos 7 dias simulados. |
@@ -1310,6 +1310,8 @@ A amostra foi montada para mostrar os principais cenários do banco sem tentar c
 A massa principal do projeto tem 200 vendas e foi criada para demonstrar as regras, consultas e situações previstas no banco. Ela não representa um mês completo de funcionamento do Hortifruti União.
 
 Para o RNF09, fizemos separadamente um teste com 54.000 registros fictícios, equivalente a 1.800 vendas por dia durante 30 dias. Esse teste foi usado apenas para avaliar a consulta de vendas por data e o uso do índice, e não o desempenho de todo o sistema.
+
+A massa histórica não contém uma perda com status = substituida, nem um mesmo pedido com dois recebimentos. A possibilidade desses casos está prevista pelas RN43, RN52 e RN11, mas não é demonstrada diretamente pela massa atual. Da mesma forma, a procedure concluir_venda, relacionada à RN57, não foi usada para montar a carga histórica; ela permanece implementada para demonstrar e testar o fluxo de uma nova venda.
 
 ---
 
