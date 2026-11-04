@@ -1127,7 +1127,8 @@ O script contém as consultas gerenciais **G01 a G12** e as auditorias **A01 a A
 | G06 | Calcula o ticket médio diário das vendas concluídas. |
 | G07 | Identifica produtos abaixo do estoque mínimo e informa se possuem pedido de compra aberto ou parcial. |
 | G08 | Calcula a taxa de cancelamento por mês. Por mês, a massa tem 1,71% em outubro (3/175) e 4,00% em novembro (1/25); o total é 4/200 = 2%. |
-| G09 | Soma as quantidades recusadas por fornecedor e unidade de medida, separando `kg` e `unidade`. A comparação das quantidades deve ser feita dentro da mesma unidade de medida. || G10 | Apresenta as contas abertas, separando vencidas e a vencer e considerando os abatimentos registrados. |
+| G09 | Soma as quantidades recusadas por fornecedor e unidade de medida, separando `kg` e `unidade`. A comparação das quantidades deve ser feita dentro da mesma unidade de medida. 
+|| G10 | Apresenta as contas abertas, separando vencidas e a vencer e considerando os abatimentos registrados. |
 | G11 | Identifica perdas com lote a confirmar e calcula o tempo de pendência. Na massa, são 6 perdas pendentes entre 24 perdas válidas, equivalentes a 25%. |
 | G12 | Apresenta as promoções como vigentes ou encerradas em relação à data de referência. |
 | A01 | Foi preparada para localizar as 6 perdas com lote a confirmar, que são pendências intencionais da massa. |
