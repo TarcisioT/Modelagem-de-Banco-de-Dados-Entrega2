@@ -1268,12 +1268,12 @@ O relatório técnico está neste arquivo `README.md`, localizado na raiz da bra
 #### Principais arquivos da entrega
 
 - `README.md` – Relatório Técnico Final
-- `docs/DER_conceitual.png` – DER Conceitual
-- `docs/modelo_logico.png` – Modelo Lógico
+- `diagramas/der.conceitual.png` – DER Conceitual
+- `diagramas/Modelo_Logico_Hortifruti.png` – Modelo Lógico
 - `docs/script.sql` – Script SQL completo
-- `docs/dicionario_dados.md` – Dicionário de Dados
+- `docs/Dicionario_Dados.md` – Dicionário de Dados
 - `levantamento/levantamento.md` – Levantamento de requisitos
-- `apresentacao/pitch_final.pptx` – Apresentação final
+- `apresentação/Hortifruti União — Apresentação Acadêmica — Entrega 2.pdf` – Apresentação final
 
 #### Estrutura do repositório
 
