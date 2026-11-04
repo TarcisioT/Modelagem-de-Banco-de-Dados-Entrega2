@@ -811,11 +811,21 @@ O grupo já tinha relatado testes no MySQL 8.0 com 13 tabelas, 74 colunas, 17 FK
 
 **Software utilizado:** brModelo 3.2.0.
 
-![Modelo lógico relacional do Hortifruti União](diagramas/modelo_logico.png)
+O modelo lógico relacional do Hortifruti União foi desenvolvido a partir do DER conceitual revisado. A estrutura implementada no SQL atual contém **27 tabelas e 53 restrições de chave estrangeira**, além dos atributos, tipos de dados, chaves primárias e restrições de integridade.
 
-O diagrama tem 13 tabelas, com colunas, tipos, PKs, FKs e cardinalidades já convertidas. Na cópia do SQL usada na conferência há 17 FKs, todas anuláveis. Obrigatoriedade, unicidade e valores permitidos vão no [Dicionário de Dados](Dicionario_Dados.md) e no [script SQL](docs/script.sql); nessa cópia as restrições a mais ainda não estão. A conferência final precisa comparar o PNG, o dicionário e o SQL que será publicado.
+**Arquivo do modelo lógico:** [docs/modelo_logico.png](docs/modelo_logico.png)
 
-Arquivos: `diagramas/der_conceitual.png`, `diagramas/modelo_logico.png`, `Dicionario_Dados.md` (74 colunas), `docs/script.sql` (base `hortifruti_uniao_entrega2`).
+![Modelo lógico relacional do Hortifruti União](docs/modelo_logico.png)
+
+As tabelas representam os cadastros e as operações do mercado, incluindo funcionários, fornecedores, produtos, compras, recebimentos, lotes, perdas, vendas, pagamentos e sessões de caixa. As chaves estrangeiras relacionam esses registros e impedem referências a registros inexistentes.
+
+A estrutura está implementada no script [docs/script.sql](docs/script.sql), desenvolvido para **MySQL 8.0.16 ou superior**. A versão `script_com_massa_200_vendas_CORRIGIDO.sql` foi executada no **MySQL 8.0.46**, no banco `hortifruti_uniao`, com uma massa fictícia de **200 vendas distribuídas em sete dias**.
+
+O script contém **12 consultas gerenciais, G01 a G12, e 12 consultas de auditoria, A01 a A12**. Os detalhes da execução, os resultados conferidos e as limitações identificadas estão descritos na seção 3.
+
+As chaves estrangeiras não garantem, sozinhas, todas as regras de negócio. Por isso, o SQL também utiliza restrições `CHECK`, triggers e procedures para validar operações como baixas de estoque, cancelamentos e escolha de lotes. A existência desses mecanismos não substitui os testes de cada fluxo.
+
+O [Dicionário de Dados](docs/dicionario_dados.md) é o documento destinado a detalhar os campos e as restrições das tabelas. A imagem do modelo lógico e o dicionário devem acompanhar a mesma versão do script, com **27 tabelas e 53 chaves estrangeiras**.
 
 ---
 
