@@ -1032,7 +1032,7 @@ O modelo lógico relacional do Hortifruti União foi desenvolvido a partir do DE
 
 As tabelas representam os cadastros e as operações do mercado, incluindo funcionários, fornecedores, produtos, compras, recebimentos, lotes, perdas, vendas, pagamentos e sessões de caixa. As chaves estrangeiras relacionam esses registros e impedem referências a registros inexistentes.
 
-A implementação está no [script SQL](docs/script.sql), desenvolvido para **MySQL 8.0.16 ou superior**, no banco `hortifruti_uniao`. Os detalhes da execução e as limitações identificadas estão na seção 3.
+A implementação está no [script SQL](docs/script.sql), desenvolvido para **MySQL 8.0.16 ou superior**, no banco `hortifruti_uniao`. Os detalhes da execução, das correções realizadas e dos limites da implementação estão na seção 3.
 
 O [Dicionário de Dados](docs/Dicionario_Dados.md) detalha os campos e as restrições das tabelas. As regras que não aparecem no desenho, como `CHECK`, `DEFAULT` e validações entre tabelas, estão descritas no dicionário e no SQL. A imagem e o dicionário foram conferidos pelo grupo contra o script: 27 tabelas e 53 chaves estrangeiras.
 
