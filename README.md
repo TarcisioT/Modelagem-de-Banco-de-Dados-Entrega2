@@ -995,7 +995,7 @@ A perda guarda o setor da época em que aconteceu, mas as vendas por setor usam 
 | KPI06 — Ticket médio | VENDA | G06 |
 | KPI07 — Produtos com estoque baixo | PRODUTO, LOTE, PERDA, PEDIDO_COMPRA, ITEM_PEDIDO_COMPRA | G07 |
 | KPI08 — Taxa de cancelamentos | VENDA | G08 |
-| KPI09 — Mercadorias recusadas | ITEM_RECEBIMENTO, RECEBIMENTO, FORNECEDOR | G09 |
+| KPI09 — Mercadorias recusadas | ITEM_RECEBIMENTO, RECEBIMENTO, FORNECEDOR, PRODUTO | G09 |
 | KPI10 — Contas em aberto e vencidas | CONTA_PAGAR, RECEBIMENTO, FORNECEDOR | G10 |
 | KPI11 — Perdas sem lote confirmado | PERDA | G11 |
 
