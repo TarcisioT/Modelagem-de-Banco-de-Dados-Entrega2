@@ -919,6 +919,18 @@ Por isso, o resultado serve como evidência favorável para essa consulta, mas n
 
 #### Alternativas que descartamos
 
+- **Tabela ESTOQUE separada.** O saldo ficaria guardado em dois lugares (no estoque e nos lotes) e podia divergir. Preferimos somar os lotes e guardar só `LOTE.quantidade_atual`.
+- **Entidade CLIENTE.** A Entrega 1 tinha, mas o mercado não cadastra cliente. Manter só criaria uma tabela sem uso.
+- **Entidade CATEGORIA.** O mercado se organiza por setor, e o prazo de alerta de validade muda por setor. Por isso trocamos CATEGORIA por SETOR.
+- **Validade no produto.** Cada entrega do mesmo produto pode ter validade diferente, então a validade ficou no lote.
+- **Perda como um tipo de devolução ao fornecedor.** Misturar esconderia o prejuízo do mercado, porque devolução e troca com o fornecedor não são prejuízo. Mantivemos as duas separadas.
+- **Perda só como `tipo = perda` em SAIDA_LOTE.** Perdemos o motivo, o setor e a perda sem lote ("lote a confirmar"). Por isso PERDA é uma entidade própria, ligada à saída quando o lote é conhecido.
+- **Chave natural no lugar da chave numérica.** CNPJ, CPF e código de barras podem faltar ou mudar, então ficaram como colunas com `UNIQUE`.
+- **Duas tabelas de formas de pagamento (uma para venda e outra para fornecedor).** Repetiria o cadastro de formas como o Pix, que vale para os dois lados. Ficamos com uma tabela só e a coluna `uso`.
+- **Deixar quem trabalha em compras e financeiro sem setor.** `FUNCIONARIO.id_setor` ficaria opcional e as consultas por setor teriam de tratar o `NULL`. Preferimos criar os setores Caixa e Retaguarda, que não vendem produto.
+- **Descobrir quem fechou o caixa e quem pagou a conta pelo log do banco.** Não prova quem foi o funcionário responsável, então preferimos as duas FKs.
+- **Representar os itens como entidades comuns no DER.** Descartamos essa opção porque esses itens existem por causa da ligação entre outras entidades. Por isso, no conceitual eles aparecem como associações com atributos (e como entidade associativa quando a linha precisa ser referenciada), enquanto as tabelas de item ficam no modelo lógico.
+
 #### Outras escolhas do modelo
 
 O banco é em **MySQL**, com tabelas InnoDB e `utf8mb4`, para aproveitar as chaves estrangeiras e as transações. Usamos o MySQL 8.0, porque as restrições `CHECK` só são aplicadas de fato a partir da versão 8.0.16. O modelo funciona separado do VR Software. Não afirmamos que existe integração automática entre os dois.
