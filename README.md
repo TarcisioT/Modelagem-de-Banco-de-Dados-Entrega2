@@ -1412,6 +1412,8 @@ Usamos IA como apoio na organização, revisão e validação do trabalho. As in
 | **Trechos corrigidos ou rejeitados** | Rejeitamos cadastro de clientes, fidelidade, venda online, entrega e fiado porque o mercado não realiza esses processos. A troca pelo cliente existe, mas é rara e ficou fora do fluxo próprio do caixa. Escala, devolução ao fornecedor e fechamento de caixa foram mantidos porque fazem parte da rotina levantada. |
 | **Justificativa da escolha final** | O modelo foi limitado ao que a organização realmente faz e ao que é necessário para representar seus dados. |
 | **Reflexão crítica** | Listas genéricas de processos de mercado não podem substituir o levantamento; elas serviram apenas para comparação e foram filtradas pelas informações confirmadas com o responsável. |
+| Quais processos são comuns em mercados e hortifrutis e quais deles devemos conferir com o responsável?" |
+| Revisa nossas regras de negócio e vê se estão de acordo com o levantamento e se está faltando alguma regra importante." |
 
 #### Uso 6 — Claude e ChatGPT: revisão geral do README e correções de consistência
 
@@ -1440,8 +1442,6 @@ Usamos IA como apoio na organização, revisão e validação do trabalho. As in
 | **Justificativa da escolha final** | A apresentação foi mantida alinhada à ordem exigida e aos artefatos efetivamente entregues no repositório. |
 | **Reflexão crítica** | A IA ajudou na síntese visual, mas os slides precisam continuar fiéis ao modelo e ao SQL; simplificar demais poderia esconder diferenças entre o conceitual e o lógico. |
 
-**Referências técnicas consultadas no SQL:** [restrições CHECK no MySQL 8.0](https://dev.mysql.com/doc/refman/8.0/en/create-table-check-constraints.html) e [colunas geradas no MySQL](https://dev.mysql.com/doc/refman/8.0/en/create-table-generated-columns.html).
-
 #### Uso 8 — ChatGPT: interface demonstrativa do banco
 
 | Item | Registro |
@@ -1455,6 +1455,7 @@ Usamos IA como apoio na organização, revisão e validação do trabalho. As in
 | **Justificativa da escolha final** | A interface foi usada apenas como complemento visual. A implementação SQL e as consultas continuam sendo os artefatos principais exigidos pelo trabalho. |
 | **Reflexão crítica** | A interface não substitui a validação do SQL e depende da conexão correta com o MySQL. Ela serve apenas para facilitar a visualização dos dados durante a demonstração. |
 
+**Referências técnicas consultadas no SQL:** [restrições CHECK no MySQL 8.0](https://dev.mysql.com/doc/refman/8.0/en/create-table-check-constraints.html) e [colunas geradas no MySQL](https://dev.mysql.com/doc/refman/8.0/en/create-table-generated-columns.html).
 
 ## 7. Apresentação Corporativa Final
 
