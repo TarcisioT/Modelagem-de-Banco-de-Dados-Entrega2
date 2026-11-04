@@ -1302,6 +1302,7 @@ O relatório técnico está neste arquivo `README.md`, localizado na raiz da bra
 - `README_Entrega1.md` – Relatório da Entrega 1
 - `diagramas/der.conceitual.png` – DER Conceitual
 - `diagramas/Modelo_Logico_Hortifruti.png` – Modelo Lógico
+- - `docs/modelo_logico.brM3` – Arquivo editável do Modelo Lógico no brModelo
 - `docs/script.sql` – Script SQL completo
 - `docs/Dicionario_Dados.md` – Dicionário de Dados
 - `levantamento/levantamento.md` – Levantamento de requisitos
