@@ -296,7 +296,13 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 
 ##### Requisitos comuns não incluídos
 
-Em 30/09/2026, o responsável confirmou presencialmente, no mercado, que esses processos existem, mas são feitos por outros sistemas, pela contabilidade ou pelo financeiro, e não fazem parte do controle de vendas, estoque e perdas. Por isso não geram requisito neste banco e não são necessários para resolver P1 e P2.
+Em 30/09/2026, durante a visita ao mercado, o responsável explicou que também existem processos de inventário, controle sanitário, folha de pagamento e ponto, despesas gerais e definição de preços.
+
+Esses processos foram considerados no levantamento, mas não viraram requisitos próprios no nosso banco porque já são controlados por outros sistemas, pela contabilidade, pelo setor financeiro ou pela própria gestão do mercado.
+
+No nosso projeto, mantivemos apenas as informações que têm relação com o modelo desenvolvido. O estoque é controlado pelos lotes, os funcionários têm cadastro e escala, as contas a pagar estão ligadas aos recebimentos de mercadorias e o preço definido pela gerência fica registrado no produto e nas vendas.
+
+Também não criamos requisitos para cadastro de clientes, programa de fidelidade, vendas online, entregas e venda fiado, porque o responsável confirmou que o mercado não realiza esses processos.
 
 ---
 
