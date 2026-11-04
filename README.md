@@ -115,11 +115,6 @@
 
 - **Comprovação:** As fotos tiradas na visita e os registros da entrevista e das confirmações ficam na pasta `imagens/evidencias/`. A entrevista de 22/09 foi realizada por videochamada no WhatsApp e é comprovada pelo [registro da videochamada](imagens/evidencias/entrevista_videochamada.jpeg). Como ela não aconteceu no ambiente do mercado, não temos uma foto da entrevista em si. A visita presencial de 30/09 está comprovada pelas fotos do local. Também incluímos os dois prints das confirmações feitas por WhatsApp em 26/10/2026: [primeiro print da confirmação](imagens/evidencias/resposta_proprietario1.jpeg) e [segundo print da confirmação](imagens/evidencias/resposta_proprietario2.jpeg).
 
--**Respostas do Proprietário:** 
-
-[Resposta 1](imagens/evidencias/resposta_proprietario1.jpeg)
-
-[Resposta 2](imagens/evidencias/resposta_proprietario2.jpeg)
   
 - **Resumo do levantamento:** Pelo que o responsável explicou, a rotina do mercado funciona assim:
   - **De manhã (retaguarda):** cadastro dos produtos (código de barras, preço, setor, venda por quilo ou por unidade), conferência da nota do fornecedor e entrada no estoque quando a carga chega, e pedidos de compra feitos olhando o giro e os dias de estoque. O fiscal e o financeiro (notas e contas a pagar) também passam pelo sistema. Quando chega algum item fora do padrão, ele pode ser devolvido ou trocado pelo fornecedor, ou então gerar um abatimento na próxima nota.
