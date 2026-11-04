@@ -177,7 +177,7 @@ Essa mesma conversa também confirmou a devolução e troca com fornecedores e a
 
 **Fluxograma do processo de venda:**
 
-![Fluxograma de Vendas](imagens/fluxogramas/fluxograma_venda.jpeg)
+[Fluxograma de Vendas](imagens/fluxogramas/fluxograma_venda.jpeg)
 
 
 Os fluxos do ciclo de compra e do fechamento de caixa representam as rotinas descritas pelo responsável sobre compras, recebimento e conferência do caixa. Eles estão escritos em Mermaid porque o GitHub renderiza esse formato diretamente no README.
