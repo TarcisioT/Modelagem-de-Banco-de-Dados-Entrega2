@@ -1302,7 +1302,7 @@ apresentacao/
 
 Os fluxogramas do ciclo de compra e do fechamento de caixa não têm arquivo de imagem: estão em Mermaid, direto no README.
 
-**Dicionário de dados:** [docs/dicionario_dados.md](docs/dicionario_dados.md). Como a turma é GTI, o dicionário é um único arquivo Markdown, separado do README. Ele traz as 27 tabelas com os campos, tipos, obrigatoriedade, unicidade, valores permitidos e valor padrão, além da versão do MySQL com data, dos índices e da parte de LGPD (que inclui os contatos de fornecedor que são pessoa física ou MEI).
+**Dicionário de dados:** [docs/dicionario_dados.md](docs/Dicionario_Dados.md). Como a turma é GTI, o dicionário é um único arquivo Markdown, separado do README. Ele traz as 27 tabelas com os campos, tipos, obrigatoriedade, unicidade, valores permitidos e valor padrão, além da versão do MySQL com data, dos índices e da parte de LGPD (que inclui os contatos de fornecedor que são pessoa física ou MEI).
 
 As fotos da organização, os registros da entrevista e os prints das confirmações ficam em `imagens/evidencias/`. O levantamento completo fica separado, em `levantamento/levantamento.md`. O DER, o modelo lógico, o script e o dicionário de dados ficam em `docs/`, e a apresentação final fica em `apresentacao/`.
 
