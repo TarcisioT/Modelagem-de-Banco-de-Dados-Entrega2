@@ -1182,7 +1182,9 @@ Na organização da massa:
 - as perdas com lote a confirmar permanecem identificadas como pendências;
 - os totais das vendas, os pagamentos e os saldos foram conferidos.
 
-Os testes foram feitos para conferir o funcionamento do banco na demonstração do projeto. Executamos as operações uma de cada vez e também testamos uma situação com duas conexões ao mesmo tempo. Além disso, fizemos um teste específico de desempenho da consulta de vendas por data com 54.000 registros sintéticos. Esse teste não representa o processamento completo do sistema. Também não testamos todas as situações possíveis das regras de negócio e das operações simultâneas.
+Os testes foram feitos para conferir se o banco e as principais regras estavam funcionando como esperado. Também testamos uma situação com duas conexões ao mesmo tempo e fizemos um teste separado da consulta de vendas por data com 54.000 registros fictícios.
+
+Esse teste maior serviu para verificar o uso do índice e o comportamento dessa consulta, mas não representa o funcionamento completo do sistema com itens, pagamentos, estoque e vários usuários ao mesmo tempo. Também não testamos todas as combinações possíveis das regras de negócio e das operações simultâneas.
 
 ---
 
