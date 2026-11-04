@@ -179,14 +179,10 @@ Em mercados e hortifrutis costumam existir outros processos além dos listados a
 
 **Fluxograma do processo de venda:**
 
-[Fluxograma de Vendas](imagens/fluxogramas/fluxograma_venda.jpeg)
+![Fluxograma de Vendas](imagens/fluxogramas/fluxograma_venda.jpeg)
+
 
 O fluxograma acima mostra como uma venda acontece no caixa. As rotinas de compra, recebimento e fechamento de caixa estão descritas no resumo do levantamento e na lista de processos.
-
-**Fluxograma de Compra e Recebimento:**
-
-[Fluxograma de Compra e Recebimento](imagens/fluxogramas/fluxograma_compra_recebimento.jpeg)
-
 
 #### Requisitos do sistema
 
@@ -633,7 +629,7 @@ Revisamos o modelo com base nos apontamentos da Entrega 1 e nas informações no
 | Chaves estrangeiras no conceitual | Foram retiradas | Pertencem ao modelo lógico. |
 | Venda e produto incompletos | Criamos a entidade associativa VENDA–PRODUTO, com quantidade, preço e situação de cada item (vira a tabela ITEM_VENDA no lógico) | Precisamos da quantidade e do preço de cada produto vendido. |
 | Sem entidade de lotes | Criamos LOTE | O controle de validade depende de cada lote. |
-| Compra incompleta | Incluímos pedidos, recebimentos, contas a pagar e os itens de pedido e de recebimento (associações com atributos) | Fazem parte da rotina do mercado. |
+| Sem PEDIDO e ciclo de compra incompleto |Incluímos pedidos, recebimentos, contas a pagar e os itens de pedido e de recebimento (associações com atributos) | Fazem parte da rotina do mercado. |
 | Entidade CLIENTE | Foi retirada | As vendas não têm cadastro de cliente. |
 | Faltava a operação dos caixas | Incluímos caixa, sessão, pagamento, sangria e troca de operador | O banco precisa mostrar o que acontece no atendimento. |
 | Entidade CATEGORIA | Trocada por SETOR | O mercado organiza por setor, e o prazo de alerta de validade varia conforme o setor. A validade de cada produto fica registrada no lote. |
@@ -641,12 +637,17 @@ Revisamos o modelo com base nos apontamentos da Entrega 1 e nas informações no
 | Sem funcionários e escalas | Incluímos FUNCIONARIO e ESCALA | São cerca de 110 funcionários e a escala é feita em planilha. |
 | Justificativas pouco detalhadas | Passamos a explicar as alternativas e os motivos | Mostra por que cada coisa faz sentido para o mercado. |
 | Processos: faltava o fluxo do ciclo de compra e do fechamento de caixa | Mantivemos o fluxograma de vendas. O ciclo de compra, o recebimento e o fechamento de caixa estão explicados em texto, na seção de processos | A venda é o processo principal do caixa, e as outras duas rotinas estão descritas no levantamento |
-| Regras: Inmetro, LGPD, estoque mínimo e permissões | LGPD, estoque mínimo e permissões já estavam previstos nas regras e requisitos (RN51, RN04, RN25 e RNF01), então o grupo apenas ajustou o texto. A aferição da balança (Inmetro) ficou de fora de propósito | O banco não controla a balança, e o grupo não confirmou com o responsável como a aferição é feita. O motivo está na tabela de regras comuns não incluídas. |
+| Regras: Inmetro, LGPD, estoque mínimo e permissões | LGPD, estoque mínimo e permissões passaram a constar explicitamente nas regras e requisitos do projeto (RN04, RN25, RN51, RNF01 e RNF07). A aferição da balança pelo Inmetro ficou fora do banco e foi justificada no texto de regras comuns não incluídas. | Os três primeiros pontos foram incorporados ao projeto. O Inmetro não foi modelado porque o banco apenas recebe o peso informado pela venda e o grupo não confirmou com o responsável como é feita a aferição da balança. |
 | Entrevista e evidências | Nova entrevista (22/09), visita (30/09) e confirmações por WhatsApp (26/10), com fotos e prints no repositório | A comprovação ficou mais completa e os registros ficaram reunidos no repositório. |
 | Dicionário de dados | Ficou em um arquivo Markdown separado, `docs/Dicionario_Dados.md` | A turma é GTI. |
 | Anexos no GitHub | DER, modelo lógico, script, fotos, prints e levantamento ficam em pastas do repositório e têm link no README | O professor corrige pelo repositório. |
 | Forma de pagamento Pix | Entrou no cadastro de formas de pagamento | O responsável confirmou que o mercado aceita Pix. |
 | Integrantes | Victor Hugo, Guilherme e Lucas entraram, Henrico e Nicole saíram | Mudança do grupo desde a Entrega 1. |
+| Fornecedor–produto modelado como 1:N | Revisamos para N:N e criamos a associação FORNECEDOR_PRODUTO, que no modelo lógico virou uma tabela própria | Um fornecedor pode fornecer vários produtos e o mesmo produto pode estar relacionado a mais de um fornecedor. A associação também guarda o código do produto no fornecedor e o último custo. |
+| Dicionário: CPF, CNPJ, telefone e código de barras tratados como número | Esses campos passaram a utilizar `VARCHAR` no modelo lógico e no dicionário | São identificadores ou textos de contato, não valores usados em cálculos, e podem possuir zeros à esquerda. |
+| Dicionário: faltavam versão/data e índices | O dicionário foi atualizado com a versão do MySQL utilizada, data de revisão e os índices definidos no banco | Essas informações passaram a documentar com mais precisão a implementação entregue. |
+| Dicionário: log de acesso | O grupo não criou um log genérico de acesso. A rastreabilidade das operações foi feita por FKs para FUNCIONARIO nas operações relevantes, e o controle de acesso foi representado por roles e permissões do MySQL | Mantivemos essa decisão porque o usuário técnico que executa um comando no banco não identifica necessariamente o funcionário responsável pela operação. |
+| Dicionário e DER: cardinalidades incompletas ou incorretas | As cardinalidades foram revisadas e passaram a mostrar mínimo e máximo nos dois lados dos relacionamentos | A revisão deixa explícito o que é obrigatório, opcional, único ou múltiplo em cada relacionamento. |
 
 Além dos apontamentos, incluímos por conta própria o estorno em SAIDA_LOTE, ligado à baixa original, para corrigir baixas sem apagar o histórico, e as ligações que dizem quem fechou o caixa e quem pagou a conta (relacionamentos 46 e 47) e a que liga uma perda corrigida à original (48).
 
@@ -1310,7 +1311,7 @@ O relatório técnico está neste arquivo `README.md`, localizado na raiz da bra
 - `docs/script.sql` – Script SQL completo
 - `docs/Dicionario_Dados.md` – Dicionário de Dados
 - `levantamento/levantamento.md` – Levantamento de requisitos
-- `apresentacaoo/Apresentacao_HortifrutiUniao_Entrega2.pptx` – Apresentação final
+- `apresentação/Hortifruti União — Apresentação Acadêmica — Entrega 2.pdf` – Apresentação final
 - `interface/` – Interface demonstrativa em PHP, HTML e CSS utilizada como complemento visual da apresentação
 
 #### Estrutura do repositório
@@ -1318,8 +1319,8 @@ O relatório técnico está neste arquivo `README.md`, localizado na raiz da bra
 ```text
 README.md
 README_Entrega1.md
-apresentaçao/
-  Apresentacao_HortifrutiUniao_Entrega2.pptx
+apresentação/
+  Hortifruti União — Apresentação Acadêmica — Entrega 2.pdf
 diagramas/
   Modelo_Logico_Hortifruti.png
   der.conceitual.png
@@ -1374,14 +1375,14 @@ Usamos IA como apoio na organização, revisão e validação do trabalho. As in
 
 | Item | Registro |
 | :--- | :--- |
-| **Ferramenta e etapa** | ChatGPT, na revisão do DER conceitual e na conferência das chaves do modelo lógico. |
+| **Ferramenta e etapa** | Claude e ChatGPT, na revisão, reorganização e redação de partes do README. O Claude foi utilizado também na elaboração de versões iniciais de trechos das seções 1.2 a 1.6, que depois foram revisados pelo grupo e comparados com o modelo e o SQL. O ChatGPT foi usado em revisões posteriores de consistência, estrutura e alinhamento com o esqueleto do professor. |
 | **Motivação** | Conferir se entidades, atributos, relacionamentos, cardinalidades e chaves estavam coerentes com o levantamento e com a conversão para o modelo lógico. |
 | **Prompt(s) utilizados** | "Analisa nosso DER e vê se as entidades, atributos, relacionamentos e cardinalidades fazem sentido com o levantamento que fizemos. Também verifica se tem algum relacionamento N:N que precisa virar uma entidade associativa. Não coloca chave estrangeira no DER, porque isso vai ficar só no modelo lógico."<br><br>"Analisa as chaves primárias e estrangeiras das tabelas e vê se os relacionamentos estão corretos e me mostre onde esta errado." |
 | **Resposta recebida** | Revisão das entidades e cardinalidades, identificação das associações com atributos e conferência das PKs e FKs geradas na conversão para o lógico. |
 | **Fontes consultadas e verificadas** | Comparamos as sugestões com o levantamento, as regras de negócio, a lista de 22 entidades, os 48 relacionamentos do DER e as 53 FKs do modelo lógico. |
 | **Trechos corrigidos ou rejeitados** | Os itens de pedido, recebimento, devolução e venda foram mantidos como associações com atributos no conceitual e como tabelas no lógico. PAGAMENTO, SAIDA_LOTE e TROCA_OPERADOR foram mantidos como entidades porque têm comportamento e relacionamentos próprios. |
 | **Justificativa da escolha final** | Mantivemos somente as alterações que correspondiam aos processos levantados e à notação escolhida para o DER. |
-| **Reflexão crítica** | A IA ajudou a localizar inconsistências, mas a decisão final dependeu da comparação entre o desenho, as regras e o modelo lógico. |
+| **Reflexão crítica** | As IAs ajudaram a localizar divergências e discutir alternativas de modelagem, mas as decisões finais foram revisadas pela equipe. Durante as revisões, PAGAMENTO foi discutido como possível associação e SAIDA_LOTE como um caso que poderia ter outra representação; o grupo decidiu manter ambos como entidades pelas funções que exercem no modelo. TROCA_OPERADOR foi mantida como entidade por precisar preservar o histórico das trocas de operador. |
 
 #### Uso 2 — ChatGPT: revisão do SQL
 
