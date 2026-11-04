@@ -84,8 +84,7 @@
 
 ![Fotografia do estoque](imagens/evidencias/estoque_mercado.jpeg)
 
-correção levantamento md
-### Relato da entrevista
+#### Relato da entrevista
 
 - **Quem:** Guilherme Takemoto, um dos proprietários do Hortifruti União – Tatuapé. A entrevista e a visita foram feitas pelo Tarcisio, que já trabalhou no mercado. Os outros integrantes do grupo não participaram.
 
@@ -116,7 +115,7 @@ correção levantamento md
 - **O que mudou em relação à Entrega 1:** na Entrega 1, o único problema levantado era o controle de validade dos produtos. Com a entrevista e a visita desta etapa, encontramos um problema novo: a falta de controle sobre as perdas (P1). Os números do mercado continuam os mesmos. Mudaram também duas coisas: a lista de formas de pagamento, em que o Pix não aparecia e agora entrou porque o responsável confirmou que o mercado aceita Pix, e a composição do grupo, já que Victor Hugo dos Santos Maciel e Guilherme Damasceno dos Santos entraram e Henrico e Nicole saíram.
 
 - **Comprovação:** As fotos tiradas na visita e os registros da entrevista e das confirmações ficam na pasta `imagens/evidencias/`. A entrevista de 22/09 foi realizada por videochamada no WhatsApp e é comprovada pelo respectivo registro. Como ela não aconteceu no ambiente do mercado, não temos uma foto da entrevista em si. A visita presencial de 30/09 está comprovada pelas fotos do local. Também incluímos os prints das confirmações por WhatsApp de 26/10 e 29/10: [videochamada de 22/09](imagens/evidencias/entrevista_videochamada.png), [confirmação por WhatsApp de 26/10](imagens/evidencias/confirmacao_whatsapp_26-10.png) e [confirmação por WhatsApp de 29/10](imagens/evidencias/confirmacao_whatsapp_29-10.png).
-
+  
 - **Resumo do levantamento:** Pelo que o responsável explicou, a rotina do mercado funciona assim:
   - **De manhã (retaguarda):** cadastro dos produtos (código de barras, preço, setor, venda por quilo ou por unidade), conferência da nota do fornecedor e entrada no estoque quando a carga chega, e pedidos de compra feitos olhando o giro e os dias de estoque. O fiscal e o financeiro (notas e contas a pagar) também passam pelo sistema. Quando chega algum item fora do padrão, ele pode ser devolvido ou trocado pelo fornecedor, ou então gerar um abatimento na próxima nota.
   - **No caixa:** o operador abre o caixa com o fundo e passa os itens (os de peso vão pela balança). Existem consulta de preço, cancelamento e troca de operador. Cada venda baixa o estoque, na hora se o estoque online estiver ligado, ou depois que o escritório fecha a conferência do dia.
@@ -125,7 +124,7 @@ correção levantamento md
 
 - **Levantamento completo:** os processos e regras com mais detalhe estão em [levantamento/levantamento.md](levantamento/levantamento.md).
 
-### Processos de negócio
+#### Processos de negócio
 
 Com base na entrevista com o responsável, na visita ao Hortifruti União e nas confirmações feitas por WhatsApp em 26/10 e 29/10, identificamos os principais processos que fazem parte da rotina do mercado. Como o estabelecimento trabalha com vários setores e uma grande quantidade de produtos, existem diferentes atividades que precisam ser organizadas e controladas diariamente. Os detalhes de cada processo estão no [levantamento completo](levantamento/levantamento.md).
 
@@ -159,7 +158,7 @@ Os principais processos identificados foram:
 
 - **Escala de trabalho dos funcionários:** Como o mercado abre todos os dias, inclusive domingos e feriados, existe uma escala para organizar o trabalho dos cerca de 110 funcionários. Hoje essa escala é feita em planilha, fora do VR Software. Mesmo sem ligação direta com os problemas de perdas e validade, ela é um processo real do mercado, e por isso entrou no nosso modelo.
 
-#### Processos comuns que não foram incluídos no levantamento
+##### Processos comuns que não foram incluídos no levantamento
 
 Em mercados e hortifrutis costumam existir outros processos além dos listados acima. Em 29/10/2026, confirmamos com o responsável, por WhatsApp, como o Hortifruti União lida com cada um deles. Os que não foram incluídos no modelo, e os motivos, são:
 
@@ -174,15 +173,15 @@ Em mercados e hortifrutis costumam existir outros processos além dos listados a
 
 Essa mesma conversa também confirmou a devolução e troca com fornecedores e a escala dos funcionários. Como o mercado realiza os dois, eles entraram na lista principal de processos.
 
-#### Fluxogramas
+##### Fluxogramas
 
 **Fluxograma do processo de venda:**
 
-<img src="fluxograma_vendas.png" alt="Fluxograma do processo de venda" width="450">
+<img src="imagens/fluxogramas/fluxograma_vendas.png" alt="Fluxograma do processo de venda" width="450">
 
 **Fluxograma do processo de estoque:**
 
-<img src="fluxograma_estoque.png" alt="Fluxograma do processo de estoque" width="450">
+<img src="imagens/fluxogramas/fluxograma_estoque.png" alt="Fluxograma do processo de estoque" width="450">
 
 Os fluxos do ciclo de compra e do fechamento de caixa representam as rotinas descritas pelo responsável sobre compras, recebimento e conferência do caixa. Eles estão escritos em Mermaid porque o GitHub renderiza esse formato diretamente no README.
 
@@ -221,29 +220,27 @@ flowchart TD
     H --> I[Atualiza estoque, relatórios e fiscal]
 ```
 
-
-
-#### Requisitos do Sistema
+#### Requisitos do sistema
 
 Os requisitos abaixo foram definidos a partir da entrevista de 22/09/2026, da visita de 30/09/2026 e das confirmações por WhatsApp de 26/10 e 29/10/2026. O que foi informado pelo responsável ou observado na visita é tratado como **levantamento**. Já os campos, validações e controles definidos pelo grupo para organizar o banco são tratados como **proposta**.
 
 O banco será desenvolvido em MySQL como uma implementação acadêmica, independente do VR Software, com dados fictícios. Não há integração nem carga automática de dados do sistema atual, então o banco representa os processos do mercado, mas não acompanha a operação real.
 
-### Requisitos Funcionais
+##### Requisitos funcionais
 
-#### Cadastros
+###### Cadastros
 
 | Código | Requisito | Dados envolvidos |
 | :---- | :---- | :---- |
-| RF01 | Cadastrar e atualizar setores. | Nome, descrição e dias de antecedência do alerta de validade. |
+| RF01 | Cadastrar e atualizar setores. | Nome, descrição, dias de antecedência do alerta de validade e se o setor vende produto. |
 | RF02 | Cadastrar, atualizar e inativar produtos. | Código interno (PLU), código de barras quando existir, nome, setor, unidade de venda, preço, estoque mínimo, situação, indicador de validade impressa e restrição de venda por idade. |
 | RF03 | Cadastrar, atualizar e inativar fornecedores. | Razão social, CNPJ, telefone, e-mail, endereço e situação. |
 | RF04 | Relacionar produtos aos fornecedores. | Fornecedor, produto e código do produto no fornecedor. |
-| RF05 | Cadastrar formas de pagamento. | Descrição e situação. |
+| RF05 | Cadastrar formas de pagamento. | Descrição, uso (venda, fornecedor ou ambos) e situação. |
 | RF06 | Cadastrar e inativar caixas. | Número e situação. |
 | RF07 | Cadastrar motivos de perda. | Descrição e situação. |
 
-#### Funcionários e escala
+###### Funcionários e escala
 
 | Código | Requisito | Dados envolvidos |
 | :---- | :---- | :---- |
@@ -251,7 +248,7 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 | RF09 | Registrar a escala de trabalho. | Funcionário, data, tipo (trabalho ou folga) e horários, quando for dia de trabalho. |
 | RF10 | Consultar a escala por data, funcionário ou setor. | Funcionário, setor, data e horários. |
 
-#### Compras e recebimento
+###### Compras e recebimento
 
 | Código | Requisito | Dados envolvidos |
 | :---- | :---- | :---- |
@@ -263,7 +260,7 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 | RF16 | Registrar devolução, troca ou abatimento negociado com o fornecedor. | Fornecedor, recebimento, itens, quantidades, tipo, motivo, valor do abatimento, situação, funcionário e data. |
 | RF17 | Consultar pedidos, recebimentos e divergências por fornecedor e período. | Quantidades pedidas, aceitas e recusadas. |
 
-#### Estoque
+###### Estoque
 
 | Código | Requisito | Dados envolvidos |
 | :---- | :---- | :---- |
@@ -271,33 +268,33 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 | RF19 | Registrar saídas de lote e seus estornos. | Lote, quantidade, venda ou perda de origem, data e hora. |
 | RF20 | Consultar produtos com estoque baixo ou pouco giro. | Produto, setor, saldo, estoque mínimo e quantidade vendida no período. |
 
-#### Vendas e caixa
+###### Vendas e caixa
 
 | Código | Requisito | Dados envolvidos |
 | :---- | :---- | :---- |
 | RF21 | Abrir a sessão de um caixa. | Caixa, operador, data, hora e fundo inicial. |
 | RF22 | Registrar vendas e seus itens, sem identificar o cliente. | Sessão, data, situação, produto, quantidade ou peso, preço praticado, subtotal e total. |
-| RF23 | Consultar o preço de um produto durante o atendimento. | PLU, código de barras ou nome, preço e unidade de venda. |
+| RF23 | Consultar o preço de um produto durante o atendimento. | PLU, código de barras ou nome, preço e unidade de venda. Como a promoção depende do lote, a consulta mostra o preço normal e avisa quando existe lote do produto em promoção vigente. O preço final de cada linha é fechado na conclusão da venda. |
 | RF24 | Registrar o pagamento da venda em uma ou mais formas. | Venda, forma de pagamento e valor. |
-| RF25 | Cancelar uma venda com autorização de supervisor, mantendo seu histórico. | Venda, motivo, operador, supervisor, data e hora. |
+| RF25 | Cancelar uma venda com autorização de supervisor, mantendo seu histórico e estornando, na mesma operação, as baixas de estoque dos itens da venda. | Venda, motivo, operador, supervisor, data e hora. |
 | RF26 | Cancelar um ou mais itens enquanto a venda estiver em andamento, mantendo-os registrados como cancelados. | Venda, itens, motivo, operador, data e hora. |
 | RF27 | Avisar o operador quando o produto tiver venda restrita por idade. | Produto e indicador de restrição. |
 | RF28 | Registrar troca de operador no caixa. | Caixa, operador anterior, novo operador e horários. |
 | RF29 | Registrar sangrias. | Sessão, valor, data, hora e funcionário. |
-| RF30 | Fechar a sessão do caixa com a conferência dos valores. | Data, hora, valor contado, valor esperado e diferença. |
+| RF30 | Fechar a sessão do caixa com a conferência dos valores. | Data, hora, funcionário que fechou, valor contado, valor esperado e diferença. |
 | RF31 | Registrar os dados do documento fiscal relacionado à venda. | Venda, tipo, número, série, chave de acesso, data e situação. |
 | RF32 | Consultar vendas por período, caixa, operador e forma de pagamento. | Totais de vendas concluídas e canceladas. |
 
-#### Financeiro
+###### Financeiro
 
 | Código | Requisito | Dados envolvidos |
 | :---- | :---- | :---- |
 | RF33 | Registrar contas a pagar relacionadas às notas de recebimento. | Recebimento, vencimento, valor e situação. |
-| RF34 | Registrar o pagamento de uma conta. | Conta, data, forma de pagamento e situação. |
+| RF34 | Registrar o pagamento de uma conta. | Conta, data, forma de pagamento, funcionário que registrou o pagamento e situação. |
 | RF35 | Vincular abatimento do fornecedor à conta em que será descontado. | Devolução de origem, conta e valor abatido. |
 | RF36 | Consultar contas por vencimento, situação e fornecedor. | Fornecedor, vencimento, valor e situação. |
 
-#### Perdas (P1)
+###### Perdas (P1)
 
 | Código | Requisito | Dados envolvidos |
 | :---- | :---- | :---- |
@@ -305,7 +302,7 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 | RF38 | Consultar perdas por setor, motivo, produto e período. | Quantidades, valores e perdas com lote ainda a confirmar. |
 | RF39 | Comparar perdas com mercadorias devolvidas, trocadas ou compensadas pelo fornecedor. | Período, fornecedor, setor, perdas e devoluções. |
 
-#### Validade e promoções (P2)
+###### Validade e promoções (P2)
 
 | Código | Requisito | Dados envolvidos |
 | :---- | :---- | :---- |
@@ -314,12 +311,12 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 | RF42 | Registrar promoções de lotes próximos do vencimento. | Lote, preço normal, preço promocional, início, fim e funcionário. |
 | RF43 | Consultar promoções vigentes e encerradas. | Produto, lote, período e preços. |
 
-### Requisitos Não Funcionais
+##### Requisitos não funcionais
 
 | Código | Característica | Requisito |
 | :---- | :---- | :---- |
 | RNF01 | Segurança | Cada usuário deve acessar somente as funções permitidas pelo seu perfil. |
-| RNF02 | Rastreabilidade | Operações importantes devem registrar funcionário, data e hora. |
+| RNF02 | Rastreabilidade | Operações importantes devem registrar o funcionário e a data. Nas operações de caixa, venda, baixa de estoque e perda, registram também a hora. |
 | RNF03 | Integridade | O banco deve utilizar chaves, campos obrigatórios, unicidade e restrições para evitar dados inválidos. |
 | RNF04 | Confiabilidade | Operações que envolvem vários registros devem ser concluídas por inteiro ou não ser gravadas. |
 | RNF05 | Histórico | Registros com movimentação não devem ser apagados, mas inativados ou cancelados. |
@@ -331,21 +328,20 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 | RNF11 | Usabilidade | O registro de perdas deve ser simples e exigir somente as informações necessárias. |
 | RNF12 | Compatibilidade | O banco será desenvolvido em MySQL, utilizando InnoDB e `utf8mb4`. |
 
-
 ##### Requisitos comuns não incluídos
 
 Os processos que o Hortifruti União não realiza, como cadastro de clientes, fidelidade, vendas online, entregas e venda fiado, já estão registrados na tabela **“Processos comuns que não foram incluídos no levantamento”** desta seção. Por esse motivo, não criamos requisitos funcionais para esses casos. A troca ou devolução pelo cliente existe, mas é rara e continua fora de um fluxo próprio de caixa.
 
 ---
 
-## Regras de Negócio
+#### Regras de negócio
 
 **[Confirmada]** indica uma prática informada pelo responsável ou observada na visita.  
 **[Proposta]** indica uma regra definida pelo grupo para organizar o banco.
 
 - A numeração segue a ordem em que as regras foram criadas, e não a ordem de leitura. Por isso RN08A, RN52 a RN57 aparecem dentro dos grupos por assunto.
 
-### Cadastros
+##### Cadastros
 
 - **RN01 [Confirmada + Proposta]** O mercado cadastra produtos com código de barras, preço, setor e forma de venda. No banco, todo produto também terá um código interno único e nome.
 - **RN02 [Confirmada + Proposta]** Produtos pesados podem utilizar etiqueta de código de barras e produtos a granel podem ser informados pelo código interno (PLU). O código interno será único.
@@ -357,7 +353,7 @@ Os processos que o Hortifruti União não realiza, como cadastro de clientes, fi
 - **RN08 [Confirmada]** O mercado aceita pagamento em dinheiro, débito, crédito, Pix e vale-alimentação (VA). Essas formas serão registradas no cadastro de formas de pagamento do banco.
 - **RN08A [Proposta]** Cada forma de pagamento tem um uso: venda, fornecedor ou ambos. A venda só aceita formas de uso "venda" ou "ambos", e a conta a pagar só aceita "fornecedor" ou "ambos". Por exemplo, boleto e transferência ficam só para fornecedor, e o Pix vale para os dois lados. O `uso` não pode ser alterado depois que a forma tiver algum pagamento ou conta registrada: para mudar, a forma é inativada e uma nova é cadastrada, assim o histórico continua válido.
 
-### Compras e recebimento
+##### Compras e recebimento
 
 - **RN09 [Confirmada + Proposta]** Os pedidos são definidos considerando giro e dias de estoque. Todo pedido terá fornecedor, data e ao menos um item.
 - **RN10 [Confirmada + Proposta]** A nota do fornecedor é conferida no recebimento e não poderá ser cadastrada duas vezes.
@@ -365,7 +361,7 @@ Os processos que o Hortifruti União não realiza, como cadastro de clientes, fi
 - **RN12 [Proposta]** Somente a quantidade aceita no recebimento entra no estoque.
 - **RN13 [Confirmada + Proposta]** Mercadorias que chegam fora do padrão podem ser trocadas ou gerar abatimento e não são registradas como perda do mercado.
 
-### Lotes e estoque
+##### Lotes e estoque
 
 - **RN14 [Proposta]** Todo lote estará relacionado a um produto recebido e terá quantidade positiva.
 - **RN15 [Confirmada + Proposta]** Frutas, legumes e verduras geralmente não possuem validade impressa e são avaliados visualmente. Produtos que possuem validade impressa terão essa informação registrada no lote. Os demais serão acompanhados pelo controle de estoque e perdas.
@@ -373,10 +369,9 @@ Os processos que o Hortifruti União não realiza, como cadastro de clientes, fi
 - **RN17 [Proposta]** Nenhuma saída poderá ultrapassar o saldo disponível do lote. Cancelamentos geram estorno, e não exclusão.
 - **RN18 [Proposta]** Nas vendas, o sistema prioriza o lote que vence primeiro, seguindo a lógica FEFO (*First Expire, First Out*). Quando o produto não tiver validade registrada, prioriza o lote mais antigo.
 - **RN19 [Proposta]** Neste banco, a baixa de estoque será registrada quando a venda for concluída. No mercado, a baixa pode ser imediata ou após a conferência do dia, conforme o controle online esteja ativado ou não.
-- **RN53 [Proposta]** Na conclusão da venda, a quantidade de cada produto não pode passar do saldo disponível. A procedure `concluir_venda` escolhe os lotes pela regra FEFO e usa `SELECT ... FOR UPDATE` no lote selecionado enquanto a transação está aberta. Assim, aquele lote fica bloqueado até a operação terminar. Como não fizemos um teste com várias conexões ao mesmo tempo, não dá para dizer que a concorrência foi testada; o que foi implementado foi o bloqueio previsto no fluxo.
+- **RN53 [Proposta]** Na conclusão da venda, a quantidade de cada produto não pode ultrapassar o saldo do lote escolhido nem o saldo disponível do produto (RN16). A proteção contra operações simultâneas deve abranger os fluxos que alteram o saldo, com uma estratégia consistente de bloqueios. No SQL atual, o lote escolhido usa `FOR UPDATE`, mas a leitura do saldo agregado e os demais fluxos ainda precisam de revisão e testes de concorrência.
 - **RN57 [Proposta]** Enquanto a venda está em andamento, cada item é registrado com o produto, a quantidade ou o peso e o preço normal do cadastro, ainda sem lote. O lote só é escolhido na conclusão, pela procedure concluir_venda (RN18). Se o item sai de um lote só, a linha fica como está. Se precisa de mais de um, a procedure divide a linha, deixando uma para cada lote. O preço de cada linha é o promocional quando o lote tem promoção vigente (RN47 e RN48) e o normal quando não tem. O lote de cada linha fica na baixa (SAIDA_LOTE), que aponta para o item de venda. Os itens cancelados durante a venda (RN26) saem antes dessa etapa e não entram na escolha de lote. O produto do item e o produto do lote têm que ser o mesmo.
-
-### Vendas e pagamentos
+##### Vendas e pagamentos
 
 - **RN20 [Proposta]** Toda venda estará ligada a uma sessão de caixa aberta e a um operador. O operador da venda precisa ser o operador da sessão naquele momento: quem abriu o caixa ou, se houve troca, o novo operador da última troca (RN29). O trigger de VENDA confere isso.
 - **RN21 [Confirmada]** As vendas são anônimas, sem cadastro de clientes.
@@ -384,16 +379,16 @@ Os processos que o Hortifruti União não realiza, como cadastro de clientes, fi
 - **RN23 [Proposta]** O total da venda será a soma dos itens que não estiverem cancelados. O total fica definitivo na conclusão da venda.
 - **RN24 [Confirmada]** O mercado não vende fiado e as vendas são pagas no caixa, podendo utilizar uma ou mais formas de pagamento na mesma venda.
 
-### Cancelamentos e vendas restritas
+##### Cancelamentos e vendas restritas
 
-- **RN25 [Confirmada + Proposta]** O cancelamento de uma venda exige autorização de supervisor, e o funcionário que autoriza precisa ter perfil de supervisor. A venda cancelada permanece registrada e não entra nos totais.
+- **RN25 [Confirmada + Proposta]** O cancelamento de uma venda exige autorização de supervisor, e o funcionário que autoriza precisa ter perfil de supervisor ou gerência, conforme a validação da procedure. A venda cancelada permanece registrada e não entra nos totais.
 - **RN26 [Proposta]** Um ou mais itens podem ser cancelados enquanto a venda estiver em andamento. O item permanece registrado, mas deixa de fazer parte do total.
 - **RN27 [Confirmada + Proposta]** Produtos com venda restrita por idade serão identificados no cadastro e o sistema mostrará um aviso ao operador. O banco não armazenará documento do cliente.
 - **RN28 [Proposta]** Cancelamento, perda e devolução ao fornecedor são situações diferentes. Uma mercadoria de venda cancelada não será registrada como perda.
 - **RN54 [Proposta]** Quando uma venda já concluída é cancelada, todas as baixas de estoque dos itens ativos dela são estornadas na mesma transação, e cada baixa só pode ser estornada uma vez (RN17). Se algum passo falhar, nada é gravado (RNF04).
 - **RN55 [Proposta]** Os pagamentos de uma venda cancelada continuam no histórico, mas a venda não entra no faturamento nem no valor esperado do caixa (RN25). O banco não registra a devolução do dinheiro ao cliente: cancelar é desfazer a venda inteira. Por isso o valor esperado do caixa considera que o dinheiro dessa venda voltou ao cliente ou nunca ficou lá. Como essa saída de dinheiro não é rastreada, uma diferença no fechamento causada por ela apareceria no banco sem explicação. Se um dia for preciso separar o que foi recebido do que foi devolvido, o pagamento vai precisar de uma coluna de situação. Isso ficou fora do nosso trabalho.
 
-### Caixa e fiscal
+##### Caixa e fiscal
 
 - **RN29 [Confirmada + Proposta]** Existe troca de operador e cada caixa terá somente uma sessão aberta por vez.
 - **RN30 [Confirmada + Proposta]** O caixa é aberto com um fundo inicial, que não poderá ser negativo.
@@ -401,50 +396,47 @@ Os processos que o Hortifruti União não realiza, como cadastro de clientes, fi
 - **RN32 [Confirmada + Proposta]** No fechamento, a diferença será calculada pelo valor contado menos o valor esperado.
 - **RN33 [Confirmada + Proposta]** O processo fiscal continua sendo feito no sistema atual. O banco apenas armazenará os dados dos documentos relacionados às vendas.
 
-### Financeiro
+##### Financeiro
 
 - **RN34 [Confirmada + Proposta]** Contas a pagar relacionadas às compras terão vencimento, valor e recebimento de origem.
 - **RN35 [Proposta]** Uma conta poderá estar aberta, paga ou cancelada. O modelo não registra pagamento parcial: a conta é paga de uma vez, pelo saldo a pagar.
-- **RN36 [Proposta]**A conta a pagar mantém o valor original da nota. Os abatimentos do fornecedor ficam em DEVOLUCAO_FORNECEDOR e são ligados à conta. O saldo a pagar é o valor da conta menos a soma dos abatimentos ligados a ela. A soma dos abatimentos de uma conta não pode passar do valor dela, e só dá para ligar abatimento a conta aberta.
+- **RN36 [Proposta]** A conta a pagar mantém o valor original da nota. Os abatimentos do fornecedor ficam em DEVOLUCAO_FORNECEDOR e são ligados à conta. O saldo a pagar é o valor da conta menos a soma dos abatimentos ligados a ela. A soma dos abatimentos de uma conta não pode passar do valor dela, e só dá para ligar abatimento a conta aberta.
 
-### Devoluções e abatimentos
+##### Devoluções e abatimentos
 
-- **RN37 [Proposta]** O responsável confirmou por WhatsApp que o mercado trabalha com devolução, troca e abatimento junto ao fornecedor quando há problema na mercadoria. No banco, a devolução fica ligada ao recebimento e não pode passar da quantidade recusada. Quando o fornecedor troca o produto, o que chega no lugar entra como um novo recebimento, sem pedido (RN11), e a devolução é registrada como troca (RF16). Quando há abatimento, aplica-se a RN38. O abatimento não altera o custo_unitario do lote, para que o custo histórico da mercadoria permaneça igual ao da nota de origem.
+- **RN37 [Confirmada + Proposta]** O responsável confirmou por WhatsApp que o mercado trabalha com devolução, troca e abatimento junto ao fornecedor quando há problema na mercadoria. No banco, a devolução fica ligada ao recebimento e não pode passar da quantidade recusada. Quando o fornecedor troca o produto, o que chega no lugar entra como um novo recebimento, sem pedido (RN11), e a devolução é registrada como troca (RF16). Quando há abatimento, aplica-se a RN38. O abatimento não altera o `custo_unitario` do lote, para que o custo histórico da mercadoria permaneça igual ao da nota de origem.
 - **RN38 [Confirmada + Proposta]** O abatimento concedido pelo fornecedor será relacionado a uma conta do mesmo fornecedor.
 - **RN39 [Proposta]** Uma mercadoria devolvida, trocada ou compensada pelo fornecedor não será registrada também como perda.
 
-### Perdas
+##### Perdas
 
 - **RN40 [Confirmada + Proposta]** O levantamento identificou perdas por vencimento, maturação excessiva e danos causados por clientes. Esses casos formarão a lista inicial de motivos, além da opção "Outros".
 - **RN41 [Proposta]** Toda perda terá produto, quantidade, motivo, setor, funcionário, data e situação do lote.
 - **RN42 [Proposta]** Quando o lote da perda for conhecido, a quantidade perdida será baixada desse lote. Se o lote não for conhecido, a perda ficará como "lote a confirmar" até que essa informação seja conferida. Enquanto estiver pendente, a quantidade é descontada do saldo disponível do produto (RN16), e uma perda pendente não pode ser maior que esse saldo disponível.
-- **RN43 [Proposta]** Uma perda registrada não será apagada. Para corrigir uma perda (por exemplo, 15 kg registrados que eram 12 kg) ou dividi-la em lotes (RN52), o registro original passa para a situação substituida, deixa de entrar nos totais e nas pendências, e a perda nova (ou as novas) aponta para ele. Se o original já tinha baixa em lote, essa baixa é estornada (RN17) e a perda nova gera a sua própria baixa. Só as perdas com situação valida contam nos indicadores.
+- **RN43 [Proposta]** Uma perda registrada não será apagada. Para corrigir uma perda (por exemplo, 15 kg registrados que eram 12 kg) ou dividi-la em lotes (RN52), o registro original passa para a situação `substituida`, deixa de entrar nos totais e nas pendências, e a perda nova (ou as novas) aponta para ele. Se o original já tinha baixa em lote, essa baixa é estornada (RN17) e a perda nova gera a sua própria baixa. Só as perdas com situação `valida` contam nos indicadores.
 - **RN44 [Proposta]** O valor da perda será calculado com base na quantidade e no custo do lote. Perdas sem lote confirmado ficarão sem valor até a identificação.
 - **RN52 [Proposta]** Quando o lote de uma perda pendente é confirmado, o banco faz tudo de uma vez, na mesma transação: baixa a quantidade no lote (saída do tipo perda), marca a perda como confirmada e calcula o valor. A partir daí ela deixa de ser descontada como pendente, então a quantidade sai uma única vez do saldo disponível. A quantidade não pode passar do saldo do lote. Uma perda confirmada pertence a um lote só. Se a mercadoria perdida veio de mais de um lote do mesmo produto, a pendência original passa a `substituida` (RN43) e é trocada por uma perda para cada lote, todas ligadas a ela, e a soma das partes tem que dar a quantidade original. Como só as perdas válidas entram nos totais, nada é contado duas vezes.
-
-
-### Validade e promoções
+##### Validade e promoções
 
 - **RN45 [Confirmada + Proposta]** O prazo de alerta de validade varia conforme o setor. Cada setor que trabalha com validade impressa tem um número de dias definido. Os setores com dias_alerta_validade vazio (hortifruti, Caixa e Retaguarda) não geram alerta pelo setor. Se um produto desses setores tiver validade impressa (RN15), o lote dele usa um prazo padrão de 7 dias, definido pelo grupo. Esse prazo não é coluna do banco: ele aparece como constante na consulta G03, e para mudar o prazo basta editar o valor lá.
 - **RN46 [Proposta]** Lote vencido na data da venda não pode ser vendido nem entrar em promoção. A conferência usa a data da operação e não a data de hoje.
 - **RN47 [Confirmada + Proposta]** Produtos próximos do vencimento podem entrar em promoção, com preço inferior ao preço normal.
 - **RN48 [Proposta]** A promoção terminará na data definida ou no vencimento do lote, o que acontecer primeiro.
 
-### FuncionárioS, escala e rastreabilidade
+##### Funcionários, escala e rastreabilidade
 
 - **RN49 [Confirmada + Proposta]** O mercado funciona todos os dias e organiza a escala em planilha. No banco, dias de trabalho terão horário de início e fim; folgas terão apenas a data.
 - **RN50 [Proposta]** Funcionários inativos não poderão realizar novas operações, mas seu histórico será mantido.
 - **RN51 [Proposta]** Dados pessoais dos funcionários, e os contatos de fornecedor que for pessoa física ou MEI, serão acessíveis somente a usuários autorizados, por causa da LGPD.
 - **RN56 [Proposta]** Todo fechamento de sessão de caixa e todo pagamento de conta a pagar guardam o funcionário que fez a operação, além da data e da hora (por isso `data_pagamento` e `data_fechamento` são `DATETIME`). Esse funcionário precisa estar ativo (RN50).
 
-### Regras comuns não incluídas
+##### Regras comuns não incluídas
 
 As regras ligadas a cadastro de clientes, fidelidade, entrega, venda a prazo e troca pelo cliente seguem as situações já registradas na tabela **“Processos comuns que não foram incluídos no levantamento”**. Como esses processos não fazem parte do fluxo modelado, não criamos regras de negócio específicas para eles.
 
 A aferição da balança (Inmetro) também ficou fora do modelo. O banco apenas guarda o peso informado na venda (RN22), e o grupo não confirmou com o responsável como a aferição é realizada. Por isso, não foi criada uma regra para um processo que o banco não controla.
 
-
-### Rastreabilidade dos problemas P1 e P2
+##### Rastreabilidade dos problemas P1 e P2
 
 | Problema | Requisitos funcionais | Regras de negócio | Como contribuem |
 | :---- | :---- | :---- | :---- |
@@ -455,7 +447,7 @@ A relação entre os problemas, as tabelas do banco e as consultas SQL será det
 
 ---
 
-#### DER Conceitual Revisado
+#### DER conceitual revisado
 
 ##### Como montamos o DER
 
@@ -465,89 +457,98 @@ O DER foi feito no brModelo (aplicativo instalado), na notação pedida pelo pro
 
 O DER tem **22 entidades**. Os itens de pedido, de recebimento, de devolução e de venda, além do vínculo entre fornecedor e produto, são representados como associações com atributos, como explicamos mais abaixo. Com essa modelagem, o diagrama possui **48 relacionamentos**.
 
-**Ferramenta:** [brModelo Web](https://app.brmodeloweb.com)
+**Ferramenta:** brModelo, aplicativo instalado.
 
-**Link do modelo:** [DER do Hortifruti União no brModelo](https://app.brmodeloweb.com/conceptual/6ae380e92407b9c8c2a6db74)
+**Arquivo do diagrama:** [Visualizar DER Conceitual](docs/DER_conceitual.png)
 
-**Arquivo do diagrama:** [Visualizar DER Conceitual](diagramas/der.conceitual.png)
-
-![DER Conceitual do Hortifruti União](diagramas/der.conceitual.png)
+![DER Conceitual do Hortifruti União](docs/DER_conceitual.png)
 
 ##### Entidades e atributos
 
-São **27 entidades**, separadas por assunto. Cada uma tem um identificador, que no diagrama aparece como círculo preenchido.
+São **22 entidades**, separadas por assunto. Cada uma tem um identificador, que no diagrama aparece como círculo preenchido.
 
 ###### Cadastros e funcionários
 
 | Entidade | Identificador | Principais atributos |
 | :--- | :--- | :--- |
-| SETOR | chave_setor | nome, descricao, dias_alerta_validade |
-| PRODUTO | chave_produto | codigo_interno, codigo_barras, nome, preco_venda, estoque_minimo, tipo_venda, tem_validade_impressa, venda_restrita_idade, ativo |
-| FORNECEDOR | chave_fornecedor | razao_social, cnpj, telefone, email, endereco, ativo |
-| FORNECEDOR_PRODUTO | chave_fornecedor_produto | codigo_no_fornecedor, ultimo_custo |
-| FUNCIONARIO | chave_funcionario | nome, cpf, cargo, telefone, data_admissao, perfil_acesso, ativo |
-| ESCALA | chave_escala | data, tipo, hora_inicio, hora_fim |
-| FORMA_PAGAMENTO | chave_forma | descricao, ativo |
-| CAIXA | chave_caixa | numero, ativo |
+| SETOR | id_setor | nome, descricao, dias_alerta_validade, vende_produto |
+| PRODUTO | id_produto | codigo_interno, codigo_barras, nome, preco_venda, estoque_minimo, tipo_venda, tem_validade_impressa, venda_restrita_idade, ativo |
+| FORNECEDOR | id_fornecedor | razao_social, cnpj, telefone, email, endereco, ativo |
+| FUNCIONARIO | id_funcionario | nome, cpf, cargo, telefone, data_admissao, perfil_acesso, ativo |
+| ESCALA | id_escala | data, tipo, hora_inicio, hora_fim |
+| FORMA_PAGAMENTO | id_forma | descricao, uso, ativo |
+| CAIXA | id_caixa | numero, ativo |
 
-- Nem todo produto tem código de barras (os vendidos a granel, por exemplo). Por isso o produto também tem um código interno (PLU), que não se repete. A `chave_produto` é só o identificador usado pelo banco.
-- A FORNECEDOR_PRODUTO existe porque um produto pode ter mais de um fornecedor. O banco não vai deixar cadastrar o mesmo par duas vezes.
+- Nem todo produto tem código de barras (os vendidos a granel, por exemplo). Por isso o produto também tem um código interno (PLU), que não se repete. A `id_produto` é só o identificador usado pelo banco.
 - A ESCALA entrou porque o mercado abre todos os dias e precisa organizar horários e folgas. Não é um dos problemas principais, mas faz parte da rotina.
+- O `vende_produto` do SETOR separa os setores onde se vende produto (hortifruti, padaria, frios etc.) dos setores só de organização dos funcionários (Caixa e Retaguarda). Assim, Caixa e Retaguarda não viram categoria de produto (RN03).
+- O `uso` da FORMA_PAGAMENTO diz se a forma vale para venda, para fornecedor ou para os dois (RN08A). Isso evita ter duas tabelas de formas de pagamento.
 
 ###### Compras, recebimentos e devoluções
 
 | Entidade | Identificador | Principais atributos |
 | :--- | :--- | :--- |
-| PEDIDO_COMPRA | chave_pedido | data_pedido, status |
-| ITEM_PEDIDO_COMPRA | chave_item_pedido | quantidade, custo_previsto |
-| RECEBIMENTO | chave_recebimento | numero_nf, serie, data_emissao, chave_acesso, data_recebimento, valor_total |
-| ITEM_RECEBIMENTO | chave_item_recebimento | quantidade_nf, quantidade_aceita, quantidade_recusada, custo_unitario_nf, observacao_divergencia |
-| DEVOLUCAO_FORNECEDOR | chave_devolucao | data, tipo, motivo, valor_abatimento, status |
-| ITEM_DEVOLUCAO | chave_item_devolucao | quantidade, observacao |
-| CONTA_PAGAR | chave_conta | data_vencimento, valor, data_pagamento, status |
+| PEDIDO_COMPRA | id_pedido | data_pedido, status |
+| RECEBIMENTO | id_recebimento | numero_nf, serie, data_emissao, chave_acesso, data_recebimento, valor_total |
+| DEVOLUCAO_FORNECEDOR | id_devolucao | data, tipo, motivo, valor_abatimento, status |
+| CONTA_PAGAR | id_conta | data_vencimento, valor, data_pagamento, status |
 
 - Pedido e recebimento ficam separados porque nem tudo chega de uma vez, e também pode haver recebimento sem pedido.
-- O item recebido guarda o que veio na nota e o que o mercado aceitou. Um mesmo item pode gerar mais de um lote, se as validades forem diferentes, e a soma dos lotes tem que bater com a quantidade aceita. Se nada foi aceito, não se cria lote.
+- Os itens de pedido, de recebimento e de devolução são associações (veja a tabela mais abaixo). O item recebido guarda o que veio na nota e o que o mercado aceitou. Um mesmo item pode gerar mais de um lote, se as validades forem diferentes, e a soma dos lotes tem que bater com a quantidade aceita. Se nada foi aceito, não se cria lote.
 - A devolução entrou porque o responsável contou que mercadoria fora do padrão é trocada ou vira abatimento na próxima nota. Isso não pode se misturar com perda.
 
 ###### Estoque, perdas e validade
 
 | Entidade | Identificador | Principais atributos |
 | :--- | :--- | :--- |
-| LOTE | chave_lote | codigo_lote, data_fabricacao, data_validade, quantidade_recebida, quantidade_atual, custo_unitario |
-| SAIDA_LOTE | chave_saida_lote | quantidade, data_hora, tipo |
-| MOTIVO_PERDA | chave_motivo | descricao, ativo |
-| PERDA | chave_perda | data_hora, quantidade, valor_estimado, situacao_lote, observacao |
-| PROMOCAO | chave_promocao | data_inicio, data_fim, preco_normal, preco_promocional |
+| LOTE | id_lote | codigo_lote, data_fabricacao, data_validade, quantidade_recebida, quantidade_atual, custo_unitario |
+| SAIDA_LOTE | id_saida_lote | quantidade, data_hora, tipo |
+| MOTIVO_PERDA | id_motivo | descricao, ativo |
+| PERDA | id_perda | data_hora, quantidade, valor_estimado, situacao_lote, status, observacao |
+| PROMOCAO | id_promocao | data_inicio, data_fim, preco_normal, preco_promocional |
 
 Essa é a parte mais ligada a P1 e P2.
 
 - A validade fica no **LOTE** e não no produto, porque o leite que chegou hoje pode ter validade diferente do que chegou na semana passada.
 - A **PERDA** guarda o produto, a quantidade, o motivo e quem registrou. O **MOTIVO_PERDA** organiza as ocorrências, como vencimento, maturação excessiva e dano causado por cliente.
-- A **SAIDA_LOTE** registra o que sai do lote por venda ou por perda. O `tipo` pode ser venda, perda ou estorno. Quando uma baixa precisa ser desfeita, a gente não apaga: cria um estorno que devolve a quantidade ao lote.
+- A **SAIDA_LOTE** registra o que sai do lote por venda ou por perda. O `tipo` pode ser venda, perda ou estorno. Quando uma baixa precisa ser desfeita, o registro não é apagado: é criado um estorno que devolve a quantidade ao lote.
 - A **PROMOCAO** é para os produtos perto de vencer, ligada ao lote.
 
 ###### Vendas e operação de caixa
 
 | Entidade | Identificador | Principais atributos |
 | :--- | :--- | :--- |
-| SESSAO_CAIXA | chave_sessao | data_abertura, data_fechamento, fundo_inicial, valor_esperado, valor_contado, diferenca, status |
-| TROCA_OPERADOR | chave_troca | data_hora |
-| SANGRIA | chave_sangria | data_hora, valor |
-| VENDA | chave_venda | data_hora, valor_total, status, motivo_cancelamento, data_hora_cancelamento |
-| ITEM_VENDA | chave_item_venda | quantidade_ou_peso, preco_unitario, subtotal, status, motivo_cancelamento, data_hora_cancelamento |
-| PAGAMENTO | chave_pagamento | valor |
-| DOCUMENTO_FISCAL | chave_documento | tipo_documento, numero_documento, serie, chave_acesso, data_emissao, situacao |
+| SESSAO_CAIXA | id_sessao | data_abertura, data_fechamento, fundo_inicial, valor_esperado, valor_contado, diferenca, status |
+| TROCA_OPERADOR | id_troca | data_hora |
+| SANGRIA | id_sangria | data_hora, valor |
+| VENDA | id_venda | data_hora, valor_total, status, motivo_cancelamento, data_hora_cancelamento |
+| PAGAMENTO | id_pagamento | valor |
+| DOCUMENTO_FISCAL | id_documento | tipo_documento, numero_documento, serie, chave_acesso, data_emissao, situacao |
 
-- A venda e os itens ficam separados porque uma venda tem vários produtos, e o preço da hora pode ser diferente do preço atual do cadastro.
-- O pagamento também é separado, porque uma venda pode ser paga de mais de um jeito (parte no Pix, parte no cartão). O valor registrado é o que foi aplicado à venda, sem o troco.
+- O item de venda é uma associação entre VENDA e PRODUTO, porque uma venda tem vários produtos e o preço da hora pode ser diferente do preço atual do cadastro.
+- O pagamento continua como entidade, porque uma venda pode ser paga de mais de um jeito (parte no Pix, parte no cartão). O valor registrado é o que foi aplicado à venda, sem o troco.
 - Sessão de caixa, sangria e troca de operador guardam o histórico do caixa. Venda cancelada continua registrada.
 
-O subtotal, o total da venda e a diferença do caixa são **atributos derivados**, porque dá para calcular a partir de outros dados. Outros três também dariam para calcular, mas vamos guardar:
+###### Associações com atributos (viram tabelas no lógico)
+
+Cinco ligações do negócio carregam dados próprios e por isso aparecem no DER como losangos com atributos, e não como entidades comuns. Duas delas (item recebido e item vendido) são desenhadas como entidade associativa, com um retângulo em volta do losango. No lógico, cada uma vira uma tabela com chave primária própria e uma chave estrangeira para cada ponta da ligação. A de venda ainda leva uma terceira, a do funcionário que cancela o item.
+
+| Associação | Liga | Cardinalidades | Atributos | Tabela no lógico |
+| :--- | :--- | :--- | :--- | :--- |
+| fornece | FORNECEDOR e PRODUTO | (0,n) e (0,n) | codigo_no_fornecedor, ultimo_custo | FORNECEDOR_PRODUTO |
+| contém (pedido) | PEDIDO_COMPRA e PRODUTO | (1,n) e (0,n) | quantidade, custo_previsto | ITEM_PEDIDO_COMPRA |
+| contém (recebimento) | RECEBIMENTO e PRODUTO | (1,n) e (0,n) | quantidade_nf, quantidade_aceita, quantidade_recusada, custo_unitario_nf, observacao_divergencia | ITEM_RECEBIMENTO |
+| devolve | DEVOLUCAO_FORNECEDOR e item recebido | (1,n) e (0,n) | quantidade, observacao | ITEM_DEVOLUCAO |
+| contém (venda) | VENDA e PRODUTO | (1,n) e (0,n) | quantidade_ou_peso, preco_unitario, subtotal, status, motivo_cancelamento, data_hora_cancelamento | ITEM_VENDA |
+
+Duas dessas associações, a do recebimento e a da venda, precisam ser **entidades associativas** (no brModelo, o retângulo em volta do losango): cada linha tem que poder ser apontada por outras coisas. O item recebido é ligado ao LOTE e à devolução, e o item vendido é ligado à SAIDA_LOTE e ao funcionário que cancelou a linha. Um relacionamento simples não tem identidade de linha, então a entidade associativa é o que deixa essas ligações existirem sem perder informação. A devolução também aponta para uma linha específica do recebimento, e é por isso que ela se liga ao item recebido, e não ao produto.
+
+O subtotal, o total da venda e a diferença do caixa são **atributos derivados**, porque dá para calcular a partir de outros dados. Outros cinco atributos também dariam para calcular, mas vamos guardar:
 
 - **quantidade_atual do lote:** para ver o saldo sem somar todas as movimentações toda vez (são cerca de 1.800 vendas por dia). Ela precisa ser atualizada junto com cada baixa ou estorno;
 - **valor_esperado do caixa:** fica gravado como estava no fechamento;
-- **valor_estimado da perda:** calculado pela quantidade e pelo custo do lote. Se o lote ainda não foi identificado, fica vazio até a confirmação.
+- **valor_estimado da perda:** calculado pela quantidade e pelo custo do lote. Se o lote ainda não foi identificado, fica vazio até a confirmação;
+- **quantidade_nf e quantidade_recusada do item recebido:** seguem da conta "nota = aceita + recusada", e um `CHECK` confere que os três batem (explicado na seção 1.4). Contam como dois atributos.
 
 ##### Relacionamentos e cardinalidades
 
@@ -614,17 +615,20 @@ O relacionamento 48 liga a perda nova à perda original que ela corrige ou divid
 - **Validade no lote.** Como as mercadorias chegam em dias diferentes, cada lote tem a sua validade. Isso resolve o P2.
 - **Sem entidade ESTOQUE.** O saldo do produto é a soma dos saldos dos seus lotes, para não guardar a mesma informação em dois lugares.
 - **PERDA separada de DEVOLUCAO_FORNECEDOR.** Mercadoria descartada pelo mercado é diferente de mercadoria devolvida ou compensada pelo fornecedor. Misturar as duas esconderia o prejuízo real.
-- **Origem da baixa.** Cada baixa de venda ou de perda tem uma única origem (um item de venda ou uma perda). O estorno não tem origem própria: ele aponta para a baixa que corrige e devolve a quantidade inteira dela. O banco precisa garantir isso e impedir que a mesma baixa seja estornada duas vezes.
+- **Origem da baixa.** Cada baixa de venda ou de perda tem uma única origem (um item de venda ou uma perda). O estorno não tem origem própria: ele aponta para a baixa que corrige e devolve a quantidade inteira dela. Isso é garantido por um `CHECK` no tipo da baixa e pelo `UNIQUE` em `id_saida_original`, que impede estornar a mesma baixa duas vezes.
 - **Venda e pagamento (0,n).** Uma venda em andamento, ou cancelada antes de pagar, não tem pagamento. Para ser concluída, a venda precisa estar paga, e a soma dos pagamentos tem que bater com o total (RN24).
-- **Entidades de item e de troca de operador.** Cada item precisa guardar quantidade, custo, preço e situação, e a troca de operador precisa de histórico, por isso ficaram separados.
+- **Quem fecha o caixa e quem paga a conta.** Quem abriu a sessão pode não ser quem fechou, por causa da troca de operador. Por isso o fechamento e o pagamento da conta têm a própria ligação com FUNCIONARIO (relacionamentos 46 e 47), em vez de o grupo depender de log do banco.
+- **Perda corrigida ou dividida.** Para não apagar nem contar duas vezes, a perda original fica com `status = substituida` e a nova aponta para ela (relacionamento 48).
+- **Itens como associações, e PAGAMENTO e SAIDA_LOTE como entidades.** Fornecimento, itens de pedido, itens de recebimento, itens de devolução e itens de venda são associações com atributos, e não retângulos. Já PAGAMENTO e SAIDA_LOTE continuam como entidades: o pagamento é um fato próprio da venda (uma venda com mais de uma forma), e a SAIDA_LOTE tem o autorrelacionamento de estorno e duas origens possíveis, o que não cabe num relacionamento simples. A TROCA_OPERADOR também continua como entidade, porque precisa de histórico.
+- **Entidade associativa para item recebido e item vendido.** Preservamos a identificação de cada linha pela notação de entidade associativa, porque o item recebido precisa gerar lote e receber devolução, e o item vendido precisa ligar a baixa de estoque e o cancelamento por linha. No lógico, essas associações originam tabelas de itens com chaves próprias.
 
 Alguns caminhos se repetem no DER, e deixamos de propósito:
 
-- **PRODUTO – LOTE (16):** o produto também dá para descobrir pelo item recebido. Deixamos a ligação direta para facilitar as consultas por produto. No modelo lógico e no SQL, vamos impedir que o lote aponte para um produto diferente do item recebido.
-- **LOTE – PERDA (31):** a perda aponta para o lote quando ele é conhecido. Se não é, fica como "lote a confirmar" e ainda não tem saída de lote.
-- **SETOR – PERDA (28):** o setor também dá para descobrir pelo produto, mas guardamos na perda para manter o histórico caso o produto mude de setor.
+- **PRODUTO – LOTE (13):** o produto também dá para descobrir pelo item recebido. Deixamos a ligação direta para facilitar as consultas por produto. No modelo lógico e no SQL, a regra de integridade adotada impede que o lote aponte para um produto diferente do item recebido.
+- **LOTE – PERDA (27):** a perda aponta para o lote quando ele é conhecido. Se não é, fica como "lote a confirmar" e ainda não tem saída de lote.
+- **SETOR – PERDA (24):** o setor também dá para descobrir pelo produto, mas guardamos na perda para manter o histórico caso o produto mude de setor.
 
-O relacionamento 50 não é um caminho repetido, é um autorrelacionamento de SAIDA_LOTE. Mantivemos (0,1) nas duas pontas porque nem toda baixa tem um estorno, e nem toda baixa aponta para outra (uma baixa de venda ou de perda não tem baixa original). Quando o tipo for estorno, porém, o banco vai exigir a ligação com uma baixa original e impedir que ela seja estornada mais de uma vez.
+O relacionamento 45 não é um caminho repetido, é um autorrelacionamento de SAIDA_LOTE. Mantivemos (0,1) nas duas pontas porque nem toda baixa tem um estorno, e nem toda baixa aponta para outra (uma baixa de venda ou de perda não tem baixa original). Quando o tipo for estorno, porém, o banco vai exigir a ligação com uma baixa original e impedir que ela seja estornada mais de uma vez.
 
 As validações mais detalhadas, como não repetir pares em FORNECEDOR_PRODUTO e conferir as quantidades recebidas, vão para o dicionário de dados e para o banco.
 
@@ -637,27 +641,35 @@ As validações mais detalhadas, como não repetir pares em FORNECEDOR_PRODUTO e
 
 Com isso, o mercado passa a poder consultar coisas que hoje não ficam registradas, como quais setores perdem mais, quais motivos aparecem mais e quais lotes estão perto de vencer. Os indicadores (KPIs) e a ligação deles com as consultas estão na seção 1.6, e as consultas ficam no script SQL (seção 3).
 
-
 ##### Revisão em relação à Entrega 1
 
 Revisamos o modelo com base nos apontamentos da Entrega 1 e nas informações novas do mercado. A principal mudança foi sair de um modelo focado em produtos, estoque e vendas para um que cobre também os outros processos da organização.
+
+**Apontamentos da correção da Entrega 1**
 
 | Apontamento da correção da E1 | O que mudou no trabalho | Por quê |
 | :--- | :--- | :--- |
 | DER anexado no editor do GitHub | Virou uma imagem referenciada no README | O professor exige o arquivo no repositório. |
 | Cardinalidades só com o máximo | Passaram a ter mínimo e máximo | Mostra o que é obrigatório e o que é opcional. |
 | Chaves estrangeiras no conceitual | Foram retiradas | Pertencem ao modelo lógico. |
-| Venda e produto incompletos | Criamos ITEM_VENDA | Precisamos da quantidade e do preço de cada produto vendido. |
+| Venda e produto incompletos | Criamos a entidade associativa VENDA–PRODUTO, com quantidade, preço e situação de cada item (vira a tabela ITEM_VENDA no lógico) | Precisamos da quantidade e do preço de cada produto vendido. |
 | Sem entidade de lotes | Criamos LOTE | O controle de validade depende de cada lote. |
-| Compra incompleta | Incluímos pedidos, itens, recebimentos e contas a pagar | Fazem parte da rotina do mercado. |
+| Compra incompleta | Incluímos pedidos, recebimentos, contas a pagar e os itens de pedido e de recebimento (associações com atributos) | Fazem parte da rotina do mercado. |
 | Entidade CLIENTE | Foi retirada | As vendas não têm cadastro de cliente. |
 | Faltava a operação dos caixas | Incluímos caixa, sessão, pagamento, sangria e troca de operador | O banco precisa mostrar o que acontece no atendimento. |
 | Entidade CATEGORIA | Trocada por SETOR | O mercado organiza por setor, e o prazo de alerta de validade varia conforme o setor. A validade de cada produto fica registrada no lote. |
 | Perdas não representadas | Criamos PERDA, MOTIVO_PERDA e as ligações | Foi um dos principais problemas do levantamento. |
 | Sem funcionários e escalas | Incluímos FUNCIONARIO e ESCALA | São cerca de 110 funcionários e a escala é feita em planilha. |
 | Justificativas pouco detalhadas | Passamos a explicar as alternativas e os motivos | Mostra por que cada coisa faz sentido para o mercado. |
+| Processos: faltava o fluxo do ciclo de compra e do fechamento de caixa | Acrescentamos os dois fluxogramas na seção de processos | São rotinas reais do mercado e estavam só no texto. |
+| Regras: Inmetro, LGPD, estoque mínimo e permissões | LGPD, estoque mínimo e permissões já estavam previstos nas regras e requisitos (RN51, RN04, RN25 e RNF01), então o grupo apenas ajustou o texto. A aferição da balança (Inmetro) ficou de fora de propósito | O banco não controla a balança, e o grupo não confirmou com o responsável como a aferição é feita. O motivo está na tabela de regras comuns não incluídas. |
+| Entrevista e evidências | Nova entrevista (22/09), visita (30/09) e confirmações por WhatsApp (26/10 e 29/10), com fotos e prints no repositório | A comprovação ficou mais completa e os registros ficaram reunidos no repositório. |
+| Dicionário de dados | Ficou em um arquivo Markdown separado, `docs/dicionario_dados.md` | A turma é GTI. |
+| Anexos no GitHub | DER, modelo lógico, script, fotos, prints e levantamento ficam em pastas do repositório e têm link no README | O professor corrige pelo repositório. |
+| Forma de pagamento Pix | Entrou no cadastro de formas de pagamento | O responsável confirmou que o mercado aceita Pix. |
+| Integrantes | Victor Hugo e Guilherme entraram, Henrico e Nicole saíram | Mudança do grupo desde a Entrega 1. |
 
-Além dos apontamentos, incluímos por conta própria o estorno em SAIDA_LOTE, ligado à baixa original, para corrigir baixas sem apagar o histórico.
+Além dos apontamentos, incluímos por conta própria o estorno em SAIDA_LOTE, ligado à baixa original, para corrigir baixas sem apagar o histórico, e as ligações que dizem quem fechou o caixa e quem pagou a conta (relacionamentos 46 e 47) e a que liga uma perda corrigida à original (48).
 
 ##### Considerações sobre o modelo conceitual
 
@@ -669,140 +681,366 @@ Na seção seguinte mostramos a conversão das entidades e associações em tabe
 
 ### 1.2 Conversão do Modelo Conceitual para o Modelo Lógico
 
-Passamos as 13 entidades para 13 tabelas no MySQL 8.0: `PRODUTO`, `CATEGORIA_PRODUTO`, `FORNECEDOR`, `PEDIDO_COMPRA`, `ITEM_PEDIDO_COMPRA`, `RECEBIMENTO`, `LOTE`, `FUNCIONARIO`, `VENDA`, `ITEM_VENDA`, `PAGAMENTO`, `PERDA` e `SAIDA_LOTE`. São 13 PKs e 17 FKs.
+Convertemos o DER no brModelo para o modelo lógico do MySQL. O resultado é o seguinte.
 
-Os atributos viraram colunas (`codigo_produto`, `nome_produto`, `preco_venda`, `unidade_medida` etc.). Identificador virou PK; referência virou FK.
+**Entidades e associações → tabelas.** As 22 entidades viraram 22 tabelas com o mesmo nome. As 5 associações com atributos (fornece, e os itens de pedido, de recebimento, de devolução e de venda) viraram mais 5 tabelas, cada uma com chave primária própria: FORNECEDOR_PRODUTO, ITEM_PEDIDO_COMPRA, ITEM_RECEBIMENTO, ITEM_DEVOLUCAO e ITEM_VENDA. Dá **27 tabelas** no total. As outras ligações não geraram tabela nova, porque nenhuma é N:N.
 
-No 1:N a FK ficou no lado N (exemplo: `LOTE.codigo_produto` aponta para `PRODUTO`). Onde era N:N, criamos tabela no meio:
+**Atributos → colunas.** Cada atributo virou uma coluna. O identificador virou a chave primária (`id_...`), do tipo inteiro com `AUTO_INCREMENT`. Escolhemos os tipos assim:
 
-- `ITEM_VENDA`: venda × produto (quantidade, preço praticado, subtotal);
-- `ITEM_PEDIDO_COMPRA`: pedido × produto (quantidade, preço de compra);
-- `SAIDA_LOTE`: item vendido × lote (quantidade retirada).
+| Tipo de informação | Tipo no MySQL | Observação |
+| :--- | :--- | :--- |
+| Identificadores | `INT UNSIGNED` | Chave primária com `AUTO_INCREMENT`. |
+| Nomes, descrições, observações | `VARCHAR` | Tamanho conforme o campo. |
+| CPF, CNPJ, telefone, código de barras, número e chave de acesso da nota | `VARCHAR` | Texto, e não número, para não perder zeros à esquerda. |
+| Valores em reais | `DECIMAL(10,2)` | Nada de `FLOAT` para dinheiro. |
+| Quantidade e peso | `DECIMAL(10,3)` | Aceita decimal nos produtos vendidos por quilo. |
+| Data | `DATE` | Validade, fabricação, vencimento e escala. |
+| Data e hora | `DATETIME` | Vendas, baixas, perdas, sessões de caixa (abertura e fechamento) e pagamento de conta. |
+| Sim ou não (`ativo`, `tem_validade_impressa`, `vende_produto` etc.) | `TINYINT(1)` | Com `CHECK` para aceitar só 0 ou 1. |
+| Situações e tipos (`status`, `tipo`, `uso`) | `VARCHAR` | Com `CHECK` listando os valores permitidos. |
+| Horário | `TIME` | Início e fim da escala de trabalho. |
 
-Não fizemos tabela `FORNECEDOR_PRODUTO`. A lista de produtos por fornecedor sai do histórico de pedidos (RF04).
+Algumas colunas pedem um cuidado a mais:
 
-Não usamos generalização/especialização: no escopo não apareceu hierarquia do tipo pessoa física/jurídica.
+- `SETOR.dias_alerta_validade` aceita `NULL`. Setor sem alerta por validade (hortifruti, que quase não tem data impressa, além de Caixa e Retaguarda) fica com `NULL`;
+- `SETOR.vende_produto` diz se o setor tem produto à venda. Caixa e Retaguarda ficam com 0, e por isso não recebem produto nem perda;
+- `FORMA_PAGAMENTO.uso` aceita `venda`, `fornecedor` ou `ambos`;
+- `PRODUTO.codigo_barras` aceita `NULL` (produto a granel) e é `UNIQUE`, porque o MySQL permite vários `NULL` numa coluna única;
+- `LOTE.data_validade` aceita `NULL`, para o lote de produto sem validade impressa.
+
+**Relacionamentos → chaves.** O DER tem 48 relacionamentos, e eles viram chaves estrangeiras de dois jeitos:
+
+- as **5 associações com atributos** viram tabela, e cada tabela leva **2 FKs**, uma para cada lado. Isso dá 10 FKs;
+- os **43 relacionamentos restantes** têm máximo 1 em pelo menos uma das pontas. Em cada um, a chave estrangeira ficou na tabela da ponta que tem máximo 1, apontando para a outra. Isso dá 43 FKs.
+
+Somando, são **53 FKs** no modelo lógico (43 + 10), que é a contagem apresentada na seção 1.3. As cinco associações com atributos viram tabelas próprias e geram duas FKs cada; os demais relacionamentos geram as outras 43 FKs.
+
+**Cardinalidades.** A cardinalidade mínima decidiu se a FK aceita nulo:
+
+- mínimo 1 (por exemplo `(1,1)`): a FK é `NOT NULL`. Exemplo: todo produto tem um setor;
+- mínimo 0 (por exemplo `(0,1)`): a FK aceita `NULL`. Exemplos: `RECEBIMENTO.id_pedido` (recebimento sem pedido), `CONTA_PAGAR.id_forma` (conta ainda não paga), `DEVOLUCAO_FORNECEDOR.id_conta`, `PERDA.id_lote` (lote a confirmar), `VENDA.id_funcionario_supervisor` (só em venda cancelada), `ITEM_VENDA.id_funcionario_cancelamento`, `SESSAO_CAIXA.id_funcionario_fechamento` (sessão ainda aberta) e `CONTA_PAGAR.id_funcionario_pagamento` (conta ainda não paga).
+
+Os casos que merecem atenção:
+
+- **Relacionamento 44 (1:1):** a FK está em `DOCUMENTO_FISCAL.id_venda`, `NOT NULL` e `UNIQUE`, para a venda ter no máximo um documento.
+- **Relacionamento 45 (autorrelacionamento):** `SAIDA_LOTE.id_saida_original` aponta para a própria tabela, aceita `NULL` e é `UNIQUE`, para a mesma baixa não ser estornada duas vezes.
+- **Relacionamentos 21 e 22:** `SAIDA_LOTE` tem duas FKs que aceitam nulo (`id_item_venda` e `id_perda`). Uma baixa de venda preenche a primeira, uma de perda preenche a segunda, e um `CHECK` impede preencher as duas. Como o estorno não tem origem própria, o `CHECK` também leva em conta o `tipo`: no estorno as duas ficam vazias e a `id_saida_original` é obrigatória.
+- **Dois papéis do mesmo funcionário:** em `VENDA` (operador e supervisor), em `TROCA_OPERADOR` (anterior e novo) e em `SESSAO_CAIXA` (quem abriu e quem fechou) existem duas FKs para `FUNCIONARIO`, com nomes diferentes.
+- **Relacionamento 48 (autorrelacionamento):** `PERDA.id_perda_original` aponta para a própria tabela e aceita `NULL`, porque só a perda que corrige ou divide outra tem original.
+- **Relacionamentos 46 e 47:** `SESSAO_CAIXA.id_funcionario_fechamento` e `CONTA_PAGAR.id_funcionario_pagamento` aceitam `NULL`, mas um `CHECK` exige o preenchimento quando a sessão está fechada ou a conta está paga (RN56).
+
+**O que a chave estrangeira obrigatória resolve, e o que fica de fora.** Uma FK `NOT NULL` garante que todo registro filho tem um pai: nenhum item de venda fica sem venda e nenhum lote fica sem item recebido. O contrário ela não garante. O mínimo 1 do lado "n" (como o `(1,n)` do pedido na associação de itens de pedido, ou o da venda na de itens de venda) diz que todo pedido tem que ter pelo menos um item e que toda venda concluída tem que ter itens e pagamentos. Nenhuma chave consegue exigir isso sozinha, porque o pai é gravado antes dos filhos. Por isso essa conferência fica na procedure que conclui a venda, que olha itens e pagamentos antes de concluir, e nas consultas de auditoria, que procuram pedido sem item e venda concluída sem pagamento.
+
+**Generalização/especialização.** O nosso DER não tem generalização nem especialização, então não foi preciso escolher uma estratégia de conversão (tabela única, uma tabela por entidade ou só as especializadas).
 
 ### 1.3 Definição de Chaves Primárias e Estrangeiras
 
+Todas as 27 tabelas têm chave primária própria, com o prefixo `id_`. As chaves estrangeiras seguem os relacionamentos explicados na seção 1.2 e somam 53: 43 vindas dos relacionamentos simples e 10 das cinco tabelas de associação (duas em cada).
+
 | Tabela | Chave primária (PK) | Chaves estrangeiras (FK) |
-|---|---|---|
-| FORNECEDOR | `codigo_fornecedor` | Não possui |
-| CATEGORIA_PRODUTO | `codigo_categoria` | Não possui |
-| FUNCIONARIO | `codigo_funcionario` | Não possui |
-| PRODUTO | `codigo_produto` | `codigo_categoria` → CATEGORIA_PRODUTO |
-| PEDIDO_COMPRA | `codigo_pedido` | `codigo_fornecedor` → FORNECEDOR |
-| ITEM_PEDIDO_COMPRA | `codigo_item_pedido` | `codigo_pedido` → PEDIDO_COMPRA; `codigo_produto` → PRODUTO |
-| RECEBIMENTO | `codigo_recebimento` | `codigo_pedido` → PEDIDO_COMPRA |
-| LOTE | `codigo_lote` | `codigo_produto` → PRODUTO; `codigo_item_pedido` → ITEM_PEDIDO_COMPRA; `codigo_recebimento` → RECEBIMENTO |
-| PERDA | `codigo_perda` | `codigo_lote` → LOTE; `codigo_funcionario` → FUNCIONARIO |
-| VENDA | `codigo_venda` | `codigo_funcionario` → FUNCIONARIO; `codigo_funcionario_cancelamento` → FUNCIONARIO |
-| ITEM_VENDA | `codigo_item_venda` | `codigo_venda` → VENDA; `codigo_produto` → PRODUTO |
-| PAGAMENTO | `codigo_pagamento` | `codigo_venda` → VENDA |
-| SAIDA_LOTE | `codigo_saida_lote` | `codigo_lote` → LOTE; `codigo_item_venda` → ITEM_VENDA |
+| :--- | :--- | :--- |
+| `SETOR` | `id_setor` | Não possui |
+| `PRODUTO` | `id_produto` | `id_setor` |
+| `FORNECEDOR` | `id_fornecedor` | Não possui |
+| `FORNECEDOR_PRODUTO` | `id_fornecedor_produto` | `id_fornecedor`, `id_produto` |
+| `FUNCIONARIO` | `id_funcionario` | `id_setor` |
+| `ESCALA` | `id_escala` | `id_funcionario` |
+| `FORMA_PAGAMENTO` | `id_forma` | Não possui |
+| `CAIXA` | `id_caixa` | Não possui |
+| `PEDIDO_COMPRA` | `id_pedido` | `id_fornecedor`, `id_funcionario` |
+| `ITEM_PEDIDO_COMPRA` | `id_item_pedido` | `id_pedido`, `id_produto` |
+| `RECEBIMENTO` | `id_recebimento` | `id_fornecedor`, `id_pedido`, `id_funcionario` |
+| `ITEM_RECEBIMENTO` | `id_item_recebimento` | `id_recebimento`, `id_produto` |
+| `DEVOLUCAO_FORNECEDOR` | `id_devolucao` | `id_recebimento`, `id_funcionario`, `id_conta` |
+| `ITEM_DEVOLUCAO` | `id_item_devolucao` | `id_devolucao`, `id_item_recebimento` |
+| `CONTA_PAGAR` | `id_conta` | `id_recebimento`, `id_forma`, `id_funcionario_pagamento` |
+| `LOTE` | `id_lote` | `id_item_recebimento`, `id_produto` |
+| `SAIDA_LOTE` | `id_saida_lote` | `id_lote`, `id_item_venda`, `id_perda`, `id_saida_original` |
+| `MOTIVO_PERDA` | `id_motivo` | Não possui |
+| `PERDA` | `id_perda` | `id_produto`, `id_setor`, `id_motivo`, `id_funcionario`, `id_lote`, `id_perda_original` |
+| `PROMOCAO` | `id_promocao` | `id_lote`, `id_funcionario` |
+| `SESSAO_CAIXA` | `id_sessao` | `id_caixa`, `id_funcionario_abertura`, `id_funcionario_fechamento` |
+| `TROCA_OPERADOR` | `id_troca` | `id_sessao`, `id_funcionario_anterior`, `id_funcionario_novo` |
+| `SANGRIA` | `id_sangria` | `id_sessao`, `id_funcionario` |
+| `VENDA` | `id_venda` | `id_sessao`, `id_funcionario_operador`, `id_funcionario_supervisor` |
+| `ITEM_VENDA` | `id_item_venda` | `id_venda`, `id_produto`, `id_funcionario_cancelamento` |
+| `PAGAMENTO` | `id_pagamento` | `id_venda`, `id_forma` |
+| `DOCUMENTO_FISCAL` | `id_documento` | `id_venda` |
 
-**Cardinalidade conceitual × SQL:** as mínimas (1,1) e (1,N) são regra de negócio. Na cópia usada na conferência (`script(2).sql`), as 17 FKs **aceitam NULL**. A FK, sozinha, também não exige que cada pedido ou venda tenha pelo menos um item, nem que cada venda tenha um pagamento. Quando a FK está preenchida, ela impede uma referência a registro inexistente (teste A05).
+Nos relacionamentos 44 e 45 a chave estrangeira precisa ser única: `DOCUMENTO_FISCAL.id_venda` impede dois documentos para a mesma venda, e `SAIDA_LOTE.id_saida_original` impede estornar a mesma baixa duas vezes. No segundo caso a coluna aceita `NULL`, porque uma baixa normal não aponta para outra.
 
-**Observação:** o modelo implementado não possui uma tabela associativa direta entre FORNECEDOR e PRODUTO. A identificação dos produtos solicitados a cada fornecedor é realizada por meio das tabelas PEDIDO_COMPRA e ITEM_PEDIDO_COMPRA. Essa simplificação foi adotada para manter o foco nos processos de compra e recebimento incluídos no escopo acadêmico. O DER conceitual foi revisado e exportado, e sua representação contempla os relacionamentos definidos para as 13 entidades do projeto. As diferenças entre a obrigatoriedade indicada pelas cardinalidades conceituais e as restrições efetivamente aplicadas no MySQL estão documentadas como limitações da implementação.
+As FKs de funcionário em `VENDA`, `TROCA_OPERADOR` e `SESSAO_CAIXA` têm nomes diferentes (`id_funcionario_operador` e `id_funcionario_supervisor`, `id_funcionario_anterior` e `id_funcionario_novo`, `id_funcionario_abertura` e `id_funcionario_fechamento`) porque o mesmo funcionário participa com papéis diferentes.
+
+As FKs impedem, por exemplo, um item de venda ligado a um produto que não existe. Mas elas sozinhas não resolvem regras que comparam várias linhas ou tabelas, como conferir se a venda foi paga por inteiro ou se a saída passa do saldo do lote. Essas ficam para as restrições e para as operações do SQL, explicadas na seção 1.5.
 
 ### 1.4 Processo de Normalização (1FN, 2FN e 3FN)
 
-- **1FN — Primeira Forma Normal:** cada coluna tem um valor só. Os produtos de uma venda e de um pedido não vão numa lista dentro de `VENDA` ou `PEDIDO_COMPRA`; são linhas de `ITEM_VENDA` e `ITEM_PEDIDO_COMPRA`. No pagamento dividido, cada pagamento fica em uma linha de `PAGAMENTO`.
+Usamos a normalização para não misturar, numa mesma tabela, informações de cadastro, venda, compra e estoque.
 
-- **2FN — Segunda Forma Normal:** as PKs são simples, então não há dependência parcial **em relação a essas PKs**. Quantidade e preço de compra dependem de `codigo_item_pedido`; nome do produto e dados do fornecedor ficam nos cadastros. **PK simples sozinha não encerra a análise da 2FN**: também precisamos considerar outras combinações de atributos que possam identificar um item, as chamadas chaves candidatas.
+#### Primeira Forma Normal (1FN)
 
-- **3FN — Terceira Forma Normal:** `PEDIDO_COMPRA` guarda `codigo_fornecedor`; razão social, telefone e CNPJ ficam em `FORNECEDOR`. `PRODUTO` guarda `codigo_categoria`; o nome da categoria fica em `CATEGORIA_PRODUTO`. Assim não repetimos descrição em cada movimento.
+Na 1FN cada campo guarda um único valor, sem lista de produtos, pagamentos ou datas dentro de uma coluna. O DER não tem nenhum atributo multivalorado. Os itens de venda ficaram em ITEM_VENDA e os de pedido em ITEM_PEDIDO_COMPRA: uma venda com três produtos gera três linhas de item, e não três produtos num campo só.
 
-- **O que ainda é redundante e precisa de cuidado:**
-  - `LOTE.codigo_produto` repete o produto que já dá para achar pelo item do pedido. A auditoria A02 compara os dois; não há FK composta. Se alguém atualizar um lado e esquecer o outro, os dados divergem — por isso **não dizemos que o esquema está 3FN sem ressalva**.
-  - `ITEM_VENDA.subtotal`, `VENDA.valor_total` e `LOTE.quantidade_disponivel` são valores gravados para facilitar consulta. Sem um mecanismo que os mantenha consistentes com as movimentações, podem surgir diferenças entre o saldo, os itens e o total da venda.
+O mesmo vale para recebimentos, devoluções e pagamentos. Cada item e cada pagamento tem a sua linha. Fornecedor e funcionário têm um telefone cada. Se o mercado quiser guardar vários, será preciso uma tabela própria de telefones. O endereço do fornecedor ficou como um texto único, porque é assim que usamos no levantamento. Se um dia for preciso buscar por CEP ou bairro, essa escolha tem que ser revista.
 
-Em resumo: separamos as listas (1FN) e os dados dos itens dos cadastros. Ter PK própria ajuda a identificar cada item, mas não basta para provar a 2FN. Também evitamos repetir dados de fornecedor e categoria em cada movimento. **Não fechamos 3FN em tudo.** A redundância do lote ainda precisa ser resolvida ou justificada no dicionário, mostrando no SQL como os dados ficam consistentes. Conferir os valores por uma consulta, por si só, não elimina essa redundância.
+**Por que a 1FN foi necessária no nosso caso.** Venda, pedido, recebimento e devolução têm vários itens, e uma venda pode ser paga de mais de um jeito. Se esses dados ficassem numa lista dentro de um campo, não daria para somar o subtotal, baixar o estoque do lote de cada item, cancelar só um item (RN26) nem conferir os pagamentos contra o total (RN24). Com uma linha por item e uma por pagamento, cada uma dessas contas vira uma consulta simples.
+
+#### Segunda Forma Normal (2FN)
+
+A 2FN pede que cada dado dependa da chave inteira e não de um pedaço dela. Todas as nossas chaves primárias são simples (`id_item_venda`, `id_item_pedido` etc.), então não existe dependência parcial em relação a elas.
+
+Só que chave primária simples não encerra o assunto. Algumas tabelas também têm chaves candidatas compostas (colunas que ficam juntas num `UNIQUE`), e conferimos as dependências em relação a elas também:
+
+- **FORNECEDOR_PRODUTO**, chave candidata (`id_fornecedor`, `id_produto`): o código no fornecedor e o último custo valem para o par, e não para só um dos dois. Os dados do fornecedor e do produto continuam nas tabelas deles.
+- **ESCALA**, chave candidata (`id_funcionario`, `data`): tipo, hora de início e hora de fim pertencem àquele funcionário naquele dia.
+- **RECEBIMENTO**, chave candidata (`id_fornecedor`, `numero_nf`, `serie`): as datas, o valor e o funcionário dependem da nota inteira. O número da nota sozinho não define nada, porque outro fornecedor pode ter a mesma numeração.
+
+O **ITEM_VENDA** não tem chave candidata composta: a mesma venda pode ter o mesmo produto em mais de uma linha, por causa da divisão por lotes (RN57), então não existe `UNIQUE` em venda + produto. Aqui só vale a chave simples: quantidade e preço praticado pertencem àquele item, e o nome e o preço atual do produto continuam em PRODUTO.
+
+Para não repetir o par de FORNECEDOR_PRODUTO, usamos `UNIQUE` nas duas FKs.
+
+**Por que a 2FN foi necessária no nosso caso.** As tabelas que ligam duas coisas (FORNECEDOR_PRODUTO, ESCALA, RECEBIMENTO) têm chave candidata composta, e era ali que o erro podia aparecer: guardar o nome do produto ou a razão social do fornecedor junto do par faria o mesmo dado se repetir em cada linha, e corrigir um nome exigiria alterar várias linhas. Conferindo que cada coluna depende do par inteiro, o nome fica só no cadastro e a tabela de ligação guarda apenas o que é do par (código no fornecedor, último custo, horários do dia).
+
+#### Terceira Forma Normal (3FN)
+
+Na 3FN evitamos que um atributo dependa de outro que não seja a chave. Por isso o nome do setor fica só em SETOR e a razão social do fornecedor só em FORNECEDOR, sem repetir em PRODUTO, RECEBIMENTO ou PEDIDO_COMPRA. VENDA e PAGAMENTO são separadas porque uma venda pode ter mais de uma forma de pagamento, e criamos MOTIVO_PERDA para não repetir a descrição do motivo em cada perda. Pela mesma razão as formas de pagamento ficam num cadastro só (FORMA_PAGAMENTO), usado nas vendas e nas contas a pagar, em vez de um texto digitado em cada pagamento.
+
+**Por que a 3FN foi necessária no nosso caso.** O mercado tem poucos setores, motivos de perda e formas de pagamento, mas milhares de produtos, perdas e pagamentos. Se o nome do setor ou a descrição do motivo ficasse em cada linha, uma grafia diferente ("Frios" e "frios") quebraria os indicadores por setor e por motivo (KPI01 e KPI02), que são o centro do P1. Com cada descrição em um lugar só, os totais batem. Onde repetimos de propósito, explicamos o motivo e o controle abaixo.
+
+Em alguns pontos mantivemos uma repetição de propósito, e ali a 3FN não é estrita. Separamos em três grupos, porque o motivo de cada um é diferente.
+
+**Repetições de caminho, controladas pelo banco:**
+
+- **`LOTE.id_produto`:** o item recebido já identifica o produto (lote → item recebido → produto). Guardamos o produto no lote para facilitar consulta por produto. Como o produto de um lote não muda depois de criado, basta o SQL conferir na criação que ele é o mesmo produto do item recebido, e os dois caminhos não divergem.
+- **`PERDA.id_setor`:** o setor já se descobre pelo produto (perda → produto → setor, uma dependência transitiva). Guardamos na perda porque ela precisa lembrar o setor onde a perda aconteceu: se o produto mudar de setor depois, a perda antiga continua no setor de antes e os indicadores por setor não mudam sozinhos. A validação é que, ao registrar a perda, o setor seja o setor do produto naquele momento e seja um setor que vende produto (RN03).
+- **`PERDA.id_produto`:** quando o lote é conhecido, o produto também se descobre pelo lote. Mas na perda com "lote a confirmar" não existe lote, então o produto precisa ficar na própria perda. Quando o lote é identificado, o SQL confere se os dois produtos são o mesmo.
+- **`LOTE.custo_unitario`:** é uma cópia histórica do `custo_unitario_nf` do item recebido, feita quando o lote é criado, e não muda depois. Fica no lote porque é esse custo que calcula o valor da perda (RN44) e porque um mesmo item pode gerar mais de um lote.
+- **`SAIDA_LOTE.id_lote`:** o item de venda já identifica o produto, e o lote também. Os dois caminhos precisam levar ao mesmo produto, e o trigger confere isso na baixa.
+- **`ITEM_DEVOLUCAO.id_item_recebimento`:** o item recebido pertence a um recebimento, e a devolução também aponta para um recebimento. Os dois precisam ser o mesmo, e o trigger confere na criação do item de devolução.
+
+**Dados históricos, que não são repetição:**
+
+- **`ITEM_VENDA.preco_unitario` e `PROMOCAO.preco_normal`:** parecem repetir o preço do produto, mas são outro fato. Eles registram o preço praticado naquela venda e o preço normal naquela promoção, e não dependem do preço atual do cadastro. Se o preço do produto mudar amanhã, o item vendido ontem não pode mudar. Por isso mantemos como dado da ocorrência, e não como exceção à normalização.
+
+**Valores que dariam para calcular e que decidimos guardar:**
+
+- `LOTE.quantidade_atual`, para não somar todas as movimentações a cada consulta;
+- `PERDA.valor_estimado`, para preservar o valor daquela ocorrência;
+- `SESSAO_CAIXA.valor_esperado`, o valor do momento do fechamento;
+- `ITEM_RECEBIMENTO.quantidade_nf` e `quantidade_recusada`. Aqui vale separar duas coisas: a restrição aritmética "quantidade da nota = aceita + recusada", que um `CHECK` garante, e a escolha de guardar os três números mesmo dando para calcular um deles a partir dos outros. A restrição existe sempre; a redundância é opção nossa. Guardamos os três porque o fornecedor reclama em cima do que veio na nota e do que foi recusado, e a consulta de divergências (G09) fica mais simples.
+
+Esses valores precisam ser mantidos junto com cada baixa, estorno, recebimento e fechamento, para não ficarem diferentes do histórico.
+
+`ITEM_VENDA.subtotal`, `VENDA.valor_total` e `SESSAO_CAIXA.diferenca` são **derivados**, porque podem ser calculados a partir de outros campos. No SQL, `ITEM_VENDA.subtotal` é uma coluna gerada a partir da quantidade vezes o preço, e `SESSAO_CAIXA.diferenca` é uma coluna gerada a partir do valor contado menos o valor esperado. Já `VENDA.valor_total` é gravado pela procedure `concluir_venda`, depois da conferência dos itens ativos e dos pagamentos (RN23 e RN24). Assim, os cálculos simples ficam por conta do próprio banco e o total da venda só é fechado quando a venda realmente é concluída.
+
+#### O que ganhamos com isso
+
+Cada informação fica em um lugar só. Se um fornecedor muda de telefone, o grupo atualiza apenas o cadastro dele, sem precisar procurar o mesmo dado em pedido, nota ou conta. Se o mesmo produto chega em lotes diferentes, cada lote guarda a sua validade e o cadastro do produto não muda. E como os números não ficam repetidos por aí, as consultas de perdas, validade, vendas e estoque têm menos chance de dar resultados diferentes para a mesma coisa.
 
 ### 1.5 Justificativas Técnicas das Decisões
 
-**Chaves primárias:** cada uma das 13 tabelas tem identificador simples (`codigo_produto`, `codigo_lote`, `codigo_venda` etc.). Itens de compra/venda e saídas por lote também têm PK própria, para individualizar a linha e rastrear.
+#### Chaves primárias e estrangeiras
 
-**Chaves estrangeiras:** 17 FKs no SQL que analisamos, inclusive `PEDIDO_COMPRA.codigo_fornecedor` → `FORNECEDOR` (RN03), `LOTE.codigo_item_pedido` → `ITEM_PEDIDO_COMPRA` (RN22) e `SAIDA_LOTE.codigo_lote`/`codigo_item_venda` → `LOTE`/`ITEM_VENDA` (RN14). Funcionário da venda e funcionário do cancelamento são duas FKs diferentes de `VENDA` para `FUNCIONARIO`.
+Usamos uma chave numérica própria em cada tabela, porque ela não muda quando um nome, telefone ou código comercial precisa ser corrigido. O `codigo_interno` (PLU) e o código de barras continuam em PRODUTO, mas não ligam uma tabela à outra. CPF e CNPJ também não servem de chave: são dados pessoais ou comerciais que podem ser corrigidos, e preferimos não espalhá-los pelas tabelas filhas.
 
-**O que está na cópia usada na conferência (`script(2).sql`):**
+As chaves estrangeiras seguem as cardinalidades do DER. Por exemplo, PRODUTO aponta para SETOR, ITEM_VENDA aponta para VENDA e PRODUTO, e LOTE aponta para o item recebido. Assim não sobra item solto, e dá para cruzar informações de várias tabelas. Nas FKs usamos `ON DELETE RESTRICT`, para ninguém apagar um cadastro que já tem histórico (RN05).
 
-Esse foi o nome da cópia usada na revisão. O arquivo de entrega é `docs/script.sql`. Os pontos abaixo se referem a essa cópia; não são uma nova verificação do arquivo publicado na `main`.
+#### Restrições de integridade
 
-| Regra SQL | O que garante | Limitação |
-|---|---|---|
-| 13 chaves primárias (`PRIMARY KEY`) | Identificação única pela PK | Não torna obrigatório o resto dos campos |
-| 17 FKs, com `ON DELETE RESTRICT` | Impedem referência *preenchida* a registro inexistente; travam exclusão de quem ainda é usado | As 17 FKs permitem `NULL` |
-| Tipos `INT`, `VARCHAR`, `DECIMAL`, `DATE`, `DATETIME` | Cabem no conteúdo | O tipo não impede valor negativo nem fecha regra de negócio |
+A tabela abaixo mostra como cada restrição foi pensada e como as regras de integridade foram distribuídas entre chaves, `CHECK`, triggers, procedures e perfis de acesso.
 
-**Restrições previstas que ainda não aparecem nessa cópia:**
+| Decisão | Como o banco controla | Regra ligada |
+| :--- | :--- | :--- |
+| Código interno, CNPJ e CPF sem repetição | `UNIQUE` em PRODUTO, FORNECEDOR e FUNCIONARIO | RN02, RN06, RN07 |
+| Produto, fornecedor, funcionário e caixa não são apagados | Coluna `ativo` e FKs com `ON DELETE RESTRICT` | RN05 |
+| Funcionário inativo não faz novas operações | Triggers e procedures verificam `ativo` em diferentes operações, incluindo venda, recebimento, perda e fechamento. A cobertura precisa ser conferida também nas alterações diretas de dados | RN50 |
+| Produto com setor definido | `PRODUTO.id_setor NOT NULL` e FK | RN03 |
+| Produto e perda só em setor que vende | Coluna `SETOR.vende_produto` e trigger que recusa produto ou perda em setor com 0 (Caixa e Retaguarda) | RN03, RN41 |
+| Setor da perda igual ao setor do produto no momento do registro | Trigger em PERDA | RN03, RN41 |
+| Preço positivo e estoque mínimo sem valor negativo | `CHECK` em PRODUTO | RN04 |
+| Formas de pagamento cadastradas | Tabela FORMA_PAGAMENTO com carga inicial (dinheiro, débito, crédito, Pix, VA, boleto e transferência) | RN08 |
+| Forma de pagamento coerente com o uso | `CHECK` nos valores de `uso` e trigger em PAGAMENTO (aceita `venda` ou `ambos`) e em CONTA_PAGAR (aceita `fornecedor` ou `ambos`). Outro trigger impede mudar o `uso` depois que a forma tem histórico | RN08, RN08A |
+| Nota fiscal sem duplicidade | `UNIQUE` em fornecedor + número + série, e na chave de acesso quando existir | RN10 |
+| Recebimento com ou sem pedido | `RECEBIMENTO.id_pedido` aceita `NULL` | RN11 |
+| Quantidades aceitas e recusadas coerentes | `CHECK` no item (aceita + recusada = quantidade da nota) e validação da soma dos lotes | RN12, RN14 |
+| Saldo do lote sem negativo e saída dentro do saldo | `CHECK` no lote e trigger antes de cada baixa | RN16, RN17 |
+| Venda dentro do saldo disponível do produto | A procedure `concluir_venda` confere o saldo e bloqueia o lote escolhido com `SELECT ... FOR UPDATE` durante a transação. O bloqueio foi implementado, mas não fizemos teste com várias conexões ao mesmo tempo | RN16, RN17, RN53 |
+| Estorno sem exclusão nem duplicação | Autorrelacionamento com UNIQUE em id_saida_original (impede estornar a mesma baixa duas vezes) e CHECK no tipo. A conferência da baixa original é feita pela procedure estornar_saida e pela auditoria A09 | RN17 |
+| Baixa com uma única origem | `CHECK` impedindo preencher item de venda e perda ao mesmo tempo | RN17, RN28 |
+| Saldo disponível do produto | Consulta (view) que soma os lotes e desconta as perdas com "lote a confirmar" | RN16, RN42 |
+| Perda pendente não passa do saldo disponível | Validação no registro da perda com lote a confirmar | RN42 |
+| Lote da perda confirmado sem contar duas vezes | Procedure com transação: baixa o lote, marca a perda como confirmada e calcula o valor juntos, e a perda confirmada deixa de entrar no desconto das pendentes | RN42, RN44, RN52 |
+| Produto vendido por quilo ou por unidade | Validação da quantidade conforme o tipo do produto | RN22 |
+| Venda só em sessão de caixa aberta e com o operador correto | Trigger em VENDA que confere se a sessão está aberta e se o funcionário da venda é o operador atual da sessão, considerando a última troca de operador quando existir | RN20, RN29 |
+| Lote com validade mais próxima sai primeiro, e lote vencido não é vendido | A procedure de venda prioriza o lote pela validade, seguindo FEFO, ou o lote mais antigo quando não houver validade. O trigger de SAIDA_LOTE recusa baixa de venda em lote vencido | RN18, RN46 |
+| Baixa de estoque na conclusão da venda | Procedure `concluir_venda`, dentro de uma transação | RN19 |
+| Preço promocional só no lote promocional | A procedure de venda cria uma linha de item por lote e aplica o preço promocional só ao lote que tem promoção vigente | RN18, RN47, RN48, RN57 |
+| Venda concluída só com pagamento completo | Conferência da soma dos itens ativos com os pagamentos, dentro da procedure `concluir_venda` | RN23, RN24 |
+| Cancelamento de venda com supervisor | Campos obrigatórios (motivo, data, supervisor) quando o status é cancelada, e conferência do perfil do supervisor | RN25 |
+| Cancelamento de venda concluída estorna todas as baixas | Procedure de cancelamento, em transação: estorna cada baixa dos itens ativos uma única vez e muda o status da venda | RN17, RN54, RNF04 |
+| Pagamento de venda cancelada fica no histórico mas não entra nos totais | As consultas de faturamento e o cálculo do valor esperado do caixa só consideram venda concluída | RN25, RN55 |
+| Item cancelado continua registrado | `status` do item e `CHECK` exigindo motivo e data quando cancelado | RN26 |
+| Aviso de venda restrita por idade | Coluna `venda_restrita_idade` em PRODUTO, que o atendimento consulta | RN27 |
+| Uma sessão aberta por caixa | Coluna gerada com `IF(status = 'aberta', id_caixa, NULL)` e `UNIQUE` nela (o MySQL não tem índice parcial) | RN29 |
+| Sangria positiva e fundo inicial sem valor negativo | `CHECK`, e validação de sessão aberta na sangria | RN30, RN31 |
+| Diferença do caixa | Calculada no fechamento: contado menos esperado | RN32 |
+| Fechamento de caixa com responsável | `id_funcionario_fechamento` e `CHECK` que exige o preenchimento quando a sessão está fechada | RN56, RNF02 |
+| Pagamento de conta com responsável | `id_funcionario_pagamento` e `CHECK` que exige o preenchimento (junto com a data) quando a conta está paga | RN56, RNF02 |
+| Conta a pagar completa | `NOT NULL` em recebimento, vencimento e valor, e `CHECK` nos status | RN34, RN35 |
+| Conta mantém o valor original | O abatimento fica em DEVOLUCAO_FORNECEDOR, sem alterar `CONTA_PAGAR.valor` | RN36 |
+| Devolução até o limite recusado e abatimento na conta do mesmo fornecedor | Trigger em ITEM_DEVOLUCAO e em DEVOLUCAO_FORNECEDOR, porque comparam tabelas diferentes | RN37, RN38 |
+| Perda separada de devolução | Tabelas diferentes para a parcela recusada do recebimento e as perdas de estoque. Não há uma identificação geral da mercadoria física que impeça qualquer registro duplicado entre os dois processos | RN28, RN39 |
+| Perda com motivo e situação do lote | FK, `NOT NULL` e validação condicional | RN40 a RN42 |
+| Perda não é apagada | Sem `DELETE` para o perfil de uso. Correção ou divisão por novo registro ligado ao original, que passa a `substituida` e sai dos totais | RN43, RN52 |
+| Valor da perda só com lote confirmado | `valor_estimado` aceita `NULL` e `CHECK` ligado à situação do lote | RN44 |
+| Alerta de validade por setor | `SETOR.dias_alerta_validade` (`NULL` nos setores sem alerta) e consultas por lote | RN45 |
+| Prazo padrão de 7 dias para produto com validade em setor sem alerta | Constante escrita na consulta G03, e não coluna do banco. Para mudar o prazo, edita-se o valor na consulta | RN45 |
+| Promoção com preço menor e dentro da validade | `CHECK` (promocional menor que normal) e trigger entre PROMOCAO e LOTE | RN46 a RN48 |
+| Escala de trabalho e folga | `CHECK` por tipo e `UNIQUE` em funcionário + data | RN49 |
+| Reposição por estoque mínimo | Consulta que compara o saldo disponível com `PRODUTO.estoque_minimo` e mostra se já existe pedido de compra em aberto | RN04, RN09, RF20 |
+| Proteção de dados e perfis de acesso | Perfis (roles) do MySQL com `GRANT` por coluna, criados no script (seção 3). O modelo não tem tabela de usuários: `perfil_acesso` só descreve o perfil, e o vínculo entre o funcionário e a conta do MySQL não é modelado | RN51, RNF01, RNF07 |
+| Peso do item vendido por quilo | O banco só guarda o peso informado na venda, e a balança fica fora do banco | RN22 |
+| Baixa de venda no lote do produto certo | Trigger em SAIDA_LOTE que compara o produto do item de venda com o produto do lote | RN17, RN57 |
+| Item devolvido pertence ao recebimento da devolução | Trigger em ITEM_DEVOLUCAO que compara o recebimento do item com o da devolução | RN37 |
+| Item de venda com várias linhas do mesmo produto | Sem `UNIQUE` em venda + produto em ITEM_VENDA: a mesma venda pode ter o mesmo produto em mais de uma linha, uma por lote | RN57 |
 
-| Restrição necessária | Exemplo de implementação | Requisito/regra |
-|---|---|---|
-| Obrigatoriedade de fornecedor e categoria | `PEDIDO_COMPRA.codigo_fornecedor NOT NULL`, `PRODUTO.codigo_categoria NOT NULL` | RN03, RN16 |
-| Obrigatoriedade dos dados essenciais | `NOT NULL` em FKs e atributos essenciais de item, recebimento, lote, venda e pagamento; deixar nulo só o que for mesmo opcional | RN02, RN13, RN14, RN22 |
-| Unicidade de identificadores naturais | `UNIQUE` em `FORNECEDOR.cnpj` e `PRODUTO.codigo_barras` (reavaliar política para produtos de peso variável) | RN04, RF01 |
-| Positividade e domínio de valores | `CHECK (quantidade_vendida > 0)`, checagens de preço, perda e saldo, e domínio de `forma_pagamento` | RN15, RN18 |
-| Lote compatível com pedido, recebimento e produto | Validação na transação ou integridade composta bem desenhada | RN22 |
-| Pedido/venda com itens e pagamentos correspondentes | Validação na transação ou procedimento de fechamento | RN13, RN15 |
-| Venda com saídas por lote e saldo coerente | Procedimento atômico, validade e saldo, eventual `SELECT ... FOR UPDATE` | RN01, RN14, RN18, RN19 |
+Algumas regras não dá para garantir só com PK, FK e `CHECK`, porque precisam comparar várias linhas ou tabelas. É o caso da soma dos pagamentos, da soma dos lotes de um recebimento e de a venda concluída ter pelo menos um item. Para essas decidimos o seguinte:
 
-**Decisões de arquitetura:** MySQL 8.0 e dados separados em cadastro, movimento e lote. `SAIDA_LOTE` existe para dizer de qual lote saiu a quantidade vendida; o ERP deles continua com a parte fiscal. Este banco acadêmico não tem login por cargo, FEFO automático, cancelamento completo, fechamento de caixa nem baixa automática de todo saldo.
+- **Triggers** (`BEFORE INSERT` e `BEFORE UPDATE`) para as conferências curtas, que olham uma ou duas linhas: saída dentro do saldo, devolução até o limite recusado, produto do lote igual ao do item recebido, setor da perda, forma de pagamento conforme o uso, funcionário ativo.
+- **Procedures com transação** para os fluxos de vários passos previstos pela RNF04, com rollback nas condições tratadas explicitamente e tratamento geral de exceções ainda pendente: concluir uma venda, cancelar uma venda já concluída, registrar um recebimento com um item e seu lote, confirmar o lote de uma perda, estornar uma baixa e fechar uma sessão de caixa. Quando o mesmo item recebido tiver outros lotes, eles podem ser incluídos pela procedure `adicionar_lote_recebimento`, que confere se a soma dos lotes não ultrapassa a quantidade aceita.
+- **Consultas de auditoria** (A01 a A12) para conferir depois o que o banco não consegue impedir sozinho.
 
-O `docs/script.sql` e o `Dicionario_Dados.md` precisam descrever **a mesma estrutura**: mesmas tabelas, colunas, nome do banco e restrições. Não adianta prometer `NOT NULL`/`UNIQUE`/`CHECK` só no README.
+#### Quem fez cada operação (RNF02 e RNF06)
 
+Quase todas as tabelas de operação têm uma FK para quem registrou: pedido, recebimento, devolução, perda, promoção, sangria, venda, troca de operador e cancelamento. Só faltavam o fechamento do caixa e o pagamento de uma conta a pagar. A primeira ideia era descobrir isso pela sessão e por um log de acesso do banco, mas não funciona: quem abriu o caixa pode não ser quem fechou (por causa da troca de operador), e o usuário técnico que roda um comando no banco nem sempre é o funcionário responsável. Por isso criamos duas ligações próprias com FUNCIONARIO: `SESSAO_CAIXA.id_funcionario_fechamento` e `CONTA_PAGAR.id_funcionario_pagamento` (relacionamentos 46 e 47). Com elas e com a ligação das perdas corrigidas (48), o DER ganhou três relacionamentos, e o responsável passou a ser obrigatório quando a sessão é fechada ou a conta é paga (RN56).
+
+#### Escopo da implementação
+
+O banco é uma implementação acadêmica, feita só para este trabalho, com dados fictícios e sem ligação com o VR Software. Ele modela os processos do mercado (caixa, vendas, pagamentos, documentos fiscais, estoque e fechamento), mas não recebe as vendas reais, então não serve para operar o mercado em paralelo ao sistema que ele já usa. Os dados fiscais guardados são só informações ligadas às vendas e não substituem o sistema fiscal do mercado (RN33).
+
+RN25, RN51, RNF01 e RNF07 dependem do perfil do funcionário. No banco, isso fica como regra de projeto: os perfis (roles) e permissões por coluna estão no script, mas o vínculo entre o funcionário e a conta do MySQL não é modelado. Por isso tratamos essas regras como implementadas só até onde o script chega.
+
+#### Índices
+
+Para o volume de cerca de 1.800 vendas por dia (RNF09), além das chaves, criamos índices nas colunas mais usadas nas consultas:
+
+- `LOTE (data_validade)` e `LOTE (id_produto)`, para validade e saldo;
+- `PERDA (data_hora)`, `PERDA (id_setor)` e `PERDA (id_motivo)`, para as consultas de perdas;
+- `VENDA (data_hora)` e `VENDA (id_sessao)`, para faturamento e fechamento;
+- `ITEM_VENDA (id_venda)` e `ITEM_VENDA (id_produto)`, para os itens e o giro;
+- `PAGAMENTO (id_venda)`, para conferir o pagamento de cada venda;
+- `SAIDA_LOTE (id_lote)`, para a conferência do saldo;
+- `PRODUTO (codigo_barras)`, para a consulta de preço no caixa;
+- `CONTA_PAGAR (data_vencimento, status)`, para contas por vencimento.
+
+#### Alternativas que descartamos
+
+- **Tabela ESTOQUE separada.** O saldo ficaria guardado em dois lugares (no estoque e nos lotes) e podia divergir. Preferimos somar os lotes e guardar só `LOTE.quantidade_atual`.
+- **Entidade CLIENTE.** A Entrega 1 tinha, mas o mercado não cadastra cliente. Manter só criaria uma tabela sem uso.
+- **Entidade CATEGORIA.** O mercado se organiza por setor, e o prazo de alerta de validade muda por setor. Por isso trocamos CATEGORIA por SETOR.
+- **Validade no produto.** Cada entrega do mesmo produto pode ter validade diferente, então a validade ficou no lote.
+- **Perda como um tipo de devolução ao fornecedor.** Misturar esconderia o prejuízo do mercado, porque devolução e troca com o fornecedor não são prejuízo. Mantivemos as duas separadas.
+- **Perda só como `tipo = perda` em SAIDA_LOTE.** Perdemos o motivo, o setor e a perda sem lote ("lote a confirmar"). Por isso PERDA é uma entidade própria, ligada à saída quando o lote é conhecido.
+- **Chave natural no lugar da chave numérica.** CNPJ, CPF e código de barras podem faltar ou mudar, então ficaram como colunas com `UNIQUE`.
+- **Duas tabelas de formas de pagamento (uma para venda e outra para fornecedor).** Repetiria o cadastro de formas como o Pix, que vale para os dois lados. Ficamos com uma tabela só e a coluna `uso`.
+- **Deixar quem trabalha em compras e financeiro sem setor.** `FUNCIONARIO.id_setor` ficaria opcional e as consultas por setor teriam de tratar o `NULL`. Preferimos criar os setores Caixa e Retaguarda, que não vendem produto.
+- **Descobrir quem fechou o caixa e quem pagou a conta pelo log do banco.** Não prova quem foi o funcionário responsável, então preferimos as duas FKs.
+- **Representar os itens como entidades comuns no DER.** Descartamos essa opção porque esses itens existem por causa da ligação entre outras entidades. Por isso, no conceitual eles aparecem como associações com atributos (e como entidade associativa quando a linha precisa ser referenciada), enquanto as tabelas de item ficam no modelo lógico.
+
+#### Outras escolhas do modelo
+
+O banco é em **MySQL**, com tabelas InnoDB e `utf8mb4`, para aproveitar as chaves estrangeiras e as transações. Usamos o MySQL 8.0, porque as restrições `CHECK` só são aplicadas de fato a partir da versão 8.0.16. O modelo funciona separado do VR Software. Não afirmamos que existe integração automática entre os dois.
+
+Sobre dados pessoais (LGPD): além dos dados dos funcionários, o telefone e o e-mail de fornecedor que é MEI ou pessoa física também podem ser dado pessoal. Por isso essas colunas entram na mesma restrição de acesso por perfil (RN51).
 
 ### 1.6 Proposta de Arquitetura Analítica para BI e IA
 
-Com esses dados o gerente consegue ver o que está para vencer, quanto já se perdeu, o que está abaixo do mínimo, como andam os recebimentos e o que entrou de pagamento. Só faz sentido no painel se o saldo do lote acompanhar a movimentação.
+Pensamos em indicadores que ajudem o responsável com os problemas do levantamento. O foco é perdas e validade, mas também entram vendas, estoque, fornecedores e contas a pagar.
 
-**KPIs e consultas — o que a gente quer medir e o que a cópia conferida do SQL já faz:**
+#### Informações estratégicas
 
-| Indicador | Fórmula para o KPI | Período | Referência/meta | SQL usado na conferência |
-|---|---|---|---|---|
-| Lotes a vencer | `COUNT(*)` de lotes válidos com saldo positivo e validade até 7 dias | Diário, data de referência fixa de 28/10/2026 na demonstração | Acompanhar diariamente; meta quantitativa a definir | G01 lista os lotes; ainda falta devolver a quantidade total no SQL |
-| Lotes vencidos com saldo | `COUNT(*)` de lotes vencidos com saldo positivo | Diário | Meta proposta: 0 | G02 lista os lotes; ainda falta a contagem no SQL |
-| Valor das perdas | `SUM(quantidade_perdida × custo_unitario)` | Por dia/mês, conforme `PERDA.data_perda` | Histórico informado ≈ 1,5% do faturamento; não é meta formal confirmada | G03 mostra o custo de cada perda; ainda falta somar os valores e filtrar pelo período definido |
-| Produtos abaixo do mínimo | `COUNT(*)` de produtos cuja soma dos saldos por lote é inferior ao mínimo | Diário | Meta proposta: 0 produtos | G04 lista os produtos; ainda falta devolver a quantidade total no SQL |
-| Pagamentos de vendas concluídas | `SUM(valor_pagamento)` associado às vendas concluídas | Por dia da venda | Monitoramento, sem meta de faturamento fixada | G05 soma os pagamentos por dia da venda; não confere se eles batem com `VENDA.valor_total` |
+Com os dados registrados, o mercado passa a responder perguntas que hoje não tem como responder:
 
-**Resultados da massa nos testes já relatados pelo grupo, com data de referência `2026-10-28`:**
+- Quais setores e produtos mais perdem, e quanto isso custa.
+- Quais motivos de perda aparecem mais (vencimento, maturação ou dano de cliente).
+- Quais lotes vão vencer nos próximos dias e se já foram para promoção.
+- Quais fornecedores mais entregam mercadoria fora do padrão e quanto foi recusado.
+- Quais produtos estão abaixo do estoque mínimo e precisam de pedido.
+- Como estão as vendas, o ticket médio e os cancelamentos por dia, caixa e operador.
+- Quanto há de contas a pagar em aberto, quanto já venceu sem pagar e quando o resto vence.
 
-| Consulta | Resultado registrado | Observação |
-|---|---|---|
-| G01 | 3 linhas: Maçã (MAC-001), Banana prata (BAN-001) e Tomate (TOM-001) | A consulta detalha os lotes; o indicador de quantidade ainda precisa de cálculo no SQL |
-| G02 | 1 linha: Alface crespa (ALF-001), saldo 30,000 | Lote propositalmente vencido com saldo para testar alerta |
-| G03 | 1 registro de perda, R$ 20,00 (10,000 × R$ 2,00, Alface crespa) | É resultado unitário; o custo de R$ 2,00 do lote difere do preço de compra de R$ 1,50 no pedido, sem justificativa documentada |
-| G04 | 2 linhas: Arroz 5 kg (5,000 / mínimo 10,000) e Cenoura (0,000 / mínimo 10,000) | Soma saldos de lotes vencidos: ao excluir o lote de alface, o resultado demonstrativo passaria de 2 para 3 produtos abaixo do mínimo (considerando a mesma massa) |
-| G05 | R$ 19,47 em uma venda concluída em 28/10/2026 | Valor de pagamento registrado, coincidente com o total da venda fictícia |
+#### Como o hortifruti entra no controle de validade
 
-O grupo já tinha relatado testes no MySQL 8.0 com 13 tabelas, 74 colunas, 17 FKs e 51 registros fictícios. **Nesta revisão do texto, não rodamos o MySQL de novo.** Há duas informações nos registros: a cópia `script(2).sql` usada na conferência ainda trazia `TOM-001` com saldo 70,000, e o grupo relatou ter corrigido esse saldo para 69,000. Pelos movimentos descritos — 70,000 recebidos e 1,000 vendido —, o esperado é 69,000. **Ainda falta confirmar que o `docs/script.sql` publicado na `main` é a mesma versão corrigida e registrar os resultados dessa versão.** Os resultados acima não são uma nova validação do arquivo publicado.
+O hortifruti é o setor mais forte do mercado, mas frutas, legumes e verduras quase nunca têm validade impressa (RN15). Por isso, nesse setor, o P2 não funciona do mesmo jeito que na padaria, nos frios ou nos laticínios, e o `SETOR.dias_alerta_validade` do hortifruti fica vazio. O banco ajuda o setor de três formas:
 
-**Auditorias e o que elas não cobrem:**
+- a data de recebimento da carga fica no recebimento ligado ao lote, e o lote mais antigo sai primeiro (RN18), mesmo sem validade;
+- a perda por **maturação excessiva** é o principal motivo de perda do setor, e o P1 mostra quanto custa (KPI01 e KPI02);
+- o recebimento recusa ou devolve a carga que já chega mole ou murcha, e isso aparece nos relatórios de fornecedor (KPI09).
 
-| Auditoria | O que verifica | Limitação |
-|---|---|---|
-| A01 | Referência não nula de lote a produto inexistente | Não acha `LOTE.codigo_produto IS NULL`; a FK já impede referência preenchida inválida |
-| A02 | Divergência entre produto e pedido nas linhas vinculadas | `INNER JOIN` ignora registro com FK nula; não fecha a RN22 inteira |
-| A03 | Produto da saída diferente do produto do item vendido | `INNER JOIN` ignora associação incompleta |
-| A04 | Soma de retiradas diferente da quantidade de cada item | Não testa saldo negativo nem venda de lote vencido |
-| A05 | Rejeição de FK para funcionário inexistente | O procedimento trata o erro; não prova autorização por função |
+Os lotes perto do vencimento (KPI03 e KPI04) só valem para os produtos que têm data impressa, em qualquer setor. No hortifruti a validade é conferida no olho, e o banco não muda isso.
 
-**Rastreabilidade: problemas e indicadores até a implementação SQL**
+**Limite do controle de validade.** O banco só avisa de vencimento dos produtos que têm data conhecida. Nos perecíveis sem data, que são a maior parte do hortifruti, ele não prevê quando o produto vai estragar, e isso continua com os funcionários. O que o banco faz é registrar a perda depois que acontece e mostrar onde ela mais ocorre. Para ir além, seria preciso um registro de inspeção ou uma estimativa de prazo por produto, que seria proposta nossa e não está no modelo atual.
 
-| Problema ou indicador | Tabelas | Consulta | Situação da comprovação |
-|---|---|---|---|
-| P1 — risco de vencimento | `PRODUTO`, `LOTE` | G01 | Atendido como lista gerencial |
-| P1 — lote vencido ainda com saldo | `PRODUTO`, `LOTE` | G02 | Atendido como lista gerencial |
-| P1 — custo das perdas | `PERDA`, `LOTE`, `PRODUTO` | G03 | Custo por registro; agregação pendente |
-| KPI — produtos abaixo do mínimo | `PRODUTO`, `LOTE` | G04 | Lista de produtos; contagem agregada pendente |
-| KPI — valor de pagamentos por dia | `VENDA`, `PAGAMENTO` | G05 | Soma por dia disponível |
+#### Indicadores gerenciais (KPIs)
 
-**Custo da alface:** na cópia conferida, o item de compra tem `preco_compra = 1,50` e o lote tem `custo_unitario = 2,00`. Precisamos conferir de onde veio a diferença. Só vamos dizer que entrou despesa adicional se isso estiver previsto e explicado na massa de teste; não basta criar uma justificativa para os valores baterem. Se for erro de preenchimento, corrigimos o valor e recalculamos o G03.
+Cada indicador tem fórmula, período e uma consulta no script SQL. As metas abaixo são **sugestões do grupo**. Não conversamos metas com o responsável, e elas precisam ser validadas com ele. São metas hipotéticas, escolhidas por nós sem dados históricos do mercado: os 2% do KPI01, o 1% do KPI08 e o prazo de 7 dias do KPI11 não vieram do responsável. Só as referências de faturamento e ticket médio partem de números que ele informou.
 
-**BI:** painéis de validade, perda, ruptura e recebimento. Giro e desempenho comercial pedem mais histórico e saldo estável. Para o % de perda, numerador e denominador têm que ser **do mesmo período**.
+Nos indicadores de perda (KPI01, KPI02 e KPI11) só contam as perdas com `status = valida`. As perdas `substituida` ficam de fora, como diz a RN43, para uma perda corrigida ou dividida não ser contada duas vezes. Na massa atual, as 24 perdas estão com `status = valida`: 18 já têm lote confirmado e 6 ainda estão com lote a confirmar. Por isso, no KPI11, o cálculo fica 6 ÷ 24 = 25%.
 
-**IA (não implementamos):** previsão de demanda, risco de vencimento e sugestão de compra. Isso pede lote bem cadastrado, histórico suficiente e conversa com o gestor. As 51 linhas fictícias servem para testar o banco e as consultas; essa massa não demonstra histórico suficiente para validar previsões úteis ao hortifruti.
+| Código | Indicador e cálculo | Período | Meta sugerida (a validar) | Consulta SQL |
+| :--- | :--- | :--- | :--- | :--- |
+| KPI01 | Custo das perdas em relação às vendas do setor: valor estimado das perdas válidas e confirmadas ÷ valor vendido pelo setor no mesmo período × 100. Compara um custo (perda, valorada pelo custo do lote) com uma receita (venda, valorada pelo preço), então serve para acompanhar a tendência, e não como margem de prejuízo. | Mensal | Até 2% do que o setor vende | G01 |
+| KPI02 | Ocorrências de perda por motivo: contagem de registros de perda válidos por motivo (mede o número de ocorrências, não unidades nem valor) | Mensal | Queda das ocorrências de perda por vencimento mês a mês | G02 |
+| KPI03 | Lotes perto do vencimento: lotes com saldo dentro do alerta do setor, mostrando se já têm promoção registrada | Diário | Acompanhar a lista todo dia. Promover ou não é decisão comercial do responsável, e a consulta só mostra a situação | G03 |
+| KPI04 | Lotes vencidos com saldo: lotes vencidos que ainda têm quantidade | Diário | Zero | G04 |
+| KPI05 | Faturamento: soma do valor das vendas concluídas | Diário | Referência de cerca de R$ 167 mil por dia (R$ 5 milhões ÷ 30) | G05 |
+| KPI06 | Ticket médio: valor das vendas concluídas ÷ quantidade de vendas concluídas | Diário | Referência de cerca de R$ 93 (R$ 167 mil ÷ 1.800 vendas) | G06 |
+| KPI07 | Produtos abaixo do mínimo: produtos com saldo disponível (soma dos lotes menos as perdas com lote a confirmar) menor que o estoque mínimo, separando os que já têm pedido de compra em aberto dos que não têm | Diário | Zero produtos abaixo do mínimo sem pedido de compra em aberto | G07 |
+| KPI08 | Taxa de cancelamento: vendas canceladas ÷ total de vendas registradas (concluídas + canceladas) × 100 | Mensal | Até 1% | G08 |
+| KPI09 | Quantidade recusada no recebimento por fornecedor: soma das quantidades recusadas | Por período | Comparar fornecedores e acompanhar os piores | G09 |
+| KPI10 | Soma do saldo a pagar das contas abertas (valor da conta menos os abatimentos ligados a ela), separando as vencidas das que ainda vão vencer. | Por vencimento | Nenhuma conta vencida sem pagar | G10 |
+| KPI11 | Perdas com lote a confirmar: perdas válidas pendentes ÷ total de perdas válidas × 100, com a idade de cada pendência (data da consulta menos data da perda) | Mensal | Resolver as pendências em até 7 dias, ou seja, nenhuma pendência com mais de 7 dias | G11 |
+
+**Observação sobre o KPI08:** A G08 calcula a taxa por mês, então devolve duas linhas: outubro com 3 canceladas em 175 vendas (≈ 1,71%) e novembro com 1 em 25 (4,00%). Os 2% citados correspondem ao total da massa (4 em 200), obtido somando os dois meses. Ambos os meses ficam acima da meta sugerida de 1% apenas para deixar casos de cancelamento e estorno na demonstração; não representam a taxa real do Hortifruti União.
+
+A consulta G12 complementa a análise de validade e mostra as promoções vigentes e encerradas. Não tratamos o número de promoções como indicador de resultado, porque isso sozinho não prova que houve menos perda.
+
+Os valores de referência de faturamento e ticket médio são contas feitas com os números que o responsável informou de memória, então são aproximados.
+
+O KPI01 fica um pouco abaixo do prejuízo real enquanto houver perda com lote a confirmar, porque essa perda ainda não tem valor (RN44). Por isso o KPI11 anda junto com ele.
+
+A perda guarda o setor da época em que aconteceu, mas as vendas por setor usam o setor atual do produto. Se um produto mudar de setor no meio do período, o numerador e o denominador do KPI01 passam a olhar setores diferentes. Aceitamos essa diferença porque a mudança de setor é rara, mas deixamos registrado.
+
+#### Rastreabilidade entre problemas, tabelas e consultas
+
+| Problema ou indicador | Tabelas principais | Consulta no script |
+| :--- | :--- | :--- |
+| P1 — Falta de controle das perdas | PERDA, MOTIVO_PERDA, PRODUTO, SETOR | G01, G02, G11 |
+| P2 — Falta de controle de validade | LOTE, PRODUTO, SETOR, PROMOCAO | G03, G04, G12 |
+| KPI01 — Custo das perdas em relação às vendas do setor | PERDA, SETOR, PRODUTO, ITEM_VENDA, VENDA | G01 |
+| KPI02 — Ocorrências de perda por motivo | PERDA, MOTIVO_PERDA | G02 |
+| KPI03 — Lotes perto do vencimento | LOTE, PRODUTO, SETOR, PROMOCAO | G03 |
+| KPI04 — Lotes vencidos | LOTE, PRODUTO, SETOR | G04 |
+| KPI05 — Faturamento diário | VENDA, ITEM_VENDA | G05 |
+| KPI06 — Ticket médio | VENDA, ITEM_VENDA | G06 |
+| KPI07 — Produtos com estoque baixo | PRODUTO, LOTE, PERDA, PEDIDO_COMPRA, ITEM_PEDIDO_COMPRA | G07 |
+| KPI08 — Taxa de cancelamentos | VENDA | G08 |
+| KPI09 — Mercadorias recusadas | ITEM_RECEBIMENTO, RECEBIMENTO, FORNECEDOR | G09 |
+| KPI10 — Contas em aberto e vencidas | CONTA_PAGAR, RECEBIMENTO, FORNECEDOR | G10 |
+| KPI11 — Perdas sem lote confirmado | PERDA | G11 |
+
+#### Uso dos dados para BI e IA
+
+**BI.** Os dados permitem montar painéis com perdas por setor e por motivo, lotes perto de vencer, estoque abaixo do mínimo, vendas por dia e por caixa, recusas por fornecedor e contas a pagar. As consultas usam só o que já está no modelo, sem inventar informação nova.
+
+**IA.** Algumas ideias, que ficam como possibilidade futura e não estão implementadas neste trabalho:
+
+- estimar o risco de perda de um produto, juntando histórico de vendas, validade, saldo e perdas anteriores;
+- sugerir quais lotes colocar em promoção e com que desconto, antes de vencerem;
+- sugerir a quantidade de cada pedido de compra com base no giro e nas perdas;
+- avisar quando houver um padrão estranho de cancelamentos ou de diferença de caixa por operador.
+
+Para isso dar resultado, o mercado teria que registrar lotes, validades e perdas todos os dias, coisa que hoje não acontece.
 
 ---
 
@@ -810,426 +1048,394 @@ O grupo já tinha relatado testes no MySQL 8.0 com 13 tabelas, 74 colunas, 17 FK
 
 **Software utilizado:** brModelo 3.2.0.
 
-O modelo lógico relacional do Hortifruti União foi desenvolvido a partir do DER conceitual revisado. A estrutura implementada no SQL atual contém **27 tabelas e 53 restrições de chave estrangeira**, além dos atributos, tipos de dados, chaves primárias e restrições de integridade.
+O modelo lógico relacional do Hortifruti União foi desenvolvido a partir do DER conceitual revisado. A estrutura implementada no SQL atual contém **27 tabelas e 53 restrições de chave estrangeira**, além dos atributos, tipos de dados, chaves primárias e restrições de integridade. As associações com atributos do modelo conceitual foram convertidas em tabelas, conforme as seções 1.2 e 1.3.
 
-**Arquivo do modelo lógico:** [docs/modelo_logico.png](docs/modelo_logico.png)
+**Arquivo do modelo lógico:** [Visualizar modelo lógico](docs/modelo_logico.png)
 
-![Modelo lógico relacional do Hortifruti União](docs/modelo_logico.png)
+![Modelo Lógico do Hortifruti União](docs/modelo_logico.png)
 
 As tabelas representam os cadastros e as operações do mercado, incluindo funcionários, fornecedores, produtos, compras, recebimentos, lotes, perdas, vendas, pagamentos e sessões de caixa. As chaves estrangeiras relacionam esses registros e impedem referências a registros inexistentes.
 
-A estrutura está implementada no script [docs/script.sql](docs/script.sql), desenvolvido para **MySQL 8.0.16 ou superior**. A versão `script_com_massa_200_vendas_CORRIGIDO.sql` foi executada no **MySQL 8.0.46**, no banco `hortifruti_uniao`, com uma massa fictícia de **200 vendas distribuídas em sete dias**.
+A implementação está no [script SQL](docs/script.sql), desenvolvido para **MySQL 8.0.16 ou superior**, no banco `hortifruti_uniao`. A implementação está no script SQL, desenvolvido para MySQL 8.0.16 ou superior, no banco hortifruti_uniao Os detalhes da execução e as limitações identificadas estão na seção 3.
 
-O script contém **12 consultas gerenciais, G01 a G12, e 12 consultas de auditoria, A01 a A12**. Os detalhes da execução, os resultados conferidos e as limitações identificadas estão descritos na seção 3.
-
-As chaves estrangeiras não garantem, sozinhas, todas as regras de negócio. Por isso, o SQL também utiliza restrições `CHECK`, triggers e procedures para validar operações como baixas de estoque, cancelamentos e escolha de lotes. A existência desses mecanismos não substitui os testes de cada fluxo.
-
-O [Dicionário de Dados](docs/dicionario_dados.md) é o documento destinado a detalhar os campos e as restrições das tabelas. A imagem do modelo lógico e o dicionário devem acompanhar a mesma versão do script, com **27 tabelas e 53 chaves estrangeiras**.
+O [Dicionário de Dados](docs/dicionario_dados.md) detalha os campos e as restrições das tabelas. As regras que não aparecem no desenho, como `CHECK`, `DEFAULT` e validações entre tabelas, estão descritas no dicionário e no SQL. A imagem e o dicionário devem acompanhar a mesma versão do script, com **27 tabelas e 53 chaves estrangeiras**; a revisão textual não substitui a conferência desses arquivos.
 
 ---
 
 ## 3. Script SQL Completo
 
-**SGBD:** MySQL 8.0. **Arquivo exigido na branch `main`:** [docs/script.sql](docs/script.sql).
+O script foi desenvolvido para **MySQL 8.0.16 ou superior** e contém a criação do banco, as tabelas, as restrições de integridade (`PK`, `FK`, `NOT NULL`, `UNIQUE` e `CHECK`), índices, uma view de saldo, triggers, procedures, massa de dados fictícia, consultas com `JOIN`, exemplos de `UPDATE` e `DELETE`, consultas gerenciais e de auditoria e perfis de acesso (roles) com `GRANT`.
 
-O esqueleto pede um `.sql` que rode numa base vazia, nesta ordem: `CREATE DATABASE`, `CREATE TABLE` e restrições, `INSERT`, `SELECT` com `JOIN`, `UPDATE`, `DELETE`, consultas gerenciais e auditoria. Vale usar transação com `ROLLBACK` no `UPDATE`/`DELETE` para não estragar a massa. **No SQL que vimos, `UPDATE` e `DELETE` estavam depois das auditorias;** o certo, pela ordem do esqueleto, é colocá-los antes das G/A.
+**Arquivo SQL:** [docs/script.sql](docs/script.sql)
 
-**Consultas identificadas na cópia usada na conferência:**
+O script utiliza o banco `hortifruti_uniao`. Cada execução completa apaga e recria esse banco, permitindo repetir a demonstração com a mesma massa de dados.
 
-| Código | Pergunta da consulta | O que atende |
-|---|---|---|
-| G01 | Quais lotes têm saldo e vencem nos próximos 7 dias? | P1 — prevenção de vencimento |
-| G02 | Quais lotes vencidos ainda têm saldo? | P1 — identificação de risco |
-| G03 | Qual o custo de cada perda registrada? | P1 — registro financeiro de perdas; falta totalização no SQL |
-| G04 | Quais produtos estão abaixo do estoque mínimo? | RN06 — risco de ruptura |
-| G05 | Quanto foi registrado em pagamentos de vendas concluídas por dia? | Indicador de recebimentos vinculados a vendas |
-| A01 | Existe referência não nula de lote a produto inexistente? | Integridade referencial, com a limitação de FKs nulas |
-| A02 | O produto e o pedido vinculados ao lote coincidem? | RN22, parcialmente |
-| A03 | A saída por lote corresponde ao produto do item vendido? | RN14/RN19, parcialmente |
-| A04 | A soma das retiradas por lote é igual à quantidade vendida? | RN18, parcialmente |
-| A05 | O banco rejeita venda vinculada a funcionário inexistente? | FK de `VENDA.codigo_funcionario` |
+### Execução e conferência
 
-### Resultados e validação das consultas
+O script foi executado em ambiente isolado no MySQL 8.0.46, com apoio de IA, pelo mecanismo de inicialização de scripts e com ajuste de DEFINER somente na cópia de teste. A carga confirmou 200 vendas, 27 tabelas, 53 chaves estrangeiras, 38 triggers e 9 procedures, e as consultas terminaram sem erro de execução. As auditorias retornaram seis perdas pendentes em A01 e nenhum registro nas demais condições verificadas. A execução no ambiente de apresentação deve usar este mesmo arquivo. Os limites dessa validação estão descritos abaixo.
 
-Os testes foram realizados pelo grupo no MySQL Workbench, conectado ao MySQL Server 8.0.46. Após a execução do script completo, conferimos a estrutura do banco, a carga de dados, as consultas gerenciais G01 a G12 e as auditorias A01 a A12.
-
-A massa utilizada é fictícia e contém 200 vendas distribuídas entre 26/10/2026 e 01/11/2026. Desse total, 196 vendas estão concluídas e 4 canceladas.
-
-#### Estrutura e carga conferidas
+As demais conferências abaixo descrevem a estrutura e a massa definidas no script. As consultas gerenciais e de auditoria ficam no próprio arquivo SQL e podem ser executadas novamente durante a demonstração.
 
 | Verificação | Resultado |
 | :--- | :--- |
-| Versão do MySQL Server | 8.0.46 |
-| Tabelas | 27 |
+| Tabelas criadas | 27 |
 | Chaves estrangeiras | 53 |
-| Triggers | 38 |
+| Triggers | 27 |
 | Procedures | 9 |
-| Total de vendas | 200 |
+| Views | 1 |
+| Índices explícitos adicionais aos de chaves | 12 |
+| Vendas simuladas | 200 |
 | Vendas concluídas | 196 |
 | Vendas canceladas | 4 |
 | Período das vendas | 26/10/2026 a 01/11/2026 |
-| Perdas válidas com lote a confirmar | 6 |
+| Caixas cadastrados | 7 |
+| Sessões de caixa | 49 |
+| Sessões fechadas | 47 |
+| Sessões abertas | 2 |
 
-A distribuição das vendas também foi conferida:
+A massa inclui vendas concluídas e canceladas, pagamentos em diferentes modalidades, troca de operador, sangrias, perdas confirmadas, perdas com lote a confirmar, promoções, devoluções, trocas e abatimentos de fornecedores, além de contas a pagar.
 
-| Dia | Total de vendas | Vendas concluídas | Faturamento das vendas concluídas |
-| :--- | ---: | ---: | ---: |
-| 26/10/2026 | 25 | 25 | R$ 2.074,35 |
-| 27/10/2026 | 27 | 26 | R$ 2.200,99 |
-| 28/10/2026 | 28 | 28 | R$ 2.359,07 |
-| 29/10/2026 | 30 | 29 | R$ 2.494,98 |
-| 30/10/2026 | 32 | 32 | R$ 2.649,93 |
-| 31/10/2026 | 33 | 32 | R$ 2.701,35 |
-| 01/11/2026 | 25 | 24 | R$ 2.059,21 |
-| **Total** | **200** | **196** | **R$ 16.539,88** |
+Existem recebimentos entre **15/10/2026 e 25/10/2026**, utilizados para formar o estoque inicial da simulação.
 
-#### Resultados das consultas gerenciais
+### Procedures implementadas
 
-| Consulta | Resultado observado |
+| Procedure | Finalidade |
 | :--- | :--- |
-| G01 | Apresentou vendas, perdas confirmadas e percentual de perdas por setor e mês. Em novembro, Embalados apresentou R$ 322,00 em vendas e R$ 14,50 em perdas (4,50%); Frios apresentou R$ 424,11 em vendas e R$ 7,48 em perdas (1,76%). A consulta considera os setores que tiveram vendas no mês. |
-| G02 | Apresentou 24 ocorrências de perdas válidas, sendo 22 em outubro e 2 em novembro, distribuídas por motivo. |
-| G03 | Identificou 7 lotes próximos do vencimento em 01/11/2026, dos quais 4 estavam com promoção vigente. |
-| G04 | Identificou 2 lotes vencidos com saldo: Biscoito Integral, vencido em 25/10/2026, e Queijo Mussarela 500g, vencido em 31/10/2026. Ambos apresentaram saldo de 10. |
-| G05 | Apresentou o faturamento das 196 vendas concluídas nos sete dias, totalizando R$ 16.539,88. As vendas canceladas ficaram fora do cálculo. |
-| G06 | Apresentou o ticket médio diário, com valores entre R$ 82,81 e R$ 86,03. |
-| G07 | Identificou 7 produtos abaixo do estoque mínimo. Seis possuíam pedido de compra aberto; Água de Coco apresentou saldo de 50, mínimo de 60 e nenhum pedido aberto. |
-| G08 | Apresentou 3 cancelamentos em 175 vendas de outubro (1,71%) e 1 cancelamento em 25 vendas de novembro (4%). No período completo, foram 4 cancelamentos em 200 vendas (2%). |
-| G09 | Identificou 6 fornecedores com mercadorias recusadas. Os fornecedores 01 e 02 apresentaram quantidade acumulada de 3 cada; os fornecedores 03 a 06 apresentaram 2 cada. A consulta não separa kg e unidades, portanto esses totais não devem ser usados como uma comparação uniforme entre fornecedores. |
-| G10 | Apresentou 2 contas abertas vencidas, com saldo de R$ 6.290,20, e 4 contas abertas a vencer, com saldo de R$ 5.312,51. O saldo total a pagar foi de R$ 11.602,71, após descontar os abatimentos não cancelados vinculados às contas. |
-| G11 | Listou 6 perdas com lote a confirmar, equivalentes a 25% das 24 perdas válidas. Na referência de 01/11/2026, as pendências tinham entre 1 e 6 dias. |
-| G12 | Apresentou 5 promoções: 4 vigentes e 1 encerrada em 01/11/2026. A promoção encerrada era a de Queijo Mussarela 500g, finalizada em 31/10/2026. |
+| `concluir_venda` | Confere a venda, realiza as baixas por lote, calcula o total e verifica se os pagamentos correspondem ao valor final. |
+| `cancelar_venda` | Valida o perfil de supervisor ou gerência, registra o cancelamento e estorna as baixas de estoque. Na carga, o documento fiscal é cancelado por um `UPDATE` separado. |
+| `confirmar_lote_perda` | Vincula uma perda pendente ao lote informado, calcula seu valor e registra a baixa correspondente. |
+| `estornar_saida` | Registra o estorno de uma saída, mantendo o movimento original no histórico. |
+| `fechar_sessao` | Calcula o valor esperado somando o fundo inicial aos pagamentos das vendas concluídas e subtraindo as sangrias. Na versão atual, soma todas as formas de pagamento, não apenas dinheiro. |
+| `adicionar_lote_recebimento` | Adiciona um lote vinculado a um item de recebimento. |
+| `registrar_recebimento` | Registra o recebimento de mercadorias. |
+| `registrar_perda_pendente` | Registra uma perda com lote a confirmar. |
+| `registrar_abatimento_fornecedor` | Registra um abatimento concedido pelo fornecedor. |
 
-As consultas de validade, vencimento de contas, idade das pendências e situação das promoções utilizam a data fixa de 01/11/2026 para permitir a reprodução dos resultados.
+As procedures utilizam transações e executam `ROLLBACK` nas condições de erro tratadas explicitamente. Não possuem tratamento geral de exceções com `EXIT HANDLER FOR SQLEXCEPTION`; por isso, ainda é necessário ajustar o código para desfazer toda a transação quando ocorrer um erro inesperado.
 
-A taxa de cancelamento de 2% supera a meta sugerida de até 1%. Essa diferença é intencional na massa demonstrativa, que inclui cancelamentos para testar a rotina e os estornos. Ela não representa a taxa real nem o desempenho desejado do mercado.
+As procedures foram mantidas no script para demonstrar os fluxos transacionais do projeto. Na `concluir_venda`, os lotes são escolhidos pela ordem FEFO, o lote selecionado é lido com `FOR UPDATE` e o preço é definido de acordo com a promoção daquele lote, quando houver. Se for preciso usar mais de um lote, o item é dividido. O bloqueio está no script, mas não fizemos teste com várias conexões ao mesmo tempo. Por isso, não afirmamos que a concorrência foi testada.
 
-#### Resultados das consultas de auditoria
+### Limitações identificadas na implementação
 
-| Consulta | Verificação | Resultado |
-| :--- | :--- | :--- |
-| A01 | Perdas válidas com lote a confirmar | Retornou 6 pendências previstas na massa. |
-| A02 | Pedidos não cancelados sem itens | Nenhuma inconsistência encontrada. |
-| A03 | Vendas concluídas sem itens ativos | Nenhuma inconsistência encontrada. |
-| A04 | Diferença entre o total da venda concluída e seus pagamentos | Nenhuma inconsistência encontrada. |
-| A05 | Produto do lote diferente do produto recebido | Nenhuma inconsistência encontrada. |
-| A06 | Saldo de lote negativo ou superior à quantidade recebida | Nenhuma inconsistência encontrada. |
-| A07 | Quantidade da nota diferente da soma das quantidades aceita e recusada | Nenhuma inconsistência encontrada. |
-| A08 | Quantidade devolvida superior à quantidade recusada | Nenhuma inconsistência encontrada. |
-| A09 | Origem da saída de lote incompatível com seu tipo | Nenhuma inconsistência encontrada. |
-| A10 | Baixas de vendas canceladas sem estorno | Nenhuma inconsistência encontrada. |
-| A11 | Sessões fechadas sem os dados obrigatórios de fechamento | Nenhuma inconsistência encontrada. |
-| A12 | Contas pagas sem forma, data ou funcionário responsável pelo pagamento | Nenhuma inconsistência encontrada. |
+A carga foi executada, mas a revisão encontrou pontos que ainda precisam de ajuste no SQL:
 
-O retorno da A01 representa uma pendência operacional prevista: são perdas já registradas cujo lote ainda precisa ser identificado. Por isso, esse resultado não foi tratado como erro de integridade.
+- **Fechamento de caixa:** `fechar_sessao` soma dinheiro, Pix, cartões e outras formas. Ao comparar o valor esperado com o dinheiro físico, as 47 sessões fechadas apresentaram diferença. Se a conferência for da gaveta de dinheiro, somente os pagamentos em dinheiro devem entrar nesse cálculo.
+- **Cancelamento fiscal:** o `UPDATE` do documento está separado de `cancelar_venda`. Chamar somente a procedure não atualiza o documento fiscal.
+- **Tratamento de erros:** as procedures precisam de um tratamento geral de exceções para garantir rollback integral diante de falhas inesperadas.
+- **Consulta G09:** é necessário separar kg e unidade para comparar as quantidades recusadas.
+- **Auditoria A04:** a condição precisa detectar também diferenças de exatamente um centavo.
+- **Uso direto das tabelas:** algumas validações acumuladas dependem das procedures; não há garantia de que todos os caminhos de alteração direta apliquem as mesmas regras. Concorrência e correção ou divisão de perdas precisam de testes próprios.
 
-#### Conferências complementares
+Esses pontos descrevem a versão atual. A correção do relatório não altera o funcionamento do SQL.
 
-Também executamos consultas para comparar valores armazenados com os valores calculados a partir das movimentações.
+### Consultas com JOIN, UPDATE e DELETE
 
-| Verificação | Resultado |
+Logo depois da carga, o script traz três consultas com `JOIN` (produtos com seus setores, recebimentos com seus fornecedores e vendas com o operador) e os exemplos de manutenção, escolhidos para respeitar as regras de histórico:
+
+- **`UPDATE` de cadastro:** reajuste do preço de um produto. As vendas antigas não mudam, porque o item vendido guarda o preço praticado na hora da venda.
+- **`UPDATE` de inativação:** um fornecedor que já tem movimentação é inativado (`ativo = 0`) em vez de apagado (RN05).
+- **`DELETE` sem histórico:** só em registros criados na hora para o teste, sem nenhuma ligação com outras tabelas: um produto cadastrado por engano e uma linha de escala.
+
+### Resultados e validação das consultas
+
+O script contém as consultas gerenciais **G01 a G12** e as auditorias **A01 a A12** para a massa de 200 vendas. Os indicadores de faturamento e ticket médio consideram apenas as vendas concluídas.
+
+| Consulta | Objetivo ou resultado da validação |
 | :--- | :--- |
-| Total das vendas comparado à soma dos itens ativos | Nenhuma divergência. |
-| Saldo dos lotes comparado às quantidades recebidas, saídas e estornos | Nenhuma divergência. |
-| Saldo disponível dos produtos após descontar perdas pendentes | Nenhum saldo negativo. |
-| Valor esperado dos caixas fechados comparado a fundo inicial + pagamentos em dinheiro − sangrias | Nenhuma divergência. |
-| Documentos fiscais das vendas canceladas | As vendas 50, 100, 150 e 200 apresentaram documentos cancelados. |
-| Soma das quantidades dos lotes por item recebido | Nenhum total acima da quantidade aceita. |
-| Soma dos abatimentos não cancelados por conta | Nenhum total acima do valor original da conta. |
+| G01 | Compara o custo das perdas confirmadas com o valor das vendas por setor e mês. A consulta parte dos setores com vendas e não inclui necessariamente setores que tiveram somente perdas no período. |
+| G02 | Apresenta a quantidade de ocorrências de perda por motivo e mês. |
+| G03 | Identifica lotes próximos do vencimento conforme o prazo de alerta definido para cada setor. |
+| G04 | Identifica lotes vencidos que ainda possuem saldo em estoque. |
+| G05 | Apresenta o faturamento diário das vendas concluídas. |
+| G06 | Calcula o ticket médio diário das vendas concluídas. |
+| G07 | Identifica produtos abaixo do estoque mínimo e informa se possuem pedido de compra aberto ou parcial. |
+| G08 | Calcula a taxa de cancelamento por mês. Por mês, a massa tem 1,71% em outubro (3/175) e 4,00% em novembro (1/25); o total é 4/200 = 2%. |
+| G09 | Soma as quantidades recusadas por fornecedor. O SQL atual não separa quilos e unidades, o que limita a comparação entre fornecedores. |
+| G10 | Apresenta as contas abertas, separando vencidas e a vencer e considerando os abatimentos registrados. |
+| G11 | Identifica perdas com lote a confirmar e calcula o tempo de pendência. Na massa, são 6 perdas pendentes entre 24 perdas válidas, equivalentes a 25%. |
+| G12 | Apresenta as promoções como vigentes ou encerradas em relação à data de referência. |
+| A01 | Foi preparada para localizar as 6 perdas com lote a confirmar, que são pendências intencionais da massa. |
+| A04 | Procura diferenças maiores que R$ 0,01 entre o total pago e o valor da venda concluída. A condição atual deixa passar uma diferença de exatamente um centavo e precisa ser ajustada para detectar qualquer divergência. |
+| A02, A03 e A05 a A12 | Verificam as demais condições de integridade e devem retornar vazio quando não houver inconsistência no cenário analisado. |
 
-A conferência do caixa valida o cálculo do valor esperado. Ela não significa que o valor contado pelo operador seja necessariamente igual ao esperado, pois a massa pode incluir diferenças de fechamento.
+A ausência de registros em uma consulta de auditoria é o resultado esperado quando nenhum dado viola a condição investigada. Isso não comprova, isoladamente, o atendimento a todas as regras de negócio do sistema.
 
-#### Alcance dos testes
+As consultas que dependem de uma data de referência usam diretamente a data fixa **01/11/2026** no SQL (G03, G04, G10, G11 e G12), para permitir a reprodução dos resultados da demonstração. Em uso real, essa data poderia ser substituída pela data atual ou por um parâmetro.
 
-Os resultados confirmam a consistência da massa nos critérios consultados e demonstram a execução das consultas gerenciais e de auditoria no ambiente do grupo.
+Os resultados dependem da massa carregada e podem mudar caso os dados ou a data de referência sejam alterados. Os resultados detalhados ficam disponíveis pela execução das consultas no script SQL.
 
-Esta etapa não incluiu testes de desempenho, operações simultâneas ou autenticação com usuários reais. A ausência de inconsistências nas consultas também não comprova, isoladamente, que todas as operações inválidas seriam bloqueadas. Os testes que provocam erros nas regras de negócio devem ser documentados separadamente.
+### Integridade e histórico
 
-Os valores apresentados correspondem à massa utilizada nesta execução e podem mudar caso os dados sejam alterados.
+As chaves estrangeiras mantêm os relacionamentos entre os registros, enquanto as restrições `CHECK` validam domínios e condições dos dados. Os triggers complementam essas verificações, incluindo compatibilidade entre produto e lote, controle de saldo e limites de quantidades.
 
+Os cancelamentos de venda mantêm o histórico e geram estornos das saídas de estoque. Os pagamentos dessas vendas permanecem registrados, mas não entram nos totais de vendas concluídas.
+
+Além dos `UPDATE`s usados na carga (como marcar como cancelado o documento fiscal de uma venda cancelada), o script traz exemplos de `UPDATE` e `DELETE` na seção 7. Os `DELETE`s só atingem registros criados na hora, sem nenhum histórico. Os exemplos de manutenção não apagam vendas, perdas ou lotes com histórico. A execução completa do arquivo, porém, apaga e recria o banco; a seção de recarga também limpa os dados de demonstração.
+
+### Ordem e características da carga
+
+As tabelas, restrições, triggers e procedures são criadas antes da carga dos dados.
+
+A massa é carregada como uma **carga histórica demonstrativa**: as vendas são inseridas como concluídas, acompanhadas de itens, pagamentos e saídas de lote. As procedures `cancelar_venda` e `fechar_sessao` são chamadas durante a carga para gerar os cancelamentos e fechamentos previstos.
+
+Por isso, a carga não reproduz integralmente a sequência de uso de uma aplicação. A procedure `concluir_venda` não é usada para montar essa carga histórica; ela permanece no script para demonstrar o fluxo transacional de conclusão de uma venda.
+
+Na organização da massa:
+
+- os recebimentos formam o estoque utilizado nas movimentações;
+- as vendas não utilizam lotes vencidos nem anteriores ao recebimento;
+- as sangrias são registradas enquanto a sessão está aberta;
+- as vendas canceladas possuem os estornos correspondentes;
+- as perdas com lote a confirmar permanecem identificadas como pendências;
+- os totais das vendas, os pagamentos e os saldos foram conferidos.
+
+A validação realizada é funcional e voltada à demonstração acadêmica. Ela não representa um teste de desempenho, concorrência ou cobertura integral de todas as regras de negócio.
 
 ---
 
 ## 4. Massa de Dados
 
-A massa de dados é fictícia e foi criada para este trabalho. Os cadastros e as movimentações foram montados para representar as principais atividades do Hortifruti União, sem utilizar registros reais de funcionários, fornecedores ou vendas. O apoio de IA nessa etapa está registrado na seção 6.
+A massa de dados é totalmente fictícia e foi criada exclusivamente para fins acadêmicos.
 
-#### Justificativa do volume da massa
+Utilizamos uma amostra demonstrativa do funcionamento do Hortifruti União, com volume reduzido para facilitar a execução do SQL, a conferência dos resultados e a apresentação do projeto.
 
-Na entrevista, o responsável informou que o mercado tem cerca de **110 funcionários, 7 caixas e 340 fornecedores**, além de realizar aproximadamente **1.800 vendas por dia**. Também mencionou um faturamento mensal próximo de **R$ 5 milhões** e cerca de **6 mil itens diferentes vendidos por mês**. Como esses números foram informados de memória, nós os tratamos como estimativas.
+### Volume da massa
 
-Nesse ritmo, uma semana teria aproximadamente **12.600 vendas**. Para o trabalho, usamos **200 vendas fictícias distribuídas em sete dias**, o equivalente a cerca de **1,6% desse volume semanal estimado**. Escolhemos uma quantidade menor para facilitar a apresentação do SQL e a conferência dos resultados.
+A carga contempla:
 
-A redução não foi igual em todas as tabelas. Mantivemos os **7 caixas** informados pelo responsável e usamos **16 funcionários, 12 fornecedores e 60 produtos** para representar diferentes funções, setores e operações.
+| Tabela | Registros | Justificativa na amostra |
+| :--- | ---: | :--- |
+| `SETOR` | 8 | Seis setores de venda, mais Caixa e Retaguarda. |
+| `PRODUTO` | 60 | Amostra de produtos dos seis setores, com venda por quilo/unidade e com/sem validade impressa. |
+| `FORNECEDOR` | 12 | Subconjunto fictício dos cerca de 340 fornecedores informados pelo responsável. |
+| `FORNECEDOR_PRODUTO` | 90 | Liga os produtos da amostra a um ou mais fornecedores. |
+| `FUNCIONARIO` | 16 | Amostra dos cerca de 110 funcionários, cobrindo os perfis necessários aos processos simulados. |
+| `ESCALA` | 112 | Sete dias de escala para os 16 funcionários da amostra. |
+| `FORMA_PAGAMENTO` | 7 | Dinheiro, débito, crédito, Pix, VA, boleto e transferência, conforme o uso em venda/fornecedor. |
+| `CAIXA` | 7 | Corresponde aos 7 caixas informados pelo responsável. |
+| `PEDIDO_COMPRA` | 12 | Pedidos fictícios suficientes para demonstrar compras e reposição. |
+| `ITEM_PEDIDO_COMPRA` | 70 | Distribui vários produtos entre os 12 pedidos. |
+| `RECEBIMENTO` | 12 | Recebimentos fictícios que formam o estoque inicial e cobrem conferência de mercadoria. |
+| `ITEM_RECEBIMENTO` | 66 | Itens das notas, incluindo quantidades aceitas e recusadas. |
+| `CONTA_PAGAR` | 12 | Uma conta por recebimento na amostra, com situações pagas e abertas. |
+| `DEVOLUCAO_FORNECEDOR` | 6 | Casos de devolução, troca e abatimento para demonstrar o processo com fornecedores. |
+| `ITEM_DEVOLUCAO` | 6 | Itens específicos vinculados às seis ocorrências de devolução/troca/abatimento. |
+| `LOTE` | 126 | Mais de um lote para parte dos itens, permitindo variar validade, saldo e FEFO. |
+| `MOTIVO_PERDA` | 8 | Motivos fictícios para classificar as perdas demonstradas. |
+| `PERDA` | 24 | Casos em diferentes setores, sendo 18 confirmados e 6 com lote a confirmar. |
+| `PROMOCAO` | 5 | Promoções de lotes com validade para demonstrar o P2. |
+| `SESSAO_CAIXA` | 49 | Sessões distribuídas pelos 7 caixas e pelos 7 dias simulados. |
+| `TROCA_OPERADOR` | 5 | Casos pontuais para demonstrar troca de operador durante a sessão. |
+| `SANGRIA` | 16 | Sangrias em parte das sessões, mantendo variedade sem ocorrer em todas. |
+| `VENDA` | 200 | Amostra didática distribuída em sete datas. Não representa sete dias completos da operação real. |
+| `ITEM_VENDA` | 810 | Quatro itens por venda em média, mais linhas canceladas para demonstrar histórico. |
+| `PAGAMENTO` | 220 | Inclui pagamentos simples e vendas com pagamento dividido. |
+| `DOCUMENTO_FISCAL` | 200 | Um documento fiscal por venda simulada. |
+| `SAIDA_LOTE` | 834 | 800 baixas de itens ativos, 18 baixas de perdas confirmadas e 16 estornos das 4 vendas canceladas. |
+| **Total** | **2.993** | Total de registros finais nas 27 tabelas após a carga e os estornos previstos. |
 
-Os 60 produtos formam um catálogo demonstrativo. Não consideramos essa quantidade como uma proporção confirmada do catálogo real, porque ainda seria necessário esclarecer se os “6 mil itens” mencionados na entrevista correspondem a produtos distintos.
+Os **810 itens de venda** incluem 800 itens ativos e 10 cancelados.
 
-As demais quantidades acompanham os relacionamentos do banco: as vendas possuem itens e pagamentos, os recebimentos possuem itens e lotes, e os cancelamentos geram estornos das saídas de estoque.
+As **24 perdas** estão distribuídas em 18 confirmadas e 6 com lote a confirmar. Das **49 sessões de caixa**, 47 estão fechadas e 2 permanecem abertas.
 
-#### Volume da massa
+### Justificativa do volume da massa
 
-A carga contém os seguintes registros, desconsiderando o produto e a escala temporários que são inseridos e excluídos nos exemplos de manutenção:
+Na entrevista, o responsável informou que o Hortifruti União tem cerca de **110 funcionários**, **340 fornecedores** e realiza aproximadamente **1.800 vendas por dia**. Como esses números foram informados de memória, nós os tratamos como estimativas.
 
-| Tabela | Registros |
-| :--- | ---: |
-| SETOR | 8 |
-| PRODUTO | 60 |
-| FORNECEDOR | 12 |
-| FORNECEDOR_PRODUTO | 90 |
-| FUNCIONARIO | 16 |
-| ESCALA | 112 |
-| FORMA_PAGAMENTO | 7 |
-| CAIXA | 7 |
-| PEDIDO_COMPRA | 12 |
-| ITEM_PEDIDO_COMPRA | 70 |
-| RECEBIMENTO | 12 |
-| ITEM_RECEBIMENTO | 66 |
-| DEVOLUCAO_FORNECEDOR | 6 |
-| ITEM_DEVOLUCAO | 6 |
-| CONTA_PAGAR | 12 |
-| LOTE | 126 |
-| MOTIVO_PERDA | 8 |
-| PERDA | 24 |
-| PROMOCAO | 5 |
-| SESSAO_CAIXA | 49 |
-| TROCA_OPERADOR | 5 |
-| SANGRIA | 16 |
-| VENDA | 200 |
-| ITEM_VENDA | 810 |
-| PAGAMENTO | 220 |
-| DOCUMENTO_FISCAL | 200 |
+As **200 vendas da massa não representam sete dias completos de funcionamento do mercado**. Nós distribuímos esses registros entre sete datas para conseguir demonstrar consultas por período, movimentação nos caixas e situações diferentes ao longo da semana. O volume real seria muito maior, já que o responsável informou cerca de 1.800 vendas por dia. Por isso, essa parte deve ser lida como uma amostra controlada do processo, e não como uma reprodução do movimento real.
 
-A tabela `SAIDA_LOTE` reúne as baixas das vendas, as baixas das perdas confirmadas e os estornos gerados pelos cancelamentos. O script inclui uma consulta para conferir sua quantidade após a carga.
+Mesmo com essa redução, incluímos situações diferentes: vendas em vários dias e caixas, pagamentos em mais de uma modalidade e cancelamentos com estorno. Das 200 vendas, **196 estão concluídas e 4 canceladas**. Escolhemos essa quantidade de cancelamentos apenas para demonstrar a rotina, sem afirmar que essa seja a proporção real do mercado.
 
-Das **200 vendas**, 196 estão concluídas e 4 canceladas. Os **810 itens de venda** incluem 800 ativos e 10 cancelados.
+Também usamos **16 funcionários**, distribuídos entre os cinco perfis de acesso do sistema, e **12 fornecedores**, ligados a pedidos, recebimentos, contas a pagar, devoluções, trocas e abatimentos. Assim, conseguimos mostrar os principais processos sem precisar reproduzir todos os cadastros da organização.
 
-As **24 perdas** estão divididas em 18 confirmadas e 6 com lote a confirmar. Das **49 sessões de caixa**, 47 estão fechadas e 2 permanecem abertas.
+As demais quantidades acompanham esses registros: cada venda tem seus itens e pagamentos, e os recebimentos têm os produtos e lotes correspondentes.
 
-#### Período simulado
+O porte do mercado serviu como referência para decidir quais situações representar. A massa foi reduzida para facilitar a demonstração e a conferência dos dados; ela não pretende reproduzir toda a operação real nem testar o desempenho do banco com o volume completo do estabelecimento.
 
-As vendas estão distribuídas entre **26/10/2026 e 01/11/2026**, totalizando sete dias consecutivos.
+### Período simulado
 
-Também existem recebimentos entre **15/10/2026 e 25/10/2026**, utilizados para formar o estoque da semana simulada.
+As vendas representam o período de **26/10/2026 a 01/11/2026**, totalizando sete dias consecutivos. A distribuição prevista nos registros do script é de **25, 27, 28, 30, 32, 33 e 25 vendas por dia**, respectivamente, totalizando 200.
 
-As consultas que dependem de uma data de referência utilizam **01/11/2026**, escrita diretamente no SQL. Isso permite repetir a demonstração sem depender do dia em que o script for executado.
+Existem recebimentos entre **15/10/2026 e 25/10/2026**, utilizados para formar o estoque inicial da simulação.
 
-Como a semana atravessa outubro e novembro, as consultas agrupadas por mês podem apresentar esses dois meses. Esses resultados representam somente os dias da amostra, e não meses completos de operação.
+### Variedade dos dados
 
-#### Variedade dos dados
+A massa inclui:
 
-Além da quantidade, procuramos incluir situações diferentes para demonstrar as consultas e os relacionamentos do banco.
+- Lotes com e sem validade;
+- Lotes vencidos e próximos do vencimento;
+- Produtos abaixo do estoque mínimo;
+- Promoções vigentes e encerradas;
+- Perdas por diferentes motivos;
+- Vendas canceladas com estorno de estoque;
+- Pagamentos em diferentes modalidades, incluindo pagamentos mistos;
+- Contas pagas e contas abertas, vencidas e a vencer;
+- Devoluções, trocas e abatimentos de fornecedores;
+- Sessões de caixa abertas e fechadas.
+  
+### Objetivo e validação
 
-| Cenário da massa | O que permite demonstrar |
-| :--- | :--- |
-| Produtos de diferentes setores, vendidos por quilo e por unidade | Cadastro de produtos e registro de quantidades ou pesos nas vendas. |
-| Perdas com diferentes motivos e setores | Consultas G01 e G02, relacionadas ao controle de perdas. |
-| Seis perdas com lote a confirmar | Consulta G11 e auditoria A01, para acompanhar pendências. |
-| Lotes com e sem validade, próximos do vencimento e vencidos com saldo | Consultas G03 e G04. |
-| Promoções vinculadas a lotes | Consulta G12 e acompanhamento dos períodos promocionais. |
-| Produtos abaixo do estoque mínimo | Consulta G07 e identificação da necessidade de reposição. |
-| Vendas concluídas e canceladas | Consultas G05, G06 e G08. |
-| Cancelamentos com estorno de estoque | Preservação do histórico e reversão das baixas correspondentes. |
-| Itens cancelados mantidos no histórico | Separação entre itens ativos e cancelados no cálculo da venda. |
-| Quantidades recusadas no recebimento | Consulta G09 e conferência das mercadorias recebidas. |
-| Devoluções, trocas e abatimentos de fornecedores | Relacionamento entre recebimentos, devoluções e contas a pagar. |
-| Pagamentos em uma ou mais modalidades | Registro de pagamentos simples e mistos. |
-| Contas pagas e contas abertas | Consulta G10 e acompanhamento dos vencimentos. |
-| Sessões abertas e fechadas, trocas de operador e sangrias | Histórico das operações de caixa. |
+A massa permite demonstrar o controle de estoque, lotes, validade, perdas, vendas, pagamentos e fechamento de caixa, além das **12 consultas gerenciais e 12 consultas de auditoria**.
 
-#### Cancelamentos e metas
+O script foi executado no **MySQL 8.0.46** e a conferência realizada após a carga confirmou **200 vendas, 27 tabelas, 53 chaves estrangeiras, 27 triggers e 9 procedures**, além da distribuição das vendas pelos sete dias simulados.
 
-Os **4 cancelamentos em 200 vendas representam 2% da amostra**, acima da meta sugerida de até 1% para o KPI08.
+Também foi feita uma checagem rápida de integridade após a carga. Ela não encontrou saldo disponível negativo, pedido não cancelado sem item, venda concluída sem item ativo, divergência entre pagamento e total da venda concluída, lote ligado a produto diferente do item recebido nem lote com saldo fora do intervalo permitido.
 
-Essa quantidade foi usada para demonstrar os cancelamentos e seus estornos. Ela não representa a taxa real do mercado nem o desempenho desejado. Em uma operação real, um resultado acima da meta indicaria a necessidade de investigar os motivos dos cancelamentos.
+A massa contém **6 perdas com lote a confirmar**, criadas de propósito para demonstrar o acompanhamento das pendências na auditoria A01. As demais auditorias permanecem no script para a conferência das outras regras de integridade.
 
-#### Conferência da massa
+A amostra foi montada para mostrar os principais cenários do banco sem tentar copiar o volume real do mercado. As sete datas servem para dar variedade às consultas e à demonstração; os 200 registros não correspondem ao movimento completo desses sete dias.
 
-O arquivo `script_com_massa_200_vendas_CORRIGIDO.sql` foi executado no **MySQL 8.0.46**, e a carga terminou sem erros de execução.
+### Limite da amostra
 
-Na conferência, os totais das vendas corresponderam à soma dos itens ativos. A auditoria **A01** retornou as seis perdas com lote a confirmar, previstas na massa. As demais consultas do bloco de auditoria não apontaram inconsistências nas condições verificadas.
-
-Isso não significa que todas as regras do sistema estejam comprovadas. A revisão também identificou limitações no SQL, descritas na seção 3. Entre elas, o fechamento de caixa soma pagamentos de todas as modalidades, e não somente dinheiro físico.
-
-#### Limite da amostra
-
-A massa foi criada para demonstrar os principais processos e facilitar a conferência dos dados. Ela não representa toda a movimentação do Hortifruti União e não serve como teste de desempenho.
-
-Os índices foram definidos considerando as consultas e o porte informado pelo responsável, mas a capacidade de atender ao volume real depende de testes específicos de carga e concorrência.
-
-Na carga demonstrativa, as sessões são abertas antes das vendas e das sangrias e fechadas posteriormente. As vendas são inseridas com seu histórico de itens, pagamentos e baixas, enquanto os cancelamentos previstos são realizados por chamadas à procedure correspondente.
+Essa massa não representa um mês completo do Hortifruti União e não serve como teste de desempenho. O volume real informado pelo responsável é muito maior. Os índices descritos na seção 1.5 foram pensados considerando esse cenário, mas nesta entrega o objetivo dos testes foi verificar se as regras e as consultas funcionam corretamente com casos controlados.
 
 ---
 
 ## 5. Repositório GitHub
 
-Turma **GTI:** o Dicionário de Dados vai em **um único Markdown separado do README**, no formato da disciplina, com PK, FK, obrigatoriedade, unicidade, domínio e valor-padrão de cada coluna quando se aplicar. Relatório no `README.md` da raiz da branch `main`; arquivo em outra branch não é corrigido.
+O relatório técnico está neste arquivo `README.md`, localizado na raiz da branch principal do projeto.
 
-Correção **somente da branch `main`**.
+#### Principais arquivos da entrega
 
-| Arquivo ou pasta | Conteúdo |
-|---|---|
-| `README.md` | Este relatório (Entrega 2) |
-| `Dicionario_Dados.md` | 13 tabelas, 74 colunas, PK/FK, tipos e as restrições realmente implementadas |
-| `diagramas/` | DER conceitual e modelo lógico (brModelo 3.2.0) |
-| `imagens/evidencias/` | Fotos JPG/JPEG da organização (e da entrevista, quando incluída) |
-| `docs/script.sql` | DDL, massa, G01–G05, A01–A05, UPDATE/DELETE com ROLLBACK |
-| `apresentacao/` | Slides da apresentação final |
-| `levantamento/levantamento.md` | Levantamento escrito pelo grupo |
-| `fluxograma_vendas.png` | Fluxo de venda |
-| `fluxograma_estoque.png` | Fluxo de estoque |
+- `README.md` – Relatório Técnico Final
+- `docs/DER_conceitual.png` – DER Conceitual
+- `docs/modelo_logico.png` – Modelo Lógico
+- `docs/script.sql` – Script SQL completo
+- `docs/dicionario_dados.md` – Dicionário de Dados
+- `levantamento/levantamento.md` – Levantamento de requisitos
+- `apresentacao/pitch_final.pptx` – Apresentação final
 
-Cada um commita na **própria conta** GitHub, com o usuário da tabela de Integrantes. Evitar um único commit no final.
+#### Estrutura do repositório
 
-Antes de mandar o link: fotos da visita na `main`; comprovação da entrevista pelo telefone, conforme combinado com o professor (não há foto do Tarcisio com o responsável); dados do responsável; slides em `apresentacao/`; dicionário em um `.md` só; nome do banco igual ao do SQL; cada um commitando na própria conta.
+```text
+README.md
+docs/
+  DER_conceitual.png
+  modelo_logico.png
+  script.sql
+  dicionario_dados.md
+levantamento/
+  levantamento.md
+imagens/
+  evidencias/
+    fachada_mercado.jpg
+    interior_mercado.jpg
+    estoque_mercado.jpg
+    entrevista_videochamada.png
+    confirmacao_whatsapp_26-10.png
+    confirmacao_whatsapp_29-10.png
+  fluxogramas/
+    fluxograma_vendas.png
+    fluxograma_estoque.png
+apresentacao/
+  pitch_final.pptx
+```
+
+Os fluxogramas do ciclo de compra e do fechamento de caixa não têm arquivo de imagem: estão em Mermaid, direto no README.
+
+**Dicionário de dados:** [docs/dicionario_dados.md](docs/dicionario_dados.md). Como a turma é GTI, o dicionário é um único arquivo Markdown, separado do README. Ele traz as 27 tabelas com os campos, tipos, obrigatoriedade, unicidade, valores permitidos e valor padrão, além da versão do MySQL com data, dos índices e da parte de LGPD (que inclui os contatos de fornecedor que são pessoa física ou MEI).
+
+As fotos da organização, os registros da entrevista e os prints das confirmações ficam em `imagens/evidencias/`. O levantamento completo fica separado, em `levantamento/levantamento.md`. O DER, o modelo lógico, o script e o dicionário de dados ficam em `docs/`, e a apresentação final fica em `apresentacao/`.
 
 ---
 
 ## 6. Uso de Inteligência Artificial
 
-Uso de IA **não declarado é penalizado**. Abaixo, os usos relevantes. Entrega 1 (Registros 1–4) ficou como histórico e pode citar entidade que depois saiu (ex.: CLIENTE).
+Usamos IA como apoio na organização, revisão e validação do trabalho. As informações sobre a rotina do mercado vieram da entrevista, da visita e das confirmações feitas com o responsável. A IA foi usada para ajudar a organizar essas informações, revisar a modelagem, conferir o SQL, estruturar a massa fictícia e validar os indicadores. As decisões finais foram comparadas com o levantamento, o DER, o modelo lógico, o dicionário de dados e as regras de negócio. Não usamos IA na realização da entrevista, da visita e das confirmações com o responsável, nem na produção das fotos e dos prints de evidência. As utilizações de IA que fizeram parte do desenvolvimento do trabalho estão registradas nos itens abaixo.
 
-### Registro 1 — Claude: Aprendizado do GitHub
+#### Uso 1 — ChatGPT: revisão do DER e das chaves
 
-| Item | Descrição |
-|------|------------------|
-| **Ferramenta e etapa** | Claude — auxílio no aprendizado do GitHub. |
-| **Motivação** | Ninguém do grupo era familiarizado com a ferramenta. |
-| **Prompt(s) utilizados** | "Preciso criar um arquivo readme dentro do github, aprender a editar e adicionar colaboradores para que o meu grupo também tenha acesso, como eu faço isso?" / "Aparentemente você está passando informações da versão anterior do github, fale as informações da versão atual" |
-| **Resposta recebida** | Sequência: criar repositório, README, formatação, commit, edição, colaboradores, permissões. |
-| **Fontes consultadas e verificadas** | Conhecimento geral da ferramenta; conferido na prática pelo grupo. |
-| **Trechos rejeitados ou corrigidos** | Primeira resposta parecia da interface antiga; o grupo pediu a versão atual. |
-| **Justificativa da escolha final** | Resolveu as dúvidas de publicação. |
-| **Reflexão crítica** | Foi preciso exigir atualização; a IA pode descrever tela antiga. |
+| Item | Registro |
+| :--- | :--- |
+| **Ferramenta e etapa** | ChatGPT, na revisão do DER conceitual e na conferência das chaves do modelo lógico. |
+| **Motivação** | Conferir se entidades, atributos, relacionamentos, cardinalidades e chaves estavam coerentes com o levantamento e com a conversão para o modelo lógico. |
+| **Prompt(s) utilizados** | "Analisa nosso DER e vê se as entidades, atributos, relacionamentos e cardinalidades fazem sentido com o levantamento que fizemos. Também verifica se tem algum relacionamento N:N que precisa virar uma entidade associativa. Não coloca chave estrangeira no DER, porque isso vai ficar só no modelo lógico."<br><br>"Analisa as chaves primárias e estrangeiras das tabelas e vê se os relacionamentos estão corretos e me mostre onde esta errado." |
+| **Resposta recebida** | Revisão das entidades e cardinalidades, identificação das associações com atributos e conferência das PKs e FKs geradas na conversão para o lógico. |
+| **Fontes consultadas e verificadas** | Comparamos as sugestões com o levantamento, as regras de negócio, a lista de 22 entidades, os 48 relacionamentos do DER e as 53 FKs do modelo lógico. |
+| **Trechos corrigidos ou rejeitados** | Os itens de pedido, recebimento, devolução e venda foram mantidos como associações com atributos no conceitual e como tabelas no lógico. PAGAMENTO, SAIDA_LOTE e TROCA_OPERADOR foram mantidos como entidades porque têm comportamento e relacionamentos próprios. |
+| **Justificativa da escolha final** | Mantivemos somente as alterações que correspondiam aos processos levantados e à notação escolhida para o DER. |
+| **Reflexão crítica** | A IA ajudou a localizar inconsistências, mas a decisão final dependeu da comparação entre o desenho, as regras e o modelo lógico. |
 
-### Registro 2 — Claude: Revisão ortográfica do README
+#### Uso 2 — ChatGPT: revisão do SQL
 
-| Item | Descrição |
-|------|------------------|
-| **Ferramenta e etapa** | Claude — revisão ortográfica do README. |
-| **Motivação** | Preferência do grupo. |
-| **Prompt(s) utilizados** | Revisar erros de ortografia; listar também os de menor impacto. |
-| **Resposta recebida** | Inconsistência de porte (título “pequeno” × texto “médio”) e lista de digitação. |
-| **Fontes consultadas e verificadas** | Comparação com o próprio relatório. |
-| **Trechos rejeitados ou corrigidos** | Nenhum trecho da lista foi descartado sem leitura. |
-| **Justificativa da escolha final** | Correção do porte e da digitação. |
-| **Reflexão crítica** | A primeira passagem só destacou o principal; foi preciso pedir a lista completa. |
+| Item | Registro |
+| :--- | :--- |
+| **Ferramenta e etapa** | ChatGPT, na criação e revisão do rascunho da estrutura SQL, dos triggers, das procedures e das consultas G01 a G12 e A01 a A12. O grupo revisou, executou os testes no MySQL e ajustou o que foi necessário. |
+| **Motivação** | Verificar se o script seguia o modelo lógico e se as regras de integridade estavam representadas de forma coerente. |
+| **Prompt(s) utilizados** | "Confere esse SQL e vê se está de acordo com o nosso modelo lógico e com as regras de negócio. Verifica chaves, relacionamentos, tipos de dados, NOT NULL, UNIQUE, CHECK e possíveis erros de sintaxe." |
+| **Resposta recebida** | A IA revisou PKs, FKs, tipos, obrigatoriedade, unicidade, restrições de domínio e regras que exigem validação por trigger ou procedure. |
+| **Fontes consultadas e verificadas** | A conferência foi feita contra o modelo lógico, o dicionário de dados, as regras de negócio e a documentação do MySQL 8.0. |
+| **Trechos corrigidos ou rejeitados** | Foram ajustadas restrições de status, tipo de venda, escala, lotes, perdas, sessão de caixa e cancelamento de itens. Também foram mantidas como lógica de trigger ou procedure as regras que dependem da consulta de outras linhas ou tabelas. |
+| **Justificativa da escolha final** | As correções foram aplicadas quando reforçavam regras já definidas pelo grupo sem alterar o processo real levantado. |
+| **Reflexão crítica** | Nem toda regra pode ser garantida apenas com PK, FK e `CHECK`; parte da integridade depende de operações transacionais e validações entre tabelas. |
 
-### Registro 3 — Claude: Organização da documentação
+#### Uso 3 — ChatGPT: criação e revisão da massa de dados fictícia
 
-| Item | Descrição |
-|------|------------------|
-| **Ferramenta e etapa** | Claude — organização do item 6 do esqueleto da Entrega 1. |
-| **Motivação** | Preferência do grupo. |
-| **Prompt(s) utilizados** | Print dos tópicos do esqueleto + imagem do DER: como organizar. |
-| **Resposta recebida** | Justificar cada entidade com o negócio, não só listar nomes. |
-| **Fontes consultadas e verificadas** | Esqueleto e slides da disciplina. |
-| **Trechos rejeitados ou corrigidos** | Ordem dos tópicos ajustada à ordem do esqueleto. |
-| **Justificativa da escolha final** | Estrutura útil depois de reordenada. |
-| **Reflexão crítica** | A IA invertia a ordem pedida. |
+| Item | Registro |
+| :--- | :--- |
+| **Ferramenta e etapa** | ChatGPT, no apoio à criação da massa de dados usada nos testes do banco. |
+| **Motivação** | Criar uma amostra coerente com o porte e os processos da organização, sem utilizar dados pessoais reais. |
+| **Prompt(s) utilizados** | "Ajuda a criar uma massa de dados fictícia para testar o banco. Os dados precisam ser coerentes com a realidade da organização, mas sem usar dados reais de clientes, funcionários ou outras pessoas." |
+| **Resposta recebida** | Sugestão de distribuição de registros entre produtos, fornecedores, funcionários, compras, recebimentos, lotes, perdas, vendas, pagamentos e demais tabelas. |
+| **Fontes consultadas e verificadas** | Os volumes foram comparados com os números aproximados informados pelo responsável, como cerca de 110 funcionários, 340 fornecedores, 1.800 vendas por dia e 6 mil itens diferentes vendidos por mês. |
+| **Trechos corrigidos ou rejeitados** | Ajustamos a quantidade de casos para incluir vendas concluídas e canceladas, perdas, lotes vencidos ou próximos do vencimento, estoque baixo, devoluções, abatimentos, sessões de caixa e diferentes formas de pagamento. |
+| **Justificativa da escolha final** | A massa foi organizada para gerar situações variadas e permitir que as consultas gerenciais e de auditoria tenham resultados demonstráveis. |
+| **Reflexão crítica** | A amostra representa cenários de teste e não uma reprodução estatística do movimento real do mercado. |
 
-### Registro 4 — Claude: Revisão do DER conceitual
+#### Uso 4 — ChatGPT: definição dos indicadores gerenciais
 
-| Item | Descrição |
-|------|------------------|
-| **Ferramenta e etapa** | Claude — revisão de cardinalidades do DER (Entrega 1). |
-| **Motivação** | Revisar antes da entrega. |
-| **Prompt(s) utilizados** | Revisar o DER com ênfase em cardinalidade; perguntas do tipo “por que produto–venda é N:N?”. |
-| **Resposta recebida** | Sugestões textuais de cardinalidade (a IA não editou o arquivo do brModelo). |
-| **Fontes consultadas e verificadas** | Nenhuma fonte externa citada pela IA. |
-| **Trechos rejeitados ou corrigidos** | Aplicação manual no DER; depois o modelo foi de novo revisado com ITEM_VENDA e ITEM_PEDIDO_COMPRA. |
-| **Justificativa da escolha final** | Ajuda para discutir N:N. |
-| **Reflexão crítica** | Relacionamentos deste registro são de **versão antiga** do DER. |
+| Item | Registro |
+| :--- | :--- |
+| **Ferramenta e etapa** | ChatGPT, na definição e revisão dos KPIs da seção de BI e IA. |
+| **Motivação** | Selecionar indicadores úteis para a gestão e que pudessem ser calculados somente com os dados existentes no banco. |
+| **Prompt(s) utilizados** | "com base nos dados que existem no nosso banco, quais indicadores fariam sentido para a gestão? Só mande KPI que dê para calcular com as tabelas que já temos" |
+| **Resposta recebida** | Sugestões de indicadores de perdas, validade, vendas, ticket médio, estoque mínimo, cancelamentos, recusas de fornecedor, contas a pagar e perdas com lote a confirmar. |
+| **Fontes consultadas e verificadas** | Cada KPI foi relacionado às tabelas existentes e a uma consulta gerencial G01 a G11. A G12 foi mantida como consulta complementar para validade e promoções. |
+| **Trechos corrigidos ou rejeitados** | Foram descartadas sugestões que exigiam informações que o modelo não registra. As metas permaneceram identificadas como sugestões do grupo, e não como metas informadas pelo responsável. |
+| **Justificativa da escolha final** | Só foram mantidos indicadores que podem ser calculados com a estrutura atual do banco. |
+| **Reflexão crítica** | Um indicador pode parecer útil, mas não deve ser apresentado como KPI calculável quando os dados necessários não existem no modelo. |
 
-### Registro 5 — ChatGPT: Revisão da documentação e apoio à modelagem
+#### Uso 5 — ChatGPT: requisitos, regras, normalização, README e processos comuns
 
-| Item | Descrição |
-|---|---|
-| **Ferramenta e etapa** | ChatGPT — README, regras, DER e modelo lógico da Entrega 2. |
-| **Motivação** | Organizar conceitos e achar inconsistência entre requisito e diagrama. |
-| **Prompts utilizados** | "O que é uma chave primária?"; "Estamos fazendo com base nas regras?"; "Me mande uma tabela para eu fazer sozinha o DER"; "Se eu terminar o modelo lógico, ele gera o SQL automático?" |
-| **Respostas recebidas** | Explicações de entidade, PK/FK, cardinalidade; sugestões de texto. |
-| **Fontes consultadas e verificadas** | Levantamento, RNs e correção da Entrega 1. |
-| **Trechos rejeitados ou corrigidos** | Orientações de cardinalidade e de FK gerada pelo brModelo que não batiam com o projeto. |
-| **Justificativa da escolha final** | Alterações feitas à mão no README e nos diagramas. |
-| **Reflexão crítica** | Nem toda sugestão estava correta na primeira resposta. |
+| Item | Registro |
+| :--- | :--- |
+| **Ferramenta e etapa** | ChatGPT, na organização do README, dos requisitos funcionais e não funcionais, das regras de negócio, da normalização, do dicionário de dados e na comparação com processos comuns de mercados e hortifrutis. |
+| **Motivação** | Organizar os tópicos pedidos pelo professor, verificar se havia processos comuns não considerados e conferir se as seções do trabalho estavam coerentes entre si. |
+| **Prompt(s) utilizados** | "Me ajuda a criar os requisitos funcionais e não funcionais do nosso sistema, com mais detalhes."<br>"Dá uma olhada nos requisitos do sistema e vê se está faltando alguma coisa importante."<br>"Confere se meu banco de dados está seguindo a 1FN, 2FN e 3FN e me explica o que precisa ajustar."<br>"Me ajuda a organizar o README.md do GitHub seguindo o que o professor pediu na entrega."<br>"Me ajuda a montar o dicionário de dados, colocando os campos, tipos e restrições de cada tabela." |
+| **Resposta recebida** | Textos em Markdown, sugestões de organização, revisão de normalização e uma lista de processos típicos para comparação com o levantamento. |
+| **Fontes consultadas e verificadas** | Usamos o esqueleto do professor, o levantamento, as confirmações por WhatsApp e as regras do projeto. Os processos genéricos sugeridos pela IA foram comparados com o que o responsável informou. |
+| **Trechos corrigidos ou rejeitados** | Rejeitamos cadastro de clientes, fidelidade, venda online, entrega e fiado porque o mercado não realiza esses processos. A troca pelo cliente existe, mas é rara e ficou fora do fluxo próprio do caixa. Escala, devolução ao fornecedor e fechamento de caixa foram mantidos porque fazem parte da rotina levantada. |
+| **Justificativa da escolha final** | O modelo foi limitado ao que a organização realmente faz e ao que é necessário para representar seus dados. |
+| **Reflexão crítica** | Listas genéricas de processos de mercado não podem substituir o levantamento; elas serviram apenas para comparação e foram filtradas pelas informações confirmadas com o responsável. |
 
-### Registro 6 — ChatGPT: Apoio à implementação SQL
+#### Uso 6 — Claude e ChatGPT: revisão geral do README e correções de consistência
 
-| Item | Descrição |
-|---|---|
-| **Ferramenta e etapa** | ChatGPT — organização do `script.sql`, massa e interpretação dos testes MySQL. |
-| **Motivação** | Entender a criação das tabelas, a execução das consultas e se os dados batiam. |
-| **Prompt(s) utilizados — resumo dos pedidos** | Pedimos ajuda para montar o `docs/script.sql` (criar a pasta `docs` se não existisse), entender o `CREATE TABLE` e ler o resultado de G01–G05 e A01–A05. Não foi um único prompt do tipo “gere o banco inteiro”. |
-| **Resposta recebida** | Orientações sobre estrutura do SQL, inserções fictícias e interpretação de G01–G05 e A01–A05. |
-| **Fontes consultadas e verificadas** | O `script.sql` do grupo e os testes que relatamos no MySQL 8.0; nesta versão do texto não rodamos o MySQL de novo. |
-| **Trechos rejeitados ou corrigidos** | Falas de baixa automática e de cancelamento demonstrado que não estão no SQL. |
-| **Justificativa da escolha final** | Deixar no relatório só o que o esquema, a massa e as consultas deixam conferir. |
-| **Reflexão crítica** | Ter PK, FK e insert que roda não significa que venda, saldo e validade estejam travados como no caixa real. |
+| Item | Registro |
+| :--- | :--- |
+| **Ferramenta e etapa** | Claude e ChatGPT, na revisão do README contra o esqueleto do professor, o guia do DER, a correção da Entrega 1 e as versões atualizadas do modelo. |
+| **Motivação** | Encontrar divergências de numeração, regras citadas, contagens, rastreabilidade, cardinalidades, trechos que não correspondiam mais à versão atual do DER e do modelo lógico e deixar os textos menos técnicos e mais fáceis de entender. |
+| **Prompt(s) utilizados** | "veja se existe divergências e quais correções precisam ser feitas";<br>"verifique se há alguma divergência e aponte por ordem de mais crítica até as mais leves";<br>"Dá uma revisada no trabalho e vê se está tudo de acordo com o que o professor pediu.";<br>"Deixe os textos com as descrições menos técnicas, e mais fáceis de compreendê-las com um vocabulário mais didático.";<br>Na revisão final também pedimos para corrigir pontos específicos do README, como o rótulo "Caso A", o texto sobre o Pix, o alinhamento das RN18 e RN20 com a seção 1.5, a repetição das tabelas de itens não incluídos, a hierarquia dos títulos e a explicação do porte do mercado.<br>Para o Claude: "com base no esqueleto e nesse trabalho que eu já fiz uma parte, tem umas correções que uma IA apontou, verifique se realmente precisa delas e faça as correções, e se existir mais alguma coisa para arrumar, arrume". |
+| **Resposta recebida** | Listas de inconsistências, propostas de correção e versões revisadas de partes do README. |
+| **Fontes consultadas e verificadas** | As correções foram conferidas contra o esqueleto, o levantamento, as regras, as seções 1.2 e 1.3, o DER de 22 entidades, os 48 relacionamentos e as 53 FKs do lógico. |
+| **Trechos corrigidos ou rejeitados** | Foram corrigidas referências duplicadas, regras antigas, contagens, rastreabilidade de fechamento de caixa e pagamento de contas, tratamento de perdas corrigidas, forma de pagamento e relação entre KPIs e consultas. Na revisão final, o grupo também aceitou os ajustes de texto sobre Pix, FEFO, operador da sessão, porte, títulos e repetições. As sugestões que mudariam decisões já sustentadas pelo levantamento foram rejeitadas; por isso PAGAMENTO, SAIDA_LOTE e TROCA_OPERADOR permaneceram como entidades. |
+| **Justificativa da escolha final** | O objetivo foi fazer com que README, DER, modelo lógico, regras e SQL descrevessem a mesma solução. |
+| **Reflexão crítica** | A IA foi útil para localizar divergências, mas as contagens e as decisões finais foram revisadas pela equipe com base nos artefatos do projeto. Ela também sugeriu mudar PAGAMENTO, SAIDA_LOTE e TROCA_OPERADOR, mas a equipe rejeitou porque o levantamento sustentava o modelo atual.|
 
-### Registro 7 — Claude: Fluxogramas e consistência SQL × documentação
 
-| Item | Descrição |
-|---|---|
-| **Ferramenta e etapa** | Claude — revisão de fluxogramas e comparação de script, README e dicionário. |
-| **Motivação** | Achar divergência sem inventar passo que a entrevista não confirmou. |
-| **Prompt(s) utilizados — resumo dos pedidos** | Pedimos: (1) comparar o fluxograma com os processos de venda e estoque; (2) comparar colunas, tipos e contagens de SQL e dicionário. |
-| **Resposta recebida** | Sugestão de data fixa nos testes; conferir `TOM-001`; contagem de 13 tabelas, 74 colunas e 17 FKs. |
-| **Fontes consultadas e verificadas** | Fluxogramas, SQL, README, Dicionário de Dados e resultados que o grupo relatou. |
-| **Trechos rejeitados ou corrigidos** | O grupo relatou ter mudado o saldo de 70,000 para 69,000, mas a cópia usada na conferência ainda tinha 70,000. A comparação com o arquivo final na `main` continua pendente. |
-| **Justificativa da escolha final** | Manter a data fixa no teste para todo mundo reproduzir, e deixar o saldo bater com o movimento. |
-| **Reflexão crítica** | Dá para acertar o número de tabelas e ainda assim deixar o saldo do tomate ou o custo da alface errados. O que vale é conferir o `SELECT`. |
+#### Uso 7 — ChatGPT: organização e revisão da apresentação final
 
-### Registro 8 — ChatGPT: Consolidação da revisão final do README
+| Item | Registro |
+| :--- | :--- |
+| **Ferramenta e etapa** | ChatGPT, no apoio à organização e revisão dos slides da apresentação final, com edição do material no Canva. |
+| **Motivação** | Transformar o conteúdo técnico do README em um pitch de 8 minutos, com pouco texto e na ordem exigida pelo professor. |
+| **Prompt(s) utilizados** | “Me ajuda a organizar a apresentação final seguindo o que o professor pediu, deixando os slides mais visuais e com pouco texto.” Também pedimos ajustes específicos no slide do DER conceitual e no slide reservado ao modelo lógico. |
+| **Resposta recebida** | Sugestões de sequência, títulos, redução de texto e organização dos slides para problema, solução, modelo, SQL, consultas, BI/IA e benefícios. |
+| **Fontes consultadas e verificadas** | A sequência foi conferida com a seção 7 do esqueleto do professor e com o conteúdo final do README, DER, modelo lógico e SQL. |
+| **Trechos corrigidos ou rejeitados** | Foram corrigidos slides que misturavam DER conceitual e modelo lógico, mantendo os dois assuntos separados. Também reduzimos textos longos para adequar o pitch ao tempo disponível. |
+| **Justificativa da escolha final** | A apresentação foi mantida alinhada à ordem exigida e aos artefatos efetivamente entregues no repositório. |
+| **Reflexão crítica** | A IA ajudou na síntese visual, mas os slides precisam continuar fiéis ao modelo e ao SQL; simplificar demais poderia esconder diferenças entre o conceitual e o lógico. |
 
-| Item | Descrição |
-|---|---|
-| **Ferramenta e etapa** | ChatGPT — redação e consolidação da documentação da Entrega 2. |
-| **Motivação** | Organizar apontamentos da Entrega 1 e alinhar escopo com o que o banco faz. |
-| **Prompt(s) utilizados — resumo do pedido** | Pedimos para organizar os apontamentos e devolver o documento completo com as correções. |
-| **Resposta recebida** | Separar o que está implementado, o que é proposta e o que foi testado, e organizar evidências. |
-| **Fontes consultadas e verificadas** | Esqueleto da disciplina, correção da Entrega 1, script e dicionário do grupo. |
-| **Trechos rejeitados ou corrigidos** | Texto que misturava recurso proposto com comando SQL que de fato roda. |
-| **Justificativa da escolha final** | Deixar claro o limite do projeto e manter o foco no P1. |
-| **Reflexão crítica** | Texto bem escrito não prova que o MySQL rodou, que a regra está no DDL ou que a foto da entrevista existe. |
-
-### Registro 9 — IA: KPIs típicos de hortifruti (esqueleto seção 1.6)
-
-| Item | Descrição |
-|---|---|
-| **Ferramenta e etapa** | ChatGPT / Claude — indicadores típicos de varejo alimentar / hortifruti. |
-| **Motivação** | Atender o esqueleto: levantar KPIs do tipo de organização e filtrar pelo que o banco calcula. |
-| **Prompt(s) utilizados — resumo do pedido** | Pedimos sugestões dos principais KPIs de um hortifruti ou supermercado de perecíveis, com foco em validade, perda, ruptura e faturamento. |
-| **Resposta recebida** | Lista ampla (giro, margem, ruptura, validade, ticket, perda %). |
-| **Fontes consultadas e verificadas** | Confrontado com o levantamento (perdas ≈ 1,5% do faturamento) e com as tabelas existentes. |
-| **Trechos rejeitados** | Preferimos não incluir ticket médio nesta massa de uma venda só. Margem e giro também ficaram de fora porque não detalhamos os dados necessários para essas análises. Tempo de fila e NPS: não há dados. |
-| **Justificativa da escolha final** | Mantivemos G01–G05 como consultas gerenciais. As contagens e somas que ainda faltam para os KPIs estão indicadas na seção 1.6. |
-| **Reflexão crítica** | KPI sem consulta no SQL não entra. |
-
-### Registro 10 — Massa de dados e LLM (esqueleto seção 4)
-
-| Item | Descrição |
-|---|---|
-| **Ferramenta e etapa** | ChatGPT — apoio na interpretação da massa e das consultas. A participação na escrita dos `INSERTs` ainda precisa ser conferida no histórico do grupo. |
-| **Motivação** | Esqueleto exige declarar se LLM gerou a massa. |
-| **Prompt(s) utilizados — resumo dos pedidos** | Pedimos ajuda para entender os resultados de G01–G05 e o saldo de `TOM-001`. Esse resumo não esclarece toda a participação da IA na elaboração da massa; essa parte ainda precisa ser conferida. |
-| **Resposta recebida** | Leituras de consulta; alerta de inconsistência de saldo. |
-| **Fontes consultadas e verificadas** | Testes que o grupo relatou no MySQL 8.0 em 28/10/2026. Não houve nova execução nesta revisão do texto; a diferença entre as cópias do SQL está explicada na seção 1.6. |
-| **Trechos rejeitados ou corrigidos** | Foi apontada a diferença entre saldo 70,000 e 69,000 no tomate. O grupo relatou a correção, mas ainda falta confirmar que ela está na mesma versão publicada do SQL. |
-| **Justificativa da escolha final** | Massa pequena, controlada, fictícia, alinhada a P1. |
-| **Reflexão crítica** | LLM não substitui rodar o script do zero. |
-
-### Registro 11 — ChatGPT: Conferência do README e revisão da escrita (28/10/2026)
-
-| Item | Descrição |
-|---|---|
-| **Ferramenta e etapa** | ChatGPT — comparação do README com o arquivo `00-d_Esqueleto_Entrega_2.md` e revisão dos trechos incompletos ou contraditórios. Depois, ajustes na escrita sem trocar o jeito do grupo de explicar. |
-| **Motivação** | Conferir os itens do esqueleto e corrigir as imprecisões sem deixar o texto com cara de resposta pronta de IA. |
-| **Prompt(s) utilizados** | Resumo dos pedidos anteriores: comparar o relatório com o esqueleto, apontar inconsistências e devolver o README corrigido. Pedido desta revisão: “corrija, mas sem mudar meu tom de fala, você deixa muito IA sabe muito robotico e tem partes q tem q ficar mais humano entender”. |
-| **Resposta recebida** | Correções pontuais nas frases sobre validade, observação presencial, normalização, KPIs e uso de IA. A diferença entre as versões do SQL foi mantida como pendência de conferência, não como um teste novo. |
-| **Fontes consultadas e verificadas** | Na comparação anterior, o esqueleto, o README, o dicionário e as cópias do SQL descritas no trabalho. Nesta revisão da escrita, a versão completa do README e as informações já fornecidas na conversa; sem nova consulta ao repositório ou execução do MySQL. |
-| **Trechos rejeitados ou corrigidos** | Não mantivemos a ideia de que uma lista gerencial é inválida só por não trazer uma contagem. Separamos a utilidade da lista do cálculo do KPI. Também retiramos a afirmação de que esta revisão comprovava a versão publicada do SQL, porque o texto trazia informações diferentes sobre o saldo do tomate. |
-| **Justificativa da escolha final** | Manter a nossa forma de escrever, os dados do levantamento e os limites do trabalho. O que depende de conferir o arquivo final ou de rodar o SQL continua indicado como pendência. |
-| **Reflexão crítica** | Uma resposta sobre uma cópia antiga não comprova o que está no arquivo publicado. Precisamos conferir a mesma versão do SQL que vai junto com o README. Deixar a escrita mais natural também não pode mudar o sentido do que foi levantado ou testado. |
+**Referências técnicas consultadas no SQL:** [restrições CHECK no MySQL 8.0](https://dev.mysql.com/doc/refman/8.0/en/create-table-check-constraints.html) e [colunas geradas no MySQL](https://dev.mysql.com/doc/refman/8.0/en/create-table-generated-columns.html).
 
 ## 7. Apresentação Corporativa Final
 
@@ -1249,6 +1455,6 @@ O pitch tem **8 minutos**, com pouco texto nos slides e a demonstração do banc
 
 **Arquivo da apresentação:** `apresentacao/pitch_final.pptx`.
 
-Depois do pitch todos os integrantes ficam para a defesa do modelo lógico, e cada um responde o que foi perguntado a ele. Cada aluno precisa saber explicar as partes do modelo, principalmente chaves, cardinalidades e as decisões de normalização
----
+Depois do pitch todos os integrantes ficam para a defesa do modelo lógico, e cada um responde o que foi perguntado a ele. Cada aluno precisa saber explicar as partes do modelo, principalmente chaves, cardinalidades e as decisões de normalização.
+
 
