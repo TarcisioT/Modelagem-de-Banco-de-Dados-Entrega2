@@ -834,7 +834,7 @@ A tabela abaixo mostra como cada restrição foi pensada e como as regras de int
 | Recebimento com ou sem pedido | `RECEBIMENTO.id_pedido` aceita `NULL` | RN11 |
 | Quantidades aceitas e recusadas coerentes | `CHECK` no item (aceita + recusada = quantidade da nota) e validação da soma dos lotes | RN12, RN14 |
 | Saldo do lote sem negativo e saída dentro do saldo | `CHECK` no lote e trigger antes de cada baixa | RN16, RN17 |
-| Venda dentro do saldo disponível do produto | A procedure `concluir_venda` confere o saldo e bloqueia o lote escolhido com `SELECT ... FOR UPDATE` durante a transação. O bloqueio foi implementado, mas não fizemos teste com várias conexões ao mesmo tempo | RN16, RN17, RN53 |
+| Venda dentro do saldo disponível do produto | A procedure `concluir_venda` bloqueia o produto antes de conferir o saldo disponível e bloqueia o lote escolhido com `SELECT ... FOR UPDATE`. Foi testada a espera pelo bloqueio entre duas conexões em um cenário envolvendo `registrar_perda_pendente`; não foram testadas todas as combinações de operações simultâneas | RN16, RN17, RN53 |
 | Estorno sem exclusão nem duplicação | Autorrelacionamento com UNIQUE em id_saida_original (impede estornar a mesma baixa duas vezes) e CHECK no tipo. A conferência da baixa original é feita pela procedure estornar_saida e pela auditoria A09 | RN17 |
 | Baixa com uma única origem | `CHECK` impedindo preencher item de venda e perda ao mesmo tempo | RN17, RN28 |
 | Saldo disponível do produto | Consulta (view) que soma os lotes e desconta as perdas com "lote a confirmar" | RN16, RN42 |
