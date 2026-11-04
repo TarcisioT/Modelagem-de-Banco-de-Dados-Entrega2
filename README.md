@@ -1262,6 +1262,7 @@ O relatório técnico está neste arquivo `README.md`, localizado na raiz da bra
 #### Principais arquivos da entrega
 
 - `README.md` – Relatório Técnico Final
+- `README_Entrega1.md` – Relatório da Entrega 1
 - `diagramas/der.conceitual.png` – DER Conceitual
 - `diagramas/Modelo_Logico_Hortifruti.png` – Modelo Lógico
 - `docs/script.sql` – Script SQL completo
@@ -1271,6 +1272,7 @@ O relatório técnico está neste arquivo `README.md`, localizado na raiz da bra
 
 #### Estrutura do repositório
 
+```text
 README.md
 README_Entrega1.md
 apresentação/
@@ -1292,12 +1294,11 @@ imagens/
     fluxograma_venda.jpeg
 levantamento/
   levantamento.md
-  
 ```
 
-**Dicionário de dados:** [docs/dicionario_dados.md](docs/Dicionario_Dados.md). Como a turma é GTI, o dicionário é um único arquivo Markdown, separado do README. Ele traz as 27 tabelas com os campos, tipos, obrigatoriedade, unicidade, valores permitidos e valor padrão, além da versão do MySQL com data, dos índices e da parte de LGPD (que inclui os contatos de fornecedor que são pessoa física ou MEI).
+**Dicionário de dados:** [docs/Dicionario_Dados.md](docs/Dicionario_Dados.md). Como a turma é GTI, o dicionário é um único arquivo Markdown, separado do README. Ele traz as 27 tabelas com os campos, tipos, obrigatoriedade, unicidade, valores permitidos e valor padrão, além da versão do MySQL com data, dos índices e da parte de LGPD (que inclui os contatos de fornecedor que são pessoa física ou MEI).
 
-As fotos da organização, os registros da entrevista e os prints das confirmações ficam em `imagens/evidencias/`. O levantamento completo fica separado, em `levantamento/levantamento.md`. O DER, o modelo lógico, o script e o dicionário de dados ficam em `docs/`, e a apresentação final fica em `apresentação/`.
+As fotos da organização e o registro da videochamada ficam em `imagens/evidencias/`. O levantamento completo fica separado, em `levantamento/levantamento.md`. O DER, o modelo lógico, o script e o dicionário de dados ficam em `diagramas/` e `docs/`, e a apresentação final fica em `apresentação/`.
 
 ---
 
