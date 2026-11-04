@@ -1062,9 +1062,9 @@ O script utiliza o banco `hortifruti_uniao`. Cada execução completa apaga e re
 
 ### Execução e conferência
 
-A versão corrigida foi executada em ambiente isolado no MySQL 8.0.46, com apoio do ChatGPT na revisão e nos testes. No ambiente isolado foi necessário um ajuste específico na cópia utilizada para teste, sem alteração do script oficial entregue. A carga e as consultas terminaram sem erro de execução. Foram confirmadas 200 vendas, 27 tabelas, 53 chaves estrangeiras, 38 triggers e 9 procedures.
+O arquivo final entregue em `docs/script.sql` foi executado pelo grupo no MySQL 8.0.46. Durante uma etapa anterior da revisão, uma cópia utilizada em ambiente isolado exigiu a retirada de uma definição de `DEFINER` específica daquele ambiente. Esse ajuste não faz parte do arquivo oficial entregue. A versão final do script, sem `DEFINER`, foi executada pelo grupo com a carga, as consultas gerenciais e as auditorias sem erro. Foram confirmadas 200 vendas, 27 tabelas, 53 chaves estrangeiras, 38 triggers e 9 procedures.
 
-Nesse ambiente, passaram 57 verificações sequenciais. Elas abrangeram operações válidas e inválidas, regras de estoque, recebimentos, perdas, vendas, pagamentos, cancelamentos, estornos e rollback. Também incluíram os cenários de setor com perdas e sem vendas na G01 e de fornecedor com recusas em kg e unidades na G09. Os scripts auxiliares dessa revisão não foram incluídos no repositório nesta entrega.
+Durante a revisão também foram realizadas 57 verificações auxiliares envolvendo operações válidas e inválidas, estoque, recebimentos, perdas, vendas, pagamentos, cancelamentos, estornos e rollback. Os scripts auxiliares usados nessa etapa não fazem parte da entrega e, por isso, essas 57 verificações são registradas apenas como validação interna do grupo. As verificações reproduzíveis entregues no repositório são as consultas gerenciais G01 a G12 e as auditorias A01 a A12 existentes em `docs/script.sql`.
 
 O grupo também executou a carga, as consultas gerenciais e as auditorias em seu ambiente MySQL 8.0.46. A conferência do fechamento comparou o valor esperado gravado com o fundo inicial mais os pagamentos em dinheiro das vendas concluídas, menos as sangrias, sem encontrar divergências. A A01 apresentou seis perdas pendentes previstas na massa; as demais auditorias verificadas não apontaram inconsistências.
 
@@ -1259,6 +1259,8 @@ Esta massa de 200 vendas foi utilizada para validar as regras e as consultas do 
 ### Período simulado
 
 As vendas representam o período de **26/10/2026 a 01/11/2026**, totalizando sete dias consecutivos. A distribuição prevista nos registros do script é de **25, 27, 28, 30, 32, 33 e 25 vendas por dia**, respectivamente, totalizando 200.
+
+Como a massa cobre apenas sete dias e atravessa o fim de outubro e o início de novembro, os indicadores mensais servem para demonstrar o agrupamento das consultas, e não para representar meses completos de operação ou permitir comparação histórica mensal.
 
 Existem recebimentos entre **15/10/2026 e 25/10/2026**, utilizados para formar o estoque inicial da simulação.
 
