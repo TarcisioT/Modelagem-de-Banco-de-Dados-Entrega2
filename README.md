@@ -552,60 +552,62 @@ O subtotal, o total da venda e a diferença do caixa são **atributos derivados*
 
 ##### Relacionamentos e cardinalidades
 
-As cardinalidades mostram quantas vezes cada registro pode participar de um relacionamento. Por exemplo, um setor tem vários produtos, mas cada produto tem um único setor principal. O relacionamento 50 liga o estorno à baixa que ele corrige.
+As cardinalidades mostram quantas vezes cada registro pode participar de um relacionamento. Por exemplo, um setor tem vários produtos, mas cada produto tem um único setor principal. O relacionamento 45 liga o estorno à baixa que ele corrige. "Item recebido" e "item vendido" são as entidades associativas descritas acima.
 
 | Nº | Relacionamento | Entidade A | Entidade B |
 | :--- | :--- | :--- | :--- |
 | 1 | possui | SETOR (0,n) | PRODUTO (1,1) |
 | 2 | é lotado em | SETOR (0,n) | FUNCIONARIO (1,1) |
 | 3 | possui | FUNCIONARIO (0,n) | ESCALA (1,1) |
-| 4 | fornece | FORNECEDOR (0,n) | FORNECEDOR_PRODUTO (1,1) |
-| 5 | é fornecido por | PRODUTO (0,n) | FORNECEDOR_PRODUTO (1,1) |
-| 6 | recebe | FORNECEDOR (0,n) | PEDIDO_COMPRA (1,1) |
-| 7 | realiza | FUNCIONARIO (0,n) | PEDIDO_COMPRA (1,1) |
-| 8 | contém | PEDIDO_COMPRA (1,n) | ITEM_PEDIDO_COMPRA (1,1) |
-| 9 | é pedido em | PRODUTO (0,n) | ITEM_PEDIDO_COMPRA (1,1) |
-| 10 | entrega | FORNECEDOR (0,n) | RECEBIMENTO (1,1) |
-| 11 | origina | PEDIDO_COMPRA (0,n) | RECEBIMENTO (0,1) |
-| 12 | confere | FUNCIONARIO (0,n) | RECEBIMENTO (1,1) |
-| 13 | contém | RECEBIMENTO (1,n) | ITEM_RECEBIMENTO (1,1) |
-| 14 | é recebido em | PRODUTO (0,n) | ITEM_RECEBIMENTO (1,1) |
-| 15 | gera | ITEM_RECEBIMENTO (0,n) | LOTE (1,1) |
-| 16 | possui | PRODUTO (0,n) | LOTE (1,1) |
-| 17 | gera | RECEBIMENTO (0,n) | CONTA_PAGAR (1,1) |
-| 18 | é paga com | FORMA_PAGAMENTO (0,n) | CONTA_PAGAR (0,1) |
-| 19 | origina | RECEBIMENTO (0,n) | DEVOLUCAO_FORNECEDOR (1,1) |
-| 20 | registra | FUNCIONARIO (0,n) | DEVOLUCAO_FORNECEDOR (1,1) |
-| 21 | contém | DEVOLUCAO_FORNECEDOR (1,n) | ITEM_DEVOLUCAO (1,1) |
-| 22 | é devolvido em | ITEM_RECEBIMENTO (0,n) | ITEM_DEVOLUCAO (1,1) |
-| 23 | gera abatimento em | DEVOLUCAO_FORNECEDOR (0,1) | CONTA_PAGAR (0,n) |
-| 24 | é consumido em | LOTE (0,n) | SAIDA_LOTE (1,1) |
-| 25 | origina | ITEM_VENDA (0,n) | SAIDA_LOTE (0,1) |
-| 26 | origina | PERDA (0,n) | SAIDA_LOTE (0,1) |
-| 27 | sofre | PRODUTO (0,n) | PERDA (1,1) |
-| 28 | registra ocorrência em | SETOR (0,n) | PERDA (1,1) |
-| 29 | classifica | MOTIVO_PERDA (0,n) | PERDA (1,1) |
-| 30 | registra | FUNCIONARIO (0,n) | PERDA (1,1) |
-| 31 | é afetado por | LOTE (0,n) | PERDA (0,1) |
-| 32 | recebe | LOTE (0,n) | PROMOCAO (1,1) |
-| 33 | registra | FUNCIONARIO (0,n) | PROMOCAO (1,1) |
-| 34 | possui | CAIXA (0,n) | SESSAO_CAIXA (1,1) |
-| 35 | abre | FUNCIONARIO (0,n) | SESSAO_CAIXA (1,1) |
-| 36 | possui | SESSAO_CAIXA (0,n) | TROCA_OPERADOR (1,1) |
-| 37 | é operador anterior em | FUNCIONARIO (0,n) | TROCA_OPERADOR (1,1) |
-| 38 | é novo operador em | FUNCIONARIO (0,n) | TROCA_OPERADOR (1,1) |
-| 39 | registra | SESSAO_CAIXA (0,n) | SANGRIA (1,1) |
-| 40 | realiza | FUNCIONARIO (0,n) | SANGRIA (1,1) |
-| 41 | possui | SESSAO_CAIXA (0,n) | VENDA (1,1) |
-| 42 | realiza | FUNCIONARIO (0,n) | VENDA (1,1) |
-| 43 | autoriza cancelamento | FUNCIONARIO (0,n) | VENDA (0,1) |
-| 44 | contém | VENDA (1,n) | ITEM_VENDA (1,1) |
-| 45 | é vendido em | PRODUTO (0,n) | ITEM_VENDA (1,1) |
-| 46 | cancela | FUNCIONARIO (0,n) | ITEM_VENDA (0,1) |
-| 47 | recebe | VENDA (0,n) | PAGAMENTO (1,1) |
-| 48 | classifica | FORMA_PAGAMENTO (0,n) | PAGAMENTO (1,1) |
-| 49 | possui | VENDA (0,1) | DOCUMENTO_FISCAL (1,1) |
-| 50 | estorna (autorrelacionamento) | SAIDA_LOTE original (0,1) | SAIDA_LOTE de estorno (0,1) |
+| 4 | fornece (codigo_no_fornecedor, ultimo_custo) | FORNECEDOR (0,n) | PRODUTO (0,n) |
+| 5 | recebe | FORNECEDOR (0,n) | PEDIDO_COMPRA (1,1) |
+| 6 | realiza | FUNCIONARIO (0,n) | PEDIDO_COMPRA (1,1) |
+| 7 | contém (quantidade, custo_previsto) | PEDIDO_COMPRA (1,n) | PRODUTO (0,n) |
+| 8 | entrega | FORNECEDOR (0,n) | RECEBIMENTO (1,1) |
+| 9 | origina | PEDIDO_COMPRA (0,n) | RECEBIMENTO (0,1) |
+| 10 | confere | FUNCIONARIO (0,n) | RECEBIMENTO (1,1) |
+| 11 | contém (dados da nota e da conferência) | RECEBIMENTO (1,n) | PRODUTO (0,n) |
+| 12 | gera | item recebido (0,n) | LOTE (1,1) |
+| 13 | possui | PRODUTO (0,n) | LOTE (1,1) |
+| 14 | gera | RECEBIMENTO (0,n) | CONTA_PAGAR (1,1) |
+| 15 | é paga com | FORMA_PAGAMENTO (0,n) | CONTA_PAGAR (0,1) |
+| 16 | origina | RECEBIMENTO (0,n) | DEVOLUCAO_FORNECEDOR (1,1) |
+| 17 | registra | FUNCIONARIO (0,n) | DEVOLUCAO_FORNECEDOR (1,1) |
+| 18 | devolve (quantidade, observacao) | DEVOLUCAO_FORNECEDOR (1,n) | item recebido (0,n) |
+| 19 | gera abatimento em | DEVOLUCAO_FORNECEDOR (0,1) | CONTA_PAGAR (0,n) |
+| 20 | é consumido em | LOTE (0,n) | SAIDA_LOTE (1,1) |
+| 21 | origina | item vendido (0,n) | SAIDA_LOTE (0,1) |
+| 22 | origina | PERDA (0,n) | SAIDA_LOTE (0,1) |
+| 23 | sofre | PRODUTO (0,n) | PERDA (1,1) |
+| 24 | registra ocorrência em | SETOR (0,n) | PERDA (1,1) |
+| 25 | classifica | MOTIVO_PERDA (0,n) | PERDA (1,1) |
+| 26 | registra | FUNCIONARIO (0,n) | PERDA (1,1) |
+| 27 | é afetado por | LOTE (0,n) | PERDA (0,1) |
+| 28 | recebe | LOTE (0,n) | PROMOCAO (1,1) |
+| 29 | registra | FUNCIONARIO (0,n) | PROMOCAO (1,1) |
+| 30 | possui | CAIXA (0,n) | SESSAO_CAIXA (1,1) |
+| 31 | abre | FUNCIONARIO (0,n) | SESSAO_CAIXA (1,1) |
+| 32 | possui | SESSAO_CAIXA (0,n) | TROCA_OPERADOR (1,1) |
+| 33 | é operador anterior em | FUNCIONARIO (0,n) | TROCA_OPERADOR (1,1) |
+| 34 | é novo operador em | FUNCIONARIO (0,n) | TROCA_OPERADOR (1,1) |
+| 35 | registra | SESSAO_CAIXA (0,n) | SANGRIA (1,1) |
+| 36 | realiza | FUNCIONARIO (0,n) | SANGRIA (1,1) |
+| 37 | possui | SESSAO_CAIXA (0,n) | VENDA (1,1) |
+| 38 | realiza | FUNCIONARIO (0,n) | VENDA (1,1) |
+| 39 | autoriza cancelamento | FUNCIONARIO (0,n) | VENDA (0,1) |
+| 40 | contém (quantidade_ou_peso, preco_unitario, status etc.) | VENDA (1,n) | PRODUTO (0,n) |
+| 41 | cancela | FUNCIONARIO (0,n) | item vendido (0,1) |
+| 42 | recebe | VENDA (0,n) | PAGAMENTO (1,1) |
+| 43 | classifica | FORMA_PAGAMENTO (0,n) | PAGAMENTO (1,1) |
+| 44 | possui | VENDA (0,1) | DOCUMENTO_FISCAL (1,1) |
+| 45 | estorna (autorrelacionamento) | SAIDA_LOTE original (0,1) | SAIDA_LOTE de estorno (0,1) |
+| 46 | fecha | FUNCIONARIO (0,n) | SESSAO_CAIXA (0,1) |
+| 47 | paga | FUNCIONARIO (0,n) | CONTA_PAGAR (0,1) |
+| 48 | substitui (autorrelacionamento) | PERDA original (0,n) | PERDA nova (0,1) |
+
+Os relacionamentos 46 e 47 permitem identificar quem fechou cada sessão de caixa e quem registrou o pagamento de cada conta (RN56). O mínimo é 0 do lado da sessão e da conta porque uma sessão aberta ainda não foi fechada e uma conta em aberto ainda não foi paga.
+
+O relacionamento 48 liga a perda nova à perda original que ela corrige ou divide (RN43 e RN52). A original continua guardada com `status = substituida` e sai dos totais.
 
 ##### Decisões tomadas na modelagem
 
