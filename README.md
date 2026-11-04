@@ -1327,7 +1327,7 @@ O relatório técnico está neste arquivo `README.md`, localizado na raiz da bra
 - `docs/script.sql` – Script SQL completo
 - `docs/Dicionario_Dados.md` – Dicionário de Dados
 - `levantamento/levantamento.md` – Levantamento de requisitos
-- `apresentação/Hortifruti União — Apresentação Acadêmica — Entrega 2.pdf` – Apresentação final
+- `apresentacao/Apresentacao_HortifrutiUniao_Entrega2.pptx` – Apresentação final
 - `interface/` – Interface demonstrativa em PHP, HTML e CSS utilizada como complemento visual da apresentação
 
 #### Estrutura do repositório
@@ -1335,8 +1335,8 @@ O relatório técnico está neste arquivo `README.md`, localizado na raiz da bra
 ```text
 README.md
 README_Entrega1.md
-apresentação/
-  Hortifruti União — Apresentação Acadêmica — Entrega 2.pdf
+apresentacao/
+  Apresentacao_HortifrutiUniao_Entrega2.pptx
 diagramas/
   Modelo_Logico_Hortifruti.png
   der.conceitual.png
@@ -1353,6 +1353,8 @@ imagens/
     resposta_proprietário1.jpeg
     resposta_proprietário2.jpeg
   fluxogramas/
+    fluxograma_compra_recebimento.jpeg
+    fluxograma_fechamento_caixa.jpeg
     fluxograma_venda.jpeg
 interface/
   assets/
