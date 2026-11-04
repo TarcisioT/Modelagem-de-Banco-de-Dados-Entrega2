@@ -213,7 +213,7 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 | RF01 | Cadastrar e atualizar setores. | Nome, descrição, dias de antecedência do alerta de validade e se o setor vende produto. |
 | RF02 | Cadastrar, atualizar e inativar produtos. | Código interno (PLU), código de barras quando existir, nome, setor, unidade de venda, preço, estoque mínimo, situação, indicador de validade impressa e restrição de venda por idade. |
 | RF03 | Cadastrar, atualizar e inativar fornecedores. | Razão social, CNPJ, telefone, e-mail, endereço e situação. |
-| RF04 | Relacionar produtos aos fornecedores. | Fornecedor, produto e código do produto no fornecedor. |
+| RF04 | Relacionar produtos aos fornecedores. | Fornecedor, produto, código do produto no fornecedor e último custo. |
 | RF05 | Cadastrar formas de pagamento. | Descrição, uso (venda, fornecedor ou ambos) e situação. |
 | RF06 | Cadastrar e inativar caixas. | Número e situação. |
 | RF07 | Cadastrar motivos de perda. | Descrição e situação. |
@@ -1000,7 +1000,7 @@ Nos indicadores de perda (KPI01, KPI02 e KPI11) só contam as perdas com `status
 | KPI07 | Produtos abaixo do mínimo: produtos com saldo disponível (soma dos lotes menos as perdas com lote a confirmar) menor que o estoque mínimo, separando os que já têm pedido de compra em aberto dos que não têm | Diário | Zero produtos abaixo do mínimo sem pedido de compra em aberto | G07 |
 | KPI08 | Taxa de cancelamento: vendas canceladas ÷ total de vendas registradas (concluídas + canceladas) × 100 | Mensal | Até 1% | G08 |
 | KPI09 | Quantidade recusada no recebimento, agrupada por fornecedor e unidade de medida (`kg` ou `unidade`). As quantidades são comparadas somente dentro da mesma unidade de medida. | Por período | Comparar fornecedores dentro da mesma unidade de medida e acompanhar as recusas | G09 |
-| KPI10 | Soma do saldo a pagar das contas abertas (valor da conta menos os abatimentos ligados a ela), separando as vencidas das que ainda vão vencer. | Por vencimento | Nenhuma conta vencida sem pagar | G10 |
+| KPI10 | Contas em aberto e vencidas | CONTA_PAGAR, RECEBIMENTO, FORNECEDOR, DEVOLUCAO_FORNECEDOR | G10 |
 | KPI11 | Perdas com lote a confirmar: perdas válidas pendentes ÷ total de perdas válidas × 100, com a idade de cada pendência (data da consulta menos data da perda) | Mensal | Resolver as pendências em até 7 dias, ou seja, nenhuma pendência com mais de 7 dias | G11 |
 
 **Observação sobre o KPI08:** A G08 calcula a taxa por mês, então devolve duas linhas: outubro com 3 canceladas em 175 vendas (≈ 1,71%) e novembro com 1 em 25 (4,00%). A taxa total da massa é 4/200 = 2%, obtida somando os dois meses. Ambos os meses ficam acima da meta sugerida de 1% apenas para deixar casos de cancelamento e estorno na demonstração; não representam a taxa real do Hortifruti União.
