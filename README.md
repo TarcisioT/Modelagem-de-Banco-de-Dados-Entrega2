@@ -10,7 +10,7 @@
 | :---- | :---- | :---- |
 | Tarcisio Santos de Oliveira | 47913061 | TarcisioT |
 | Gabriela Porfírio da Silva | 48017698 | porfiriogabis |
-| Henrique Moura de Oliveira | 47610972 | Bkrusher666 |
+| Henrique Moura de Oliveira | 47610972 | HenriMoura666 |
 | Victor Hugo dos Santos Maciel | 48037630 | vhugo-sm |
 | Guilherme Damasceno dos Santos | 48491683 | damascenogs |
 | Lucas Praxedes da Silva | 47832550 | lucaspraxedes08sil-gif |
