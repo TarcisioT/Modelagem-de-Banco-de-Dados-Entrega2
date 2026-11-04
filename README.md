@@ -909,19 +909,15 @@ Para o volume de cerca de 1.800 vendas por dia (RNF09), além das chaves, criamo
 - `PRODUTO (codigo_barras)`, para a consulta de preço no caixa (esse já vem do `UNIQUE` da coluna, por isso não entra nos 12 índices adicionais da seção 3);
 - `CONTA_PAGAR (data_vencimento, status)`, para contas por vencimento.
 
-#### Alternativas que descartamos
+**Teste dos índices (RNF09):** também fizemos testes com `EXPLAIN ANALYZE` para verificar se o MySQL realmente utilizava os índices em consultas por validade e por data.
 
-- **Tabela ESTOQUE separada.** O saldo ficaria guardado em dois lugares (no estoque e nos lotes) e podia divergir. Preferimos somar os lotes e guardar só `LOTE.quantidade_atual`.
-- **Entidade CLIENTE.** A Entrega 1 tinha, mas o mercado não cadastra cliente. Manter só criaria uma tabela sem uso.
-- **Entidade CATEGORIA.** O mercado se organiza por setor, e o prazo de alerta de validade muda por setor. Por isso trocamos CATEGORIA por SETOR.
-- **Validade no produto.** Cada entrega do mesmo produto pode ter validade diferente, então a validade ficou no lote.
-- **Perda como um tipo de devolução ao fornecedor.** Misturar esconderia o prejuízo do mercado, porque devolução e troca com o fornecedor não são prejuízo. Mantivemos as duas separadas.
-- **Perda só como `tipo = perda` em SAIDA_LOTE.** Perdemos o motivo, o setor e a perda sem lote ("lote a confirmar"). Por isso PERDA é uma entidade própria, ligada à saída quando o lote é conhecido.
-- **Chave natural no lugar da chave numérica.** CNPJ, CPF e código de barras podem faltar ou mudar, então ficaram como colunas com `UNIQUE`.
-- **Duas tabelas de formas de pagamento (uma para venda e outra para fornecedor).** Repetiria o cadastro de formas como o Pix, que vale para os dois lados. Ficamos com uma tabela só e a coluna `uso`.
-- **Deixar quem trabalha em compras e financeiro sem setor.** `FUNCIONARIO.id_setor` ficaria opcional e as consultas por setor teriam de tratar o `NULL`. Preferimos criar os setores Caixa e Retaguarda, que não vendem produto.
-- **Descobrir quem fechou o caixa e quem pagou a conta pelo log do banco.** Não prova quem foi o funcionário responsável, então preferimos as duas FKs.
-- **Representar os itens como entidades comuns no DER.** Descartamos essa opção porque esses itens existem por causa da ligação entre outras entidades. Por isso, no conceitual eles aparecem como associações com atributos (e como entidade associativa quando a linha precisa ser referenciada), enquanto as tabelas de item ficam no modelo lógico.
+Na consulta de vendas por data, foi criada uma base sintética com **54.000 vendas**, representando aproximadamente **1.800 vendas por dia durante 30 dias**. Ao consultar um único dia, o MySQL utilizou o índice `idx_venda_data` e leu os **1.800 registros** correspondentes à data selecionada. Nessa execução, o operador final apresentou tempo aproximado de **2,93 ms**.
+
+O teste confirma o uso do índice nessa consulta com um volume equivalente ao informado pelo responsável. Porém, os registros utilizados eram sintéticos e estavam em uma tabela isolada. Não foram testados nesse mesmo volume os itens das vendas, pagamentos, movimentações de estoque ou vários usuários acessando o banco ao mesmo tempo.
+
+Por isso, o resultado é uma evidência favorável para essa consulta, mas não comprova o desempenho de todo o sistema.
+
+#### Alternativas que descartamos
 
 #### Outras escolhas do modelo
 
