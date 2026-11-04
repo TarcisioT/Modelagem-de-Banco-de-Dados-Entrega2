@@ -170,7 +170,11 @@ Em mercados e hortifrutis costumam existir outros processos além dos listados a
 | Entregas em domicílio | Não realiza | O mercado não faz entregas, nem com equipe própria nem com terceiros. |
 | Venda fiado e crediário | Não realiza | Todas as vendas são pagas no caixa. |
 | Troca ou devolução pelo cliente | Existe, mas é rara | É tratada pela gerência ou retaguarda, com os ajustes feitos no sistema utilizado pelo mercado. Por isso, não foi criado um fluxo próprio no caixa. |
-
+| Inventário ou contagem periódica de estoque | **[CONFIRMAR]** | Se for feito no VR Software ou por equipe externa, o banco não registra a contagem. O saldo vem dos lotes, e a diferença de contagem entraria como perda com motivo "Outros" (RN40). |
+| Controle sanitário (temperatura, limpeza, laudos) | **[CONFIRMAR]** | É uma rotina de conformidade e não de dados de venda, estoque ou perda. Não está ligada a P1 nem a P2, e o grupo não levantou como é registrada. |
+| Folha de pagamento, ponto e férias | **[CONFIRMAR]** | Costuma ser feita por contabilidade ou sistema próprio. O banco guarda só o cadastro e a escala dos funcionários (RF08 a RF10). |
+| Despesas que não vêm de fornecedor de mercadoria (aluguel, energia, impostos) | **[CONFIRMAR]** | O modelo cobre contas a pagar ligadas a recebimentos de mercadoria (RN34). Outras despesas ficam no financeiro do VR Software. |
+| Precificação e curva ABC | **[CONFIRMAR]** | O preço é cadastrado no produto (RN04). A definição de preço é decisão comercial e não gera dado que o banco precise guardar além do preço praticado. |
 Essa mesma conversa também confirmou a devolução e troca com fornecedores e a escala dos funcionários. Como o mercado realiza os dois, eles entraram na lista principal de processos.
 
 ##### Fluxogramas
@@ -327,7 +331,7 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 
 ##### Requisitos comuns não incluídos
 
-Os processos que o Hortifruti União não realiza, como cadastro de clientes, fidelidade, vendas online, entregas e venda fiado, já estão registrados na tabela **“Processos comuns que não foram incluídos no levantamento”** desta seção. Por esse motivo, não criamos requisitos funcionais para esses casos. A troca ou devolução pelo cliente existe, mas é rara e continua fora de um fluxo próprio de caixa.
+Os requisitos ligados a cadastro de clientes, fidelidade, vendas online, entregas e venda fiado não foram criados porque o mercado não realiza esses processos (tabela acima). Também não criamos requisitos para os processos que o mercado faz fora do banco: inventário, controle sanitário, folha e ponto, despesas gerais e precificação. Nesses casos, o dado fica no VR Software, na contabilidade ou em planilhas, e não é necessário para resolver P1 e P2. Do lado técnico, não incluímos requisitos de integração com o VR Software nem de aplicação para os operadores: o banco é uma implementação acadêmica, independente do sistema atual (seção 1.1, Escopo do sistema).
 
 ---
 
@@ -429,10 +433,13 @@ Os processos que o Hortifruti União não realiza, como cadastro de clientes, fi
 
 ##### Regras comuns não incluídas
 
-As regras ligadas a cadastro de clientes, fidelidade, entrega, venda a prazo e troca pelo cliente seguem as situações já registradas na tabela **“Processos comuns que não foram incluídos no levantamento”**. Como esses processos não fazem parte do fluxo modelado, não criamos regras de negócio específicas para eles.
+Não criamos regras para cadastro de clientes, fidelidade, entrega, venda a prazo e troca pelo cliente, porque esses processos não fazem parte do fluxo modelado.
 
-A aferição da balança (Inmetro) também ficou fora do modelo. O banco apenas guarda o peso informado na venda (RN22), e o grupo não confirmou com o responsável como a aferição é realizada. Por isso, não foi criada uma regra para um processo que o banco não controla.
+Também ficaram de fora regras de processos que o banco não controla:
 
+- **Aferição da balança (Inmetro):** o banco só guarda o peso informado na venda (RN22), e o grupo não confirmou com o responsável como a aferição é feita.
+- **Normas sanitárias:** o banco não registra temperatura, limpeza nem laudos. A única regra ligada a produto vencido é a RN46, que impede a venda de lote vencido.
+- **Obrigações trabalhistas e fiscais:** ficam no sistema atual e na contabilidade (RN33). O banco guarda só os dados de escala e os dados dos documentos fiscais das vendas.
 ##### Rastreabilidade dos problemas P1 e P2
 
 | Problema | Requisitos funcionais | Regras de negócio | Como contribuem |
@@ -1233,17 +1240,17 @@ As **24 perdas** estão distribuídas em 18 confirmadas e 6 com lote a confirmar
 
 ### Justificativa do volume da massa
 
-Na entrevista, o responsável informou que o Hortifruti União tem cerca de **110 funcionários**, **340 fornecedores** e realiza aproximadamente **1.800 vendas por dia**. Como esses números foram informados de memória, nós os tratamos como estimativas.
+O responsável informou, de memória, cerca de 110 funcionários, 7 caixas, 340 fornecedores, 6 mil itens diferentes vendidos por mês e 1.800 vendas por dia. A massa não usa uma escala única, porque os cadastros e o movimento têm naturezas diferentes. Usamos três critérios:
 
-As **200 vendas da massa não representam sete dias completos de funcionamento do mercado**. Nós distribuímos esses registros entre sete datas para conseguir demonstrar consultas por período, movimentação nos caixas e situações diferentes ao longo da semana. O volume real seria muito maior, já que o responsável informou cerca de 1.800 vendas por dia. Por isso, essa parte deve ser lida como uma amostra controlada do processo, e não como uma reprodução do movimento real.
+1. **Cadastros pequenos e fixos, na escala real (1:1):** 8 setores, 7 caixas e 7 formas de pagamento. São poucos, e reduzi-los deixaria processos sem demonstração.
+2. **Cadastros grandes, reduzidos, mas com todos os tipos representados:** 16 de cerca de 110 funcionários (cobrindo os 5 perfis de acesso), 12 de cerca de 340 fornecedores e 60 produtos dos 6 setores, com venda por quilo e por unidade e com e sem validade impressa.
+3. **Movimento reduzido, com todas as situações presentes:** 200 vendas em 7 dias (de 26/10 a 01/11/2026), cerca de 29 por dia, ou aproximadamente 1,6% das 1.800 vendas diárias informadas.
 
-Mesmo com essa redução, incluímos situações diferentes: vendas em vários dias e caixas, pagamentos em mais de uma modalidade e cancelamentos com estorno. Das 200 vendas, **196 estão concluídas e 4 canceladas**. Escolhemos essa quantidade de cancelamentos apenas para demonstrar a rotina, sem afirmar que essa seja a proporção real do mercado.
+A quantidade das demais tabelas decorre desses números: 4 itens por venda em média (810 itens de venda), 220 pagamentos para 200 vendas (parte paga em mais de uma forma), 1 documento fiscal por venda, 112 escalas (16 funcionários × 7 dias) e 49 sessões de caixa (7 caixas × 7 dias).
 
-Também usamos **16 funcionários**, distribuídos entre os cinco perfis de acesso do sistema, e **12 fornecedores**, ligados a pedidos, recebimentos, contas a pagar, devoluções, trocas e abatimentos. Assim, conseguimos mostrar os principais processos sem precisar reproduzir todos os cadastros da organização.
+Dentro dessa redução, forçamos os casos que as consultas precisam mostrar: 4 vendas canceladas com estorno, 24 perdas (18 com lote confirmado e 6 pendentes), lotes vencidos e próximos do vencimento, produtos abaixo do mínimo, promoções vigentes e encerradas, devoluções, trocas e abatimentos, e contas abertas, vencidas e pagas. Essas proporções (por exemplo, 2% de cancelamento) foram escolhidas para a demonstração e não refletem o mercado real.
 
-As demais quantidades acompanham esses registros: cada venda tem seus itens e pagamentos, e os recebimentos têm os produtos e lotes correspondentes.
-
-O porte do mercado serviu como referência para decidir quais situações representar. A massa foi reduzida para facilitar a demonstração e a conferência dos dados; ela não pretende reproduzir toda a operação real nem testar o desempenho do banco com o volume completo do estabelecimento.
+Esta massa valida regras e consultas. Ela não serve para teste de desempenho com o volume real.
 
 ### Período simulado
 
