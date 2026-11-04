@@ -296,7 +296,7 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 
 ##### Requisitos comuns não incluídos
 
-Em 04/11/2026, o responsável confirmou por WhatsApp que esses processos existem, mas são feitos por outros sistemas, pela contabilidade ou pelo financeiro, e não fazem parte do controle de vendas, estoque e perdas. Por isso não geram requisito neste banco e não são necessários para resolver P1 e P2.
+Em 30/09/2026, o responsável confirmou presencialmente, no mercado, que esses processos existem, mas são feitos por outros sistemas, pela contabilidade ou pelo financeiro, e não fazem parte do controle de vendas, estoque e perdas. Por isso não geram requisito neste banco e não são necessários para resolver P1 e P2.
 
 ---
 
