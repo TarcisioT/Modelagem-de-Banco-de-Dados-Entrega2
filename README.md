@@ -931,6 +931,12 @@ Além da quantidade, procuramos incluir situações diferentes para demonstrar a
 | Contas pagas e contas abertas | Consulta G10 e acompanhamento dos vencimentos. |
 | Sessões abertas e fechadas, trocas de operador e sangrias | Histórico das operações de caixa. |
 
+#### Cancelamentos e metas
+
+Os **4 cancelamentos em 200 vendas representam 2% da amostra**, acima da meta sugerida de até 1% para o KPI08.
+
+Essa quantidade foi usada para demonstrar os cancelamentos e seus estornos. Ela não representa a taxa real do mercado nem o desempenho desejado. Em uma operação real, um resultado acima da meta indicaria a necessidade de investigar os motivos dos cancelamentos.
+
 ---
 
 ## 5. Repositório GitHub
