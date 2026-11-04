@@ -1352,8 +1352,8 @@ imagens/
     estoque_mercado.jpeg
     fachada_mercado.jpeg
     interior_mercado.jpeg
-    resposta_proprietário1.jpeg
-    resposta_proprietário2.jpeg
+    resposta_proprietario1.jpeg
+    resposta_proprietario2.jpeg
   fluxogramas/
     fluxograma_compra_recebimento.jpeg
     fluxograma_fechamento_caixa.jpeg
