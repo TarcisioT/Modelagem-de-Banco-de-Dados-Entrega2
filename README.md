@@ -1066,6 +1066,14 @@ Foi realizado um teste com duas conexões simultâneas, identificadas pelos IDs 
 
 As demais conferências abaixo descrevem a estrutura e a massa definidas no script. As consultas gerenciais e de auditoria ficam no próprio arquivo SQL e podem ser executadas novamente durante a demonstração.
 
+**Backup e restauração (RNF08):** o grupo fez um backup lógico do banco com `mysqldump`, incluindo estrutura, dados, procedures e triggers. Depois, o arquivo foi restaurado em um banco separado, chamado `hortifruti_uniao_restore_atualizado`, sem alterar o banco original.
+
+A exportação e a restauração terminaram sem erro. Comparamos a quantidade de registros das 27 tabelas nos dois bancos e não encontramos diferenças. No banco restaurado também foram confirmadas 53 chaves estrangeiras, 38 triggers, 9 procedures e 1 view.
+
+A conferência das vendas mostrou os mesmos 200 registros do banco original, sendo 196 vendas concluídas e 4 canceladas. O faturamento das vendas concluídas ficou em R$ 16.539,88 nos dois bancos.
+
+Esse teste confirmou a recuperação da estrutura e dos dados nos pontos verificados. Não fizemos comparação campo a campo de todos os registros, restauração em outro servidor nem teste de recuperação de usuários e permissões.
+
 | Verificação | Resultado |
 | :--- | :--- |
 | Tabelas criadas | 27 |
