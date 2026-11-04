@@ -1,3 +1,4 @@
+
 # Entrega 2 — Modelo Lógico, Implementação SQL e Apresentação Final
 
 ### Modelagem de um sistema de gestão de informações — Hortifruti União (Tatuapé)
@@ -434,7 +435,7 @@ O DER tem **22 entidades**. Os itens de pedido, de recebimento, de devolução e
 
 **Arquivo do diagrama:** [Visualizar DER Conceitual](diagramas/der.conceitual.png)
 
-![DER Conceitual do Hortifruti União](diagramas/der_conceitual.png)
+![DER Conceitual do Hortifruti União](diagramas/der.conceitual.png)
 
 ##### Entidades e atributos
 
