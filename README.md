@@ -1055,7 +1055,7 @@ O script utiliza o banco `hortifruti_uniao`. Cada execução completa apaga e re
 
 ### Execução e conferência
 
-A versão corrigida foi executada em ambiente isolado no MySQL 8.0.46, com apoio de IA, pelo mecanismo de inicialização de scripts e com ajuste de `DEFINER` somente na cópia de teste. A carga e as consultas terminaram sem erro de execução. Foram confirmadas 200 vendas, 27 tabelas, 53 chaves estrangeiras, 38 triggers e 9 procedures.
+A versão corrigida foi executada em ambiente isolado no MySQL 8.0.46, com apoio do ChatGPT na revisão e nos testes. Foi necessário ajustar o `DEFINER` somente na cópia usada para teste. A carga e as consultas terminaram sem erro de execução. Foram confirmadas 200 vendas, 27 tabelas, 53 chaves estrangeiras, 38 triggers e 9 procedures.
 
 Nesse ambiente, passaram 57 verificações sequenciais. Elas abrangeram operações válidas e inválidas, regras de estoque, recebimentos, perdas, vendas, pagamentos, cancelamentos, estornos e rollback. Também incluíram os cenários de setor com perdas e sem vendas na G01 e de fornecedor com recusas em kg e unidades na G09. Os scripts auxiliares dessa revisão não foram incluídos no repositório nesta entrega.
 
