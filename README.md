@@ -161,7 +161,7 @@ Os principais processos identificados foram:
 
 ##### Processos comuns que não foram incluídos no modelo
 
-Em mercados e hortifrutis costumam existir outros processos além dos listados acima. Em 29/10/2026, confirmamos com o responsável, por WhatsApp, como o Hortifruti União lida com cada um deles. Os que não foram incluídos no modelo, e os motivos, são:
+Em mercados e hortifrutis costumam existir outros processos além dos listados acima. Durante a visita de 30/09/2026 e nas confirmações feitas por WhatsApp em 29/10/2026, conversamos com o responsável sobre como o Hortifruti União lida com esses processos. Os que não foram incluídos no modelo, e os motivos, são:
 
 | Processo comum | Situação no Hortifruti União | Motivo de não entrar no modelo |
 | :---- | :---- | :---- |
