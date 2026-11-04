@@ -937,6 +937,14 @@ Os **4 cancelamentos em 200 vendas representam 2% da amostra**, acima da meta su
 
 Essa quantidade foi usada para demonstrar os cancelamentos e seus estornos. Ela não representa a taxa real do mercado nem o desempenho desejado. Em uma operação real, um resultado acima da meta indicaria a necessidade de investigar os motivos dos cancelamentos.
 
+#### Conferência da massa
+
+O arquivo `script_com_massa_200_vendas_CORRIGIDO.sql` foi executado no **MySQL 8.0.46**, e a carga terminou sem erros de execução.
+
+Na conferência, os totais das vendas corresponderam à soma dos itens ativos. A auditoria **A01** retornou as seis perdas com lote a confirmar, previstas na massa. As demais consultas do bloco de auditoria não apontaram inconsistências nas condições verificadas.
+
+Isso não significa que todas as regras do sistema estejam comprovadas. A revisão também identificou limitações no SQL, descritas na seção 3. Entre elas, o fechamento de caixa soma pagamentos de todas as modalidades, e não somente dinheiro físico.
+
 ---
 
 ## 5. Repositório GitHub
