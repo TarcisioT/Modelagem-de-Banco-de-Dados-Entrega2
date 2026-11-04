@@ -1302,7 +1302,7 @@ O relatório técnico está neste arquivo `README.md`, localizado na raiz da bra
 - `README_Entrega1.md` – Relatório da Entrega 1
 - `diagramas/der.conceitual.png` – DER Conceitual
 - `diagramas/Modelo_Logico_Hortifruti.png` – Modelo Lógico
-- - `docs/modelo_logico.brM3` – Arquivo editável do Modelo Lógico no brModelo
+- `docs/modelo_logico.brM3` – Arquivo editável do Modelo Lógico no brModelo
 - `docs/script.sql` – Script SQL completo
 - `docs/Dicionario_Dados.md` – Dicionário de Dados
 - `levantamento/levantamento.md` – Levantamento de requisitos
@@ -1366,6 +1366,7 @@ Usamos IA como apoio na organização, revisão e validação do trabalho. As in
 | Item | Registro |
 | :--- | :--- |
 | **Ferramenta e etapa** | ChatGPT, na criação e revisão do rascunho da estrutura SQL, dos triggers, das procedures e das consultas G01 a G12 e A01 a A12. O grupo revisou e ajustou o que foi necessário. A execução do script no MySQL 8.0.46, em ambiente isolado, e a conferência dos resultados foram feitas pelo grupo com apoio do ChatGPT, com ajuste de `DEFINER` somente na cópia de teste. |
+| **Motivação** | Verificar se o script seguia o modelo lógico, se as regras de integridade estavam representadas corretamente e se a execução ocorria sem erros. |
 | **Prompt(s) utilizados** | "Confere esse SQL e vê se está de acordo com o nosso modelo lógico e com as regras de negócio. Verifica chaves, relacionamentos, tipos de dados, NOT NULL, UNIQUE, CHECK e possíveis erros de sintaxe."<br><br>"Executa e testa o script em uma base limpa, verifica se a carga termina sem erros e confere as principais regras, consultas, triggers e procedures." |
 | **Resposta recebida** | O ChatGPT ajudou a revisar as PKs, FKs, tipos de dados, campos obrigatórios, valores únicos, restrições de domínio e regras que precisavam ser tratadas por trigger ou procedure. |
 | **Fontes consultadas e verificadas** | A conferência foi feita contra o modelo lógico, o dicionário de dados, as regras de negócio e a documentação do MySQL 8.0. |
