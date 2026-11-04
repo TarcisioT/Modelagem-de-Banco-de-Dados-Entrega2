@@ -1395,7 +1395,7 @@ Usamos IA como apoio na organização, revisão e validação do trabalho. As in
 
 | Item | Registro |
 | :--- | :--- |
-| **Ferramenta e etapa** | Claude e ChatGPT, na revisão, reorganização e redação de partes do README. O Claude foi utilizado também na elaboração de versões iniciais de trechos das seções 1.2 a 1.6, que depois foram revisados pelo grupo e comparados com o modelo e o SQL. O ChatGPT foi usado em revisões posteriores de consistência, estrutura e alinhamento com o esqueleto do professor. |
+| **Ferramenta e etapa** | ChatGPT, na revisão do DER (entidades, atributos, relacionamentos e cardinalidades) e das chaves primárias e estrangeiras na conversão para o modelo lógico. |
 | **Motivação** | Conferir se entidades, atributos, relacionamentos, cardinalidades e chaves estavam coerentes com o levantamento e com a conversão para o modelo lógico. |
 | **Prompt(s) utilizados** | "Analisa nosso DER e vê se as entidades, atributos, relacionamentos e cardinalidades fazem sentido com o levantamento que fizemos. Também verifica se tem algum relacionamento N:N que precisa virar uma entidade associativa. Não coloca chave estrangeira no DER, porque isso vai ficar só no modelo lógico."<br><br>"Analisa as chaves primárias e estrangeiras das tabelas e vê se os relacionamentos estão corretos e me mostre onde esta errado." |
 | **Resposta recebida** | Revisão das entidades e cardinalidades, identificação das associações com atributos e conferência das PKs e FKs geradas na conversão para o lógico. |
