@@ -300,9 +300,9 @@ Em 30/09/2026, durante a visita ao mercado, o responsável explicou que também 
 
 Esses processos foram considerados no levantamento, mas não viraram requisitos próprios no nosso banco porque já são controlados por outros sistemas, pela contabilidade, pelo setor financeiro ou pela própria gestão do mercado.
 
-No nosso projeto, mantivemos apenas as informações que têm relação com o modelo desenvolvido. O estoque é controlado pelos lotes, os funcionários têm cadastro e escala, as contas a pagar estão ligadas aos recebimentos de mercadorias e o preço definido pela gerência fica registrado no produto e nas vendas.
+No nosso projeto, mantivemos apenas as informações desses processos que precisam aparecer no banco. O estoque é controlado pelos lotes, os funcionários têm cadastro e escala, as contas a pagar estão ligadas aos recebimentos de mercadorias e o preço definido pela gerência fica registrado no produto e nas vendas.
 
-Também não criamos requisitos para cadastro de clientes, programa de fidelidade, vendas online, entregas e venda fiado, porque o responsável confirmou que o mercado não realiza esses processos.
+Já cadastro de clientes, programa de fidelidade, vendas online, entregas e venda fiado não viraram requisitos porque o responsável confirmou que o mercado não realiza esses processos.
 
 ---
 
