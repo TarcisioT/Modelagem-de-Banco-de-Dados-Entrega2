@@ -1282,7 +1282,9 @@ A amostra foi montada para mostrar os principais cenários do banco sem tentar c
 
 ### Limite da amostra
 
-Essa massa não representa um mês completo do Hortifruti União e não serve como teste de desempenho. O volume real informado pelo responsável é muito maior. Os índices descritos na seção 1.5 foram pensados considerando esse cenário, mas nesta entrega o objetivo dos testes foi verificar se as regras e as consultas funcionam corretamente com casos controlados.
+A massa principal do projeto tem 200 vendas e foi criada para demonstrar as regras, consultas e situações previstas no banco. Ela não representa um mês completo de funcionamento do Hortifruti União.
+
+Para o RNF09, fizemos separadamente um teste com 54.000 registros fictícios, equivalente a 1.800 vendas por dia durante 30 dias. Esse teste foi usado apenas para avaliar a consulta de vendas por data e o uso do índice, e não o desempenho de todo o sistema.
 
 ---
 
