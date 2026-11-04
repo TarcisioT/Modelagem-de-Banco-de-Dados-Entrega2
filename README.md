@@ -1140,6 +1140,34 @@ Uso de IA **não declarado é penalizado**. Abaixo, os usos relevantes. Entrega 
 | **Reflexão crítica** | Uma resposta sobre uma cópia antiga não comprova o que está no arquivo publicado. Precisamos conferir a mesma versão do SQL que vai junto com o README. Deixar a escrita mais natural também não pode mudar o sentido do que foi levantado ou testado. |
 
 ---
+### 5. Domínios e valores permitidos
+
+Resumo dos campos de situação, tipo e uso, todos garantidos por `CHECK`.
+
+| Tabela | Coluna | Valores permitidos | Padrão |
+|---|---|---|---|
+| `PRODUTO` | `tipo_venda` | `unidade`, `kg` | — |
+| `FUNCIONARIO` | `perfil_acesso` | `operador`, `supervisor`, `repositor`, `retaguarda`, `gerencia` | — |
+| `ESCALA` | `tipo` | `trabalho`, `folga` | — |
+| `FORMA_PAGAMENTO` | `uso` | `venda`, `fornecedor`, `ambos` | — |
+| `PEDIDO_COMPRA` | `status` | `aberto`, `parcial`, `recebido`, `cancelado` | `aberto` |
+| `CONTA_PAGAR` | `status` | `aberta`, `paga`, `cancelada` | `aberta` |
+| `DEVOLUCAO_FORNECEDOR` | `tipo` | `devolucao`, `troca`, `abatimento` | — |
+| `DEVOLUCAO_FORNECEDOR` | `status` | `aberta`, `concluida`, `cancelada` | `aberta` |
+| `PERDA` | `situacao_lote` | `confirmado`, `lote_a_confirmar` | — |
+| `PERDA` | `status` | `valida`, `substituida` | `valida` |
+| `SESSAO_CAIXA` | `status` | `aberta`, `fechada` | `aberta` |
+| `VENDA` | `status` | `em_andamento`, `concluida`, `cancelada` | `em_andamento` |
+| `ITEM_VENDA` | `status` | `ativo`, `cancelado` | `ativo` |
+| `DOCUMENTO_FISCAL` | `tipo_documento` | `NFCe`, `SAT`, `OUTRO` | — |
+| `DOCUMENTO_FISCAL` | `situacao` | `emitido`, `cancelado` | — |
+| `SAIDA_LOTE` | `tipo` | `venda`, `perda`, `estorno` | — |
+| `SETOR`, `PRODUTO`, `FORNECEDOR`, `FUNCIONARIO`, `FORMA_PAGAMENTO`, `CAIXA`, `MOTIVO_PERDA` | `ativo` | `0`, `1` | `1` |
+| `SETOR` | `vende_produto` | `0`, `1` | `1` |
+| `PRODUTO` | `tem_validade_impressa` | `0`, `1` | `1` |
+| `PRODUTO` | `venda_restrita_idade` | `0`, `1` | `0` |
+
+
 ### 6. View auxiliar
 
 #### vw_saldo_produto
