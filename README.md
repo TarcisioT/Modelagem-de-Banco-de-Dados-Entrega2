@@ -828,7 +828,7 @@ A tabela abaixo mostra como cada restrição foi pensada e como as regras de int
 | :--- | :--- | :--- |
 | Código interno, CNPJ e CPF sem repetição | `UNIQUE` em PRODUTO, FORNECEDOR e FUNCIONARIO | RN02, RN06, RN07 |
 | Produto, fornecedor, funcionário e caixa não são apagados | Coluna `ativo` e FKs com `ON DELETE RESTRICT` | RN05 |
-| Funcionário inativo não faz novas operações | Triggers e procedures verificam `ativo` em diferentes operações, incluindo venda, recebimento, perda e fechamento. A cobertura precisa ser conferida também nas alterações diretas de dados | RN50 |
+| Funcionário inativo não faz novas operações | Triggers e procedures verificam `ativo` nas operações cobertas pelo script, incluindo venda, recebimento, perda e fechamento. Alterações diretas fora desses fluxos fazem parte dos limites da implementação descritos na seção 3. | RN50 |
 | Produto com setor definido | `PRODUTO.id_setor NOT NULL` e FK | RN03 |
 | Produto e perda só em setor que vende | Coluna `SETOR.vende_produto` e trigger que recusa produto ou perda em setor com 0 (Caixa e Retaguarda) | RN03, RN41 |
 | Setor da perda igual ao setor do produto no momento do registro | Trigger em PERDA | RN03, RN41 |
