@@ -432,9 +432,9 @@ O DER tem **22 entidades**. Os itens de pedido, de recebimento, de devolução e
 
 **Ferramenta:** brModelo, aplicativo instalado.
 
-**Arquivo do diagrama:** [Visualizar DER Conceitual](docs/DER_conceitual.png)
+**Arquivo do diagrama:** [Visualizar DER Conceitual](diagramas/der.conceitual.png)
 
-![DER Conceitual do Hortifruti União](docs/DER_conceitual.png)
+![DER Conceitual do Hortifruti União](diagramas/der_conceitual.png)
 
 ##### Entidades e atributos
 
