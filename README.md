@@ -1279,25 +1279,26 @@ O relatório técnico está neste arquivo `README.md`, localizado na raiz da bra
 
 ```text
 README.md
+apresentação/
+  Hortifruti União — Apresentação Acadêmica — Entrega 2.pdf
+diagramas/
+  Modelo_Logico_Hortifruti.png
+  der.conceitual.png
 docs/
-  DER_conceitual.png
-  modelo_logico.png
+  Dicionario_Dados.md
+  modelo_logico.brM3
   script.sql
-  dicionario_dados.md
-levantamento/
-  levantamento.md
 imagens/
   evidencias/
+    entrevista_videochamada.jpeg
+    estoque_mercado.jpeg
     fachada_mercado.jpeg
     interior_mercado.jpeg
-    estoque_mercado.jpeg
-    entrevista_videochamada.png
-    confirmacao_whatsapp_26-10.png
-    confirmacao_whatsapp_29-10.png
   fluxogramas/
     fluxograma_venda.jpeg
-apresentacao/
-  pitch_final.pptx
+levantamento/
+  levantamento.md
+README.md
 ```
 
 Os fluxogramas do ciclo de compra e do fechamento de caixa não têm arquivo de imagem: estão em Mermaid, direto no README.
