@@ -372,7 +372,7 @@ Já cadastro de clientes, programa de fidelidade, vendas online, entregas e vend
 
 - **RN34 [Confirmada + Proposta]** Contas a pagar relacionadas às compras terão vencimento, valor e recebimento de origem.
 - **RN35 [Proposta]** Uma conta poderá estar aberta, paga ou cancelada. O modelo não registra pagamento parcial: a conta é paga de uma vez, pelo saldo a pagar.
-- **RN36 [Proposta]** A conta a pagar mantém o valor original da nota. Os abatimentos do fornecedor ficam em DEVOLUCAO_FORNECEDOR e são ligados à conta. O saldo a pagar é o valor da conta menos a soma dos abatimentos ligados a ela. A soma dos abatimentos de uma conta não pode passar do valor dela, e só dá para ligar abatimento a conta aberta.
+- **RN36 [Proposta]** A conta a pagar mantém o valor original da nota. Os abatimentos do fornecedor ficam registrados em DEVOLUCAO_FORNECEDOR e são ligados à conta. O saldo a pagar é o valor da conta menos a soma dos abatimentos ligados a ela. Os abatimentos de uma conta não podem somar mais do que o valor dela, e só dá para ligar abatimento a uma conta que ainda está aberta.
 
 ##### Devoluções e abatimentos
 
