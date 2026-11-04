@@ -78,7 +78,7 @@
   - **Função:** um dos proprietários do Hortifruti União – Tatuapé
   - **Telefone de contato autorizado:** (11) 99317-0906
 
-![Fotografia da fachada](imagens/evidencias/estoque_mercado.jpeg)
+![Fotografia da fachada](imagens/evidencias/fachada_mercado.jpeg)
 
 ![Fotografia do interior](imagens/evidencias/interior_mercado.jpeg)
 
@@ -998,7 +998,7 @@ Nos indicadores de perda (KPI01, KPI02 e KPI11) só contam as perdas com `status
 | KPI10 | Soma do saldo a pagar das contas abertas (valor da conta menos os abatimentos ligados a ela), separando as vencidas das que ainda vão vencer. | Por vencimento | Nenhuma conta vencida sem pagar | G10 |
 | KPI11 | Perdas com lote a confirmar: perdas válidas pendentes ÷ total de perdas válidas × 100, com a idade de cada pendência (data da consulta menos data da perda) | Mensal | Resolver as pendências em até 7 dias, ou seja, nenhuma pendência com mais de 7 dias | G11 |
 
-**Observação sobre o KPI08:** A G08 calcula a taxa por mês, então devolve duas linhas: outubro com 3 canceladas em 175 vendas (≈ 1,71%) e novembro com 1 em 25 (4,00%). Os 2% citados correspondem ao total da massa (4 em 200), obtido somando os dois meses. Ambos os meses ficam acima da meta sugerida de 1% apenas para deixar casos de cancelamento e estorno na demonstração; não representam a taxa real do Hortifruti União.
+**Observação sobre o KPI08:** A G08 calcula a taxa por mês, então devolve duas linhas: outubro com 3 canceladas em 175 vendas (≈ 1,71%) e novembro com 1 em 25 (4,00%). A taxa total da massa é 4/200 = 2%, obtida somando os dois meses. Ambos os meses ficam acima da meta sugerida de 1% apenas para deixar casos de cancelamento e estorno na demonstração; não representam a taxa real do Hortifruti União.
 
 A consulta G12 complementa a análise de validade e mostra as promoções vigentes e encerradas. Não tratamos o número de promoções como indicador de resultado, porque isso sozinho não prova que houve menos perda.
 
@@ -1047,7 +1047,7 @@ Para isso dar resultado, o mercado teria que registrar lotes, validades e perdas
 
 O modelo lógico relacional do Hortifruti União foi desenvolvido a partir do DER conceitual revisado. A estrutura implementada no SQL atual contém **27 tabelas e 53 restrições de chave estrangeira**, além dos atributos, tipos de dados, chaves primárias e restrições de integridade. As associações com atributos do modelo conceitual foram convertidas em tabelas, conforme as seções 1.2 e 1.3.
 
-**Arquivo do modelo lógico:**[Modelo Lógico](docs/modelo_logico.brM3)
+**Arquivo do modelo lógico:** [Visualizar modelo lógico](docs/modelo_logico.png)
 
 ![Modelo Lógico do Hortifruti União](docs/modelo_logico.png)
 
@@ -1077,7 +1077,7 @@ As demais conferências abaixo descrevem a estrutura e a massa definidas no scri
 | :--- | :--- |
 | Tabelas criadas | 27 |
 | Chaves estrangeiras | 53 |
-| Triggers | 27 |
+| Triggers | 38 |
 | Procedures | 9 |
 | Views | 1 |
 | Índices explícitos adicionais aos de chaves | 12 |
@@ -1167,7 +1167,7 @@ As chaves estrangeiras mantêm os relacionamentos entre os registros, enquanto a
 
 Os cancelamentos de venda mantêm o histórico e geram estornos das saídas de estoque. Os pagamentos dessas vendas permanecem registrados, mas não entram nos totais de vendas concluídas.
 
-Além dos `UPDATE`s usados na carga (como marcar como cancelado o documento fiscal de uma venda cancelada), o script traz exemplos de `UPDATE` e `DELETE` na seção 7. Os `DELETE`s só atingem registros criados na hora, sem nenhum histórico. Os exemplos de manutenção não apagam vendas, perdas ou lotes com histórico. A execução completa do arquivo, porém, apaga e recria o banco; a seção de recarga também limpa os dados de demonstração.
+Além dos `UPDATE`s usados na carga (como marcar como cancelado o documento fiscal de uma venda cancelada), o script traz exemplos de `UPDATE` e `DELETE` na seção 7 do script SQL. Os `DELETE`s só atingem registros criados na hora, sem nenhum histórico. Os exemplos de manutenção não apagam vendas, perdas ou lotes com histórico. A execução completa do arquivo, porém, apaga e recria o banco; a seção de recarga também limpa os dados de demonstração.
 
 ### Ordem e características da carga
 
@@ -1274,7 +1274,7 @@ A massa inclui:
 
 A massa permite demonstrar o controle de estoque, lotes, validade, perdas, vendas, pagamentos e fechamento de caixa, além das **12 consultas gerenciais e 12 consultas de auditoria**.
 
-O script foi executado no **MySQL 8.0.46** e a conferência realizada após a carga confirmou **200 vendas, 27 tabelas, 53 chaves estrangeiras, 27 triggers e 9 procedures**, além da distribuição das vendas pelos sete dias simulados.
+O script foi executado no **MySQL 8.0.46** e a conferência realizada após a carga confirmou **200 vendas, 27 tabelas, 53 chaves estrangeiras, 38 triggers e 9 procedures**, além da distribuição das vendas pelos sete dias simulados.
 
 Também foi feita uma checagem rápida de integridade após a carga. Ela não encontrou saldo disponível negativo, pedido não cancelado sem item, venda concluída sem item ativo, divergência entre pagamento e total da venda concluída, lote ligado a produto diferente do item recebido nem lote com saldo fora do intervalo permitido.
 
@@ -1315,9 +1315,9 @@ levantamento/
   levantamento.md
 imagens/
   evidencias/
-    fachada_mercado.jpg
-    interior_mercado.jpg
-    estoque_mercado.jpg
+    fachada_mercado.jpeg
+    interior_mercado.jpeg
+    estoque_mercado.jpeg
     entrevista_videochamada.png
     confirmacao_whatsapp_26-10.png
     confirmacao_whatsapp_29-10.png
@@ -1357,7 +1357,7 @@ Usamos IA como apoio na organização, revisão e validação do trabalho. As in
 
 | Item | Registro |
 | :--- | :--- |
-| **Ferramenta e etapa** | ChatGPT, na criação e revisão do rascunho da estrutura SQL, dos triggers, das procedures e das consultas G01 a G12 e A01 a A12. O grupo revisou, executou os testes no MySQL e ajustou o que foi necessário. |
+| **Ferramenta e etapa** | ChatGPT, na criação e revisão do rascunho da estrutura SQL, dos triggers, das procedures e das consultas G01 a G12 e A01 a A12. O grupo revisou e ajustou o que foi necessário. A execução do script no MySQL 8.0.46, em ambiente isolado, e a conferência dos resultados foram feitas pelo grupo junto com a IA, com ajuste de DEFINER somente na cópia de teste. |
 | **Motivação** | Verificar se o script seguia o modelo lógico e se as regras de integridade estavam representadas de forma coerente. |
 | **Prompt(s) utilizados** | "Confere esse SQL e vê se está de acordo com o nosso modelo lógico e com as regras de negócio. Verifica chaves, relacionamentos, tipos de dados, NOT NULL, UNIQUE, CHECK e possíveis erros de sintaxe." |
 | **Resposta recebida** | A IA revisou PKs, FKs, tipos, obrigatoriedade, unicidade, restrições de domínio e regras que exigem validação por trigger ou procedure. |
@@ -1453,5 +1453,3 @@ O pitch tem **8 minutos**, com pouco texto nos slides e a demonstração do banc
 **Arquivo da apresentação:** `apresentacao/pitch_final.pptx`.
 
 Depois do pitch todos os integrantes ficam para a defesa do modelo lógico, e cada um responde o que foi perguntado a ele. Cada aluno precisa saber explicar as partes do modelo, principalmente chaves, cardinalidades e as decisões de normalização.
-
-
