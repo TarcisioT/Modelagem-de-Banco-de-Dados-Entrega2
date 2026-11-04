@@ -171,12 +171,11 @@ Em mercados e hortifrutis costumam existir outros processos além dos listados a
 | Entregas em domicílio | Não realiza | O mercado não faz entregas, nem com equipe própria nem com terceiros. |
 | Venda fiado e crediário | Não realiza | Todas as vendas são pagas no caixa. |
 | Troca ou devolução pelo cliente | Existe, mas é rara | É tratada pela gerência ou retaguarda, com os ajustes feitos no sistema utilizado pelo mercado. Por isso, não foi criado um fluxo próprio no caixa. |
-| Inventário ou contagem periódica de estoque | **[CONFIRMAR]** | Se for feito no VR Software ou por equipe externa, o banco não registra a contagem. O saldo vem dos lotes, e a diferença de contagem entraria como perda com motivo "Outros" (RN40). |
-| Controle sanitário (temperatura, limpeza, laudos) | **[CONFIRMAR]** | É uma rotina de conformidade e não de dados de venda, estoque ou perda. Não está ligada a P1 nem a P2, e o grupo não levantou como é registrada. |
-| Folha de pagamento, ponto e férias | **[CONFIRMAR]** | Costuma ser feita por contabilidade ou sistema próprio. O banco guarda só o cadastro e a escala dos funcionários (RF08 a RF10). |
-| Despesas que não vêm de fornecedor de mercadoria (aluguel, energia, impostos) | **[CONFIRMAR]** | O modelo cobre contas a pagar ligadas a recebimentos de mercadoria (RN34). Outras despesas ficam no financeiro do VR Software. |
-| Precificação e curva ABC | **[CONFIRMAR]** | O preço é cadastrado no produto (RN04). A definição de preço é decisão comercial e não gera dado que o banco precise guardar além do preço praticado. |
-Essa mesma conversa também confirmou a devolução e troca com fornecedores e a escala dos funcionários. Como o mercado realiza os dois, eles entraram na lista principal de processos.
+| Inventário ou contagem periódica de estoque | Existe, no sistema do mercado | O controle é feito pelo sistema, com base nas entradas e saídas. Quando há diferença, o ajuste é feito no próprio sistema (confirmado presencialmente em 30/09/2026). O banco não registra a contagem. O saldo vem dos lotes. |
+| Controle sanitário (limpeza, condições dos produtos, laudos) | Existe | É uma rotina de conformidade e não faz parte do controle de vendas e estoque do sistema (confirmado presencialmente em 30/09/2026). O responsável não informou como é registrada. Não está ligada a P1 nem a P2. |
+| Folha de pagamento, ponto e férias | Existe, fora do banco | É feita pela contabilidade e por sistemas próprios. O banco guarda só o cadastro e a escala dos funcionários (RF08 a RF10), que é organizada separadamente. |
+| Despesas que não vêm de fornecedor de mercadoria (aluguel, energia, impostos) | Existe, fora do banco | São controladas pelo setor financeiro, no sistema usado pela empresa. O modelo cobre só as contas a pagar ligadas a recebimento de mercadoria (RN34). |
+| Precificação e curva ABC | Preço definido pela gerência | A gerência define o preço conforme a necessidade comercial e cadastra no sistema. O banco guarda só o preço no produto (RN04) e o preço praticado em cada venda. O responsável não falou de curva ABC, então ela não entrou. |
 
 ##### Fluxogramas
 
@@ -297,7 +296,7 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 
 ##### Requisitos comuns não incluídos
 
-Os requisitos ligados a cadastro de clientes, fidelidade, vendas online, entregas e venda fiado não foram criados porque o mercado não realiza esses processos (tabela acima). Também não criamos requisitos para inventário, controle sanitário, folha e ponto, despesas gerais e precificação. O grupo não levantou como o mercado faz esses processos, e eles não são necessários para resolver P1 e P2. Do lado técnico, não incluímos requisitos de integração com o VR Software nem de aplicação para os operadores: o banco é uma implementação acadêmica, independente do sistema atual (seção 1.1, Escopo do sistema).
+Em 04/11/2026, o responsável confirmou por WhatsApp que esses processos existem, mas são feitos por outros sistemas, pela contabilidade ou pelo financeiro, e não fazem parte do controle de vendas, estoque e perdas. Por isso não geram requisito neste banco e não são necessários para resolver P1 e P2.
 
 ---
 
@@ -404,8 +403,9 @@ Não criamos regras para cadastro de clientes, fidelidade, entrega, venda a praz
 Também ficaram de fora regras de processos que o banco não controla:
 
 - **Aferição da balança (Inmetro):** o banco só guarda o peso informado na venda (RN22), e o grupo não confirmou com o responsável como a aferição é feita.
-- **Normas sanitárias:** o banco não registra temperatura, limpeza nem laudos. A única regra ligada a produto vencido é a RN46, que impede a venda de lote vencido.
+- **Normas sanitárias:** o responsável confirmou que existe controle sanitário (limpeza e acompanhamento das condições dos produtos), mas fora do sistema de vendas e estoque. O banco não registra temperatura, limpeza nem laudos. A única regra ligada a produto vencido é a RN46, que impede a venda de lote vencido.
 - **Obrigações trabalhistas e fiscais:** ficam no sistema atual e na contabilidade (RN33). O banco guarda só os dados de escala e os dados dos documentos fiscais das vendas.
+  
 ##### Rastreabilidade dos problemas P1 e P2
 
 | Problema | Requisitos funcionais | Regras de negócio | Como contribuem |
