@@ -1111,6 +1111,15 @@ Uso de IA **não declarado é penalizado**. Abaixo, os usos relevantes. Entrega 
 | **Reflexão crítica** | Uma resposta sobre uma cópia antiga não comprova o que está no arquivo publicado. Precisamos conferir a mesma versão do SQL que vai junto com o README. Deixar a escrita mais natural também não pode mudar o sentido do que foi levantado ou testado. |
 
 ---
+### 8. Objetos de integridade e operação
+
+O `script.sql` contém **27 triggers** e **9 procedures**. Eles não entram na contagem de tabelas e colunas, mas complementam as restrições declarativas (`PK`, `FK`, `UNIQUE` e `CHECK`) nas regras que dependem de outras linhas ou tabelas.
+
+**Triggers** (conferências curtas): saída dentro do saldo do lote, lote vencido não vendido, produto do lote igual ao do item recebido, produto do item de venda igual ao do lote, devolução até o limite recusado, abatimento na conta do mesmo fornecedor, setor da perda igual ao do produto, produto e perda só em setor que vende, forma de pagamento conforme o `uso`, operador da venda igual ao operador da sessão e funcionário ativo nas operações (RN50).
+
+**Procedures** (fluxos em transação, com `ROLLBACK` em caso de erro): `concluir_venda`, `cancelar_venda`, `confirmar_lote_perda`, `estornar_saida`, `fechar_sessao`, `adicionar_lote_recebimento`, `registrar_recebimento`, `registrar_perda_pendente` e `registrar_abatimento_fornecedor`.
+
+
 ### 9. Versão e ambiente
 
 | Item | Informação |
