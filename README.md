@@ -1032,7 +1032,7 @@ As tabelas representam os cadastros e as operações do mercado, incluindo funci
 
 A implementação está no [script SQL](docs/script.sql), desenvolvido para **MySQL 8.0.16 ou superior**, no banco `hortifruti_uniao`. Os detalhes da execução e as limitações identificadas estão na seção 3.
 
-O [Dicionário de Dados](docs/dicionario_dados.md) detalha os campos e as restrições das tabelas. As regras que não aparecem no desenho, como `CHECK`, `DEFAULT` e validações entre tabelas, estão descritas no dicionário e no SQL. A imagem e o dicionário devem acompanhar a mesma versão do script, com **27 tabelas e 53 chaves estrangeiras**; a revisão textual não substitui a conferência desses arquivos.
+O [Dicionário de Dados](docs/Dicionario_Dados.md) detalha os campos e as restrições das tabelas. As regras que não aparecem no desenho, como `CHECK`, `DEFAULT` e validações entre tabelas, estão descritas no dicionário e no SQL. A imagem e o dicionário devem acompanhar a mesma versão do script, com **27 tabelas e 53 chaves estrangeiras**; a revisão textual não substitui a conferência desses arquivos.
 
 ---
 
