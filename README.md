@@ -1054,7 +1054,7 @@ O script utiliza o banco `hortifruti_uniao`. Cada execução completa apaga e re
 
 ### Execução e conferência
 
-O arquivo final entregue em `docs/script.sql` foi executado pelo grupo no MySQL 8.0.46. Durante uma etapa anterior da revisão, uma cópia utilizada em ambiente isolado exigiu a retirada de uma definição de `DEFINER` específica daquele ambiente. Esse ajuste não faz parte do arquivo oficial entregue. A versão final do script, sem `DEFINER`, foi executada pelo grupo com a carga, as consultas gerenciais e as auditorias sem erro. Foram confirmadas 200 vendas, 27 tabelas, 53 chaves estrangeiras, 38 triggers e 9 procedures.
+O arquivo final entregue em docs/script.sql foi executado pelo grupo no MySQL 8.0.46, instalado no computador do Tarcísio, em um banco recriado do zero pelo próprio script. Durante uma etapa anterior da revisão, uma cópia utilizada em ambiente isolado exigiu a retirada de uma definição de `DEFINER` específica daquele ambiente. Esse ajuste não faz parte do arquivo oficial entregue. A versão final do script, sem `DEFINER`, foi executada pelo grupo com a carga, as consultas gerenciais e as auditorias sem erro. Foram confirmadas 200 vendas, 27 tabelas, 53 chaves estrangeiras, 38 triggers e 9 procedures.
 
 Durante a revisão também foram realizadas 57 verificações auxiliares envolvendo operações válidas e inválidas, estoque, recebimentos, perdas, vendas, pagamentos, cancelamentos, estornos e rollback. Os scripts auxiliares usados nessa etapa não fazem parte da entrega e, por isso, essas 57 verificações são registradas apenas como validação interna do grupo. As verificações reproduzíveis entregues no repositório são as consultas gerenciais G01 a G12 e as auditorias A01 a A12 existentes em `docs/script.sql`.
 
