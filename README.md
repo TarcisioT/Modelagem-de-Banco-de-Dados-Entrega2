@@ -2,23 +2,7 @@
 
 ### Modelagem de um sistema de gestão de informações — Hortifruti União (Tatuapé)
 
-## Sumário
 
-1. [Relatório Técnico Final](#1-relatório-técnico-final)
-   - [1.1 Revisão do Modelo Conceitual](#11-revisão-do-modelo-conceitual)
-   - [1.2 Conversão do Modelo Conceitual para o Modelo Lógico](#12-conversão-do-modelo-conceitual-para-o-modelo-lógico)
-   - [1.3 Definição de Chaves Primárias e Estrangeiras](#13-definição-de-chaves-primárias-e-estrangeiras)
-   - [1.4 Processo de Normalização](#14-processo-de-normalização-1fn-2fn-e-3fn)
-   - [1.5 Justificativas Técnicas das Decisões](#15-justificativas-técnicas-das-decisões)
-   - [1.6 Proposta de Arquitetura Analítica para BI e IA](#16-proposta-de-arquitetura-analítica-para-bi-e-ia)
-2. [Modelo Lógico Relacional](#2-modelo-lógico-relacional)
-3. [Script SQL Completo](#3-script-sql-completo)
-4. [Massa de Dados](#4-massa-de-dados)
-5. [Repositório GitHub](#5-repositório-github)
-6. [Uso de Inteligência Artificial](#6-uso-de-inteligência-artificial)
-7. [Apresentação Corporativa Final](#7-apresentação-corporativa-final)
-
----
 
 ## 1. Relatório Técnico Final
 
