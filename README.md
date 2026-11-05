@@ -567,7 +567,7 @@ As principais regras do projeto foram aplicadas com `NOT NULL`, `UNIQUE`, `CHECK
 | Preço deve ser positivo e estoque mínimo não pode ser negativo | `CHECK` | RN04 |
 | Registros com histórico não devem ser apagados | Campo de situação e `ON DELETE RESTRICT` | RN05 |
 | Nota fiscal do fornecedor não pode ser cadastrada duas vezes | `UNIQUE` | RN10 |
-| Quantidade aceita e recusada deve bater com a quantidade recebida | `CHECK` e validações do SQL | RN12 e RN14 |
+| Só a quantidade aceita entra no estoque, e todo lote tem quantidade positiva | `CHECK` e validações do SQL | RN12 e RN14 |
 | Estoque não pode ficar negativo | `CHECK`, triggers e procedures | RN16 e RN17 |
 | Venda deve estar ligada a uma sessão de caixa válida | FK e validações do SQL | RN20 e RN29 |
 | Venda concluída deve ter itens e pagamento completo | Procedure de conclusão da venda | RN23 e RN24 |
@@ -628,6 +628,7 @@ Essas informações podem ser usadas em relatórios e painéis para ajudar nas d
 #### Indicadores gerenciais
 
 Os indicadores abaixo foram escolhidos porque podem ser calculados com os dados existentes no banco.
+
 | Código | Indicador | Como calcular | Período | Consulta |
 | :--- | :--- | :--- | :--- | :--- |
 | KPI01 | Custo das perdas em relação às vendas do setor | Valor das perdas ÷ valor vendido no setor × 100 | Mensal | G01 |
@@ -803,6 +804,7 @@ A massa foi criada para mostrar situações diferentes do banco, como:
 - sessões de caixa abertas e fechadas.
 
 As vendas simuladas representam o período de **26/10/2026 a 01/11/2026**. Essa massa serve apenas para demonstrar o funcionamento do banco e das consultas e não representa o movimento completo do Hortifruti União.
+
 ---
 
 ## 5. Repositório GitHub
@@ -885,7 +887,7 @@ Usamos IA como apoio na organização, revisão e validação do trabalho. As in
 | **Prompt(s) utilizados** | "com base nos dados que existem no nosso banco, quais indicadores fariam sentido para a gestão? Só mande KPI que dê para calcular com as tabelas que já temos" |
 | **Resposta recebida** | Sugestões de indicadores de perdas, validade, vendas, ticket médio, estoque mínimo, cancelamentos, recusas de fornecedor, contas a pagar e perdas com lote a confirmar. |
 | **Fontes consultadas e verificadas** | Cada KPI foi relacionado às tabelas existentes e a uma consulta gerencial G01 a G11. A G12 foi mantida como consulta complementar para validade e promoções. |
-| **Trechos corrigidos ou rejeitados** | Foram descartadas sugestões que exigiam informações que o modelo não registra. As metas permaneceram identificadas como sugestões do grupo, e não como metas informadas pelo responsável. |
+| **Trechos corrigidos ou rejeitados** | Foram descartadas sugestões que exigiam informações que o modelo não registra. |
 | **Justificativa da escolha final** | Só foram mantidos indicadores que podem ser calculados com a estrutura atual do banco. |
 | **Reflexão crítica** | Um indicador pode parecer útil, mas não deve ser apresentado como KPI calculável quando os dados necessários não existem no modelo. |
 
@@ -898,7 +900,7 @@ Usamos IA como apoio na organização, revisão e validação do trabalho. As in
 | **Prompt(s) utilizados** | "Me ajuda a criar os requisitos funcionais e não funcionais do nosso sistema, com mais detalhes."<br>"Dá uma olhada nos requisitos do sistema e vê se está faltando alguma coisa importante."<br>"Confere se meu banco de dados está seguindo a 1FN, 2FN e 3FN e me explica o que precisa ajustar."<br>"Me ajuda a organizar o README.md do GitHub seguindo o que o professor pediu na entrega."<br>"Me ajuda a montar o dicionário de dados, colocando os campos, tipos e restrições de cada tabela."<br>"Quais processos são comuns em mercados e hortifrutis e quais deles devemos conferir com o responsável?"<br>"Revisa nossas regras de negócio e vê se estão de acordo com o levantamento e se está faltando alguma regra importante." |
 | **Resposta recebida** | Textos em Markdown, sugestões de organização, revisão de normalização e uma lista de processos típicos para comparação com o levantamento. |
 | **Fontes consultadas e verificadas** | Usamos o esqueleto do professor, o levantamento, as confirmações por WhatsApp e as regras do projeto. Os processos genéricos sugeridos pela IA foram comparados com o que o responsável informou. |
-| **Trechos corrigidos ou rejeitados** | Rejeitamos cadastro de clientes, fidelidade, venda online, entrega e fiado porque o mercado não realiza esses processos. Escala, devolução ao fornecedor e fechamento de caixa foram mantidos porque fazem parte da rotina levantada. |
+| **Trechos corrigidos ou rejeitados** | Rejeitamos cadastro de clientes, fidelidade, vendas online, entrega e venda a prazo. Escala, devolução ao fornecedor e fechamento de caixa foram mantidos porque fazem parte da rotina levantada. |
 | **Justificativa da escolha final** | O modelo foi limitado ao que a organização realmente faz e ao que é necessário para representar seus dados. |
 | **Reflexão crítica** | Listas genéricas de processos de mercado não podem substituir o levantamento; elas serviram apenas para comparação e foram filtradas pelas informações confirmadas com o responsável. |
 
@@ -952,11 +954,11 @@ A apresentação foi organizada para durar cerca de **8 minutos**, mostrando pri
 | 1. Problemas do mercado | Falta de registro das perdas (P1) e dificuldade no controle de validade (P2). | 1 min |
 | 2. Solução proposta | Como o banco organiza lotes, perdas, compras, vendas e outros processos do mercado. | 1 min |
 | 3. Modelo lógico | Principais tabelas e relacionamentos, com destaque para PRODUTO, LOTE, PERDA e VENDA. | 1 min |
-| 4. Implementação SQL | Estrutura do banco e principais regras de integridade. | 1 min |
+| 4. Demonstração da implementação | SQL rodando: criação do banco e principais regras de integridade. | 1 min |
 | 5. Consultas e auditorias | Demonstração de consultas gerenciais e de pelo menos uma auditoria. | 2 min |
 | 6. BI e IA | Indicadores criados e possíveis usos futuros dos dados. | 1 min |
 | 7. Benefícios | Melhor controle das perdas, da validade e apoio às decisões do mercado. | 1 min |
 
 **Arquivo da apresentação:** `apresentação/Hortifruti União — Apresentação Acadêmica — Entrega 2.pdf`
 
-Depois da apresentação, os integrantes ficam disponíveis para responder às perguntas sobre o modelo, principalmente sobre chaves, cardinalidades, normalização e decisões tomadas no banco.
+Depois do pitch, todos os integrantes ficam para a defesa do modelo lógico, e cada pergunta é respondida somente pelo aluno a quem foi dirigida. Cada aluno precisa saber explicar as partes do modelo, principalmente chaves, cardinalidades e as decisões de normalização.
