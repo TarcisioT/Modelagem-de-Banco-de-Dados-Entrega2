@@ -742,3 +742,7 @@ Entre os exemplos estão validações de saldo de lote, consistência entre prod
 - Campos gerados, como `SESSAO_CAIXA.diferenca`, `SESSAO_CAIXA.caixa_aberto_unico` e `ITEM_VENDA.subtotal`, não devem ser preenchidos manualmente.
 - O modelo conceitual possui 22 entidades e 48 relacionamentos; as cinco associações com atributos se tornam tabelas no modelo lógico, que totaliza 27 tabelas.
 - Este arquivo documenta a implementação acadêmica, e não o banco de produção do Hortifruti União.
+
+**SGBD utilizado na validação:** MySQL 8.0.46  
+**Compatibilidade do script:** MySQL 8.0.16 ou superior  
+**Data da última revisão:** 05/11/2026
