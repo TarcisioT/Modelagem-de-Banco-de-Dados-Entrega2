@@ -919,50 +919,24 @@ Usamos IA como apoio na organização, revisão e validação do trabalho. As in
 | **Reflexão crítica** | As IAs ajudaram a localizar divergências e discutir alternativas de modelagem, mas as decisões finais foram revisadas pela equipe com base no levantamento, no DER, no modelo lógico e no SQL. As sugestões foram tratadas como possibilidades de revisão, e não como decisões automáticas sobre a modelagem. |
 
 
-#### Uso 7 — ChatGPT: organização e revisão da apresentação final
+## 7. Apresentação Final
 
-| Item | Registro |
-| :--- | :--- |
-| **Ferramenta e etapa** | ChatGPT, no apoio à organização e revisão dos slides da apresentação final, com edição do material no Canva. |
-| **Motivação** | Transformar o conteúdo técnico do README em um pitch de 8 minutos, com pouco texto e na ordem exigida pelo professor. |
-| **Prompt(s) utilizados** | “Me ajuda a organizar a apresentação final seguindo o que o professor pediu, deixando os slides mais visuais e com pouco texto.” Também pedimos ajustes específicos no slide do DER conceitual e no slide reservado ao modelo lógico. |
-| **Resposta recebida** | Sugestões de sequência, títulos, redução de texto e organização dos slides para problema, solução, modelo, SQL, consultas, BI/IA e benefícios. |
-| **Fontes consultadas e verificadas** | A sequência foi conferida com a seção 7 do esqueleto do professor e com o conteúdo final do README, DER, modelo lógico e SQL. |
-| **Trechos corrigidos ou rejeitados** | Foram corrigidos slides que misturavam DER conceitual e modelo lógico, mantendo os dois assuntos separados. Também reduzimos textos longos para adequar o pitch ao tempo disponível. |
-| **Justificativa da escolha final** | A apresentação foi mantida alinhada à ordem exigida e aos artefatos efetivamente entregues no repositório. |
-| **Reflexão crítica** | A IA ajudou na síntese visual, mas os slides precisam continuar fiéis ao modelo e ao SQL; simplificar demais poderia esconder diferenças entre o conceitual e o lógico. |
-
-#### Uso 8 — ChatGPT: interface demonstrativa do banco
-
-| Item | Registro |
-| :--- | :--- |
-| **Ferramenta e etapa** | ChatGPT, na criação de uma interface demonstrativa em PHP, HTML e CSS ligada ao banco MySQL do projeto. |
-| **Motivação** | Criar uma visualização simples para mostrar, como complemento da apresentação, como os dados e consultas do banco poderiam aparecer em um sistema. |
-| **Prompt(s) utilizados** | "Crie uma interface simples para demonstrar o nosso banco, com Dashboard, Perdas, Validade, Vendas, Estoque e Auditoria, usando as tabelas, consultas e procedures que já existem no script." |
-| **Resposta recebida** | Foi gerada uma interface acadêmica com menu lateral, cards e páginas que consultam os dados do banco `hortifruti_uniao`. |
-| **Fontes consultadas e verificadas** | A interface foi conferida com o script SQL do projeto e com os resultados da massa de dados. |
-| **Trechos corrigidos ou rejeitados** | A conexão foi ajustada para o MySQL 8 utilizado pelo grupo. O registro de perdas foi mantido desativado durante a apresentação para não alterar a massa de dados. |
-| **Justificativa da escolha final** | A interface foi usada apenas como complemento visual. A implementação SQL e as consultas continuam sendo os artefatos principais exigidos pelo trabalho. |
-| **Reflexão crítica** | A interface não substitui a validação do SQL e depende da conexão correta com o MySQL. Ela serve apenas para facilitar a visualização dos dados durante a demonstração. |
-
-**Referências técnicas consultadas no SQL:** [restrições CHECK no MySQL 8.0](https://dev.mysql.com/doc/refman/8.0/en/create-table-check-constraints.html) e [colunas geradas no MySQL](https://dev.mysql.com/doc/refman/8.0/en/create-table-generated-columns.html).
-
-## 7. Apresentação Corporativa Final
-
-O pitch tem **8 minutos**, com pouco texto nos slides e a demonstração do banco rodando no MySQL. Primeiro mostramos o problema do Hortifruti União e depois como o projeto organiza as informações.
+A apresentação foi organizada para durar cerca de **8 minutos**, mostrando primeiro os problemas encontrados no Hortifruti União e depois como o banco ajuda a organizar essas informações.
 
 ### Roteiro
 
 | Parte | O que vamos mostrar | Tempo |
 | :--- | :--- | :--- |
-| 1. Problemas do mercado | Falta de registro das perdas (P1) e dificuldade de acompanhar a validade (P2). | 1 min |
-| 2. Solução proposta | Lotes, perdas, compras, vendas e controles do mercado num banco relacional. | 1 min |
-| 3. Modelo lógico | As tabelas principais e como LOTE, PERDA, PRODUTO e VENDA se ligam. | 1 min |
-| 4. Implementação SQL | A criação das tabelas e as principais restrições. | 1 min |
-| 5. Consultas e auditorias | Rodar G01 e G03 e pelo menos uma auditoria, explicando o resultado. | 2 min |
-| 6. BI e IA | Indicadores de perdas, lotes perto de vencer e a ideia de prever risco de perda. | 1 min |
-| 7. Benefícios | Mais controle, menos produto perdido e decisões com base em dados. | 1 min |
+| 1. Problemas do mercado | Falta de registro das perdas (P1) e dificuldade no controle de validade (P2). | 1 min |
+| 2. Solução proposta | Como o banco organiza lotes, perdas, compras, vendas e outros processos do mercado. | 1 min |
+| 3. Modelo lógico | Principais tabelas e relacionamentos, com destaque para PRODUTO, LOTE, PERDA e VENDA. | 1 min |
+| 4. Implementação SQL | Estrutura do banco e principais regras de integridade. | 1 min |
+| 5. Consultas e auditorias | Demonstração de consultas gerenciais e de pelo menos uma auditoria. | 2 min |
+| 6. BI e IA | Indicadores criados e possíveis usos futuros dos dados. | 1 min |
+| 7. Benefícios | Melhor controle das perdas, da validade e apoio às decisões do mercado. | 1 min |
 
 **Arquivo da apresentação:** `apresentação/Hortifruti União — Apresentação Acadêmica — Entrega 2.pdf`
+
+Depois da apresentação, os integrantes ficam disponíveis para responder às perguntas sobre o modelo, principalmente sobre chaves, cardinalidades, normalização e decisões tomadas no banco.
 
 Depois do pitch todos os integrantes ficam para a defesa do modelo lógico, e cada um responde o que foi perguntado a ele. Cada aluno precisa saber explicar as partes do modelo, principalmente chaves, cardinalidades e as decisões de normalização.
