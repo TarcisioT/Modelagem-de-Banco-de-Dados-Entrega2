@@ -175,7 +175,7 @@ Em mercados e hortifrutis costumam existir outros processos além dos listados a
 
 **Fluxograma do processo de venda:**
 
-![Fluxograma de Vendas](imagens/fluxogramas/fluxograma_venda.jpeg)
+![Fluxograma de Vendas](imagens/evidencias/fluxograma_venda.png)
 
 
 O fluxograma acima mostra como uma venda acontece no caixa. As rotinas de compra, recebimento e fechamento de caixa estão descritas no resumo do levantamento e na lista de processos.
