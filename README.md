@@ -743,110 +743,69 @@ As consultas podem ser executadas novamente após a carga da massa de dados para
 
 ## 4. Massa de Dados
 
-A massa de dados é totalmente fictícia e foi criada exclusivamente para fins acadêmicos.
+A massa de dados usada no projeto é totalmente fictícia e foi criada apenas para fins acadêmicos.
 
-Utilizamos uma amostra demonstrativa do funcionamento do Hortifruti União, com volume reduzido para facilitar a execução do SQL, a conferência dos resultados e a apresentação do projeto.
-
-A massa de dados está incluída no [script SQL completo](docs/script.sql), junto com a criação das tabelas, regras e consultas utilizadas no projeto.
-
+Ela está incluída no [script SQL completo](docs/script.sql) e foi montada para representar os principais processos do Hortifruti União sem tentar copiar todo o volume real do mercado.
 
 ### Volume da massa
 
-A carga contempla:
-
-| Tabela | Registros | Justificativa na amostra |
+| Tabela | Registros | Justificativa |
 | :--- | ---: | :--- |
 | `SETOR` | 8 | Seis setores de venda, mais Caixa e Retaguarda. |
-| `PRODUTO` | 60 | Amostra de produtos dos seis setores, com venda por quilo/unidade e com/sem validade impressa. |
-| `FORNECEDOR` | 12 | Subconjunto fictício dos cerca de 340 fornecedores informados pelo responsável. |
-| `FORNECEDOR_PRODUTO` | 90 | Liga os produtos da amostra a um ou mais fornecedores. |
-| `FUNCIONARIO` | 16 | Amostra dos cerca de 110 funcionários, cobrindo os perfis necessários aos processos simulados. |
-| `ESCALA` | 112 | Sete dias de escala para os 16 funcionários da amostra. |
-| `FORMA_PAGAMENTO` | 7 | Dinheiro, débito, crédito, Pix, VA, boleto e transferência, conforme o uso em venda/fornecedor. |
-| `CAIXA` | 7 | Corresponde aos 7 caixas informados pelo responsável. |
-| `PEDIDO_COMPRA` | 12 | Dez pedidos recebidos, um aberto e um cancelado, permitindo demonstrar compra, reposição e situações diferentes do pedido. |
-| `ITEM_PEDIDO_COMPRA` | 70 | Distribui vários produtos entre os 12 pedidos. |
-| `RECEBIMENTO` | 12 | Dez recebimentos ligados a pedidos e dois recebimentos sem pedido, demonstrando uma das situações previstas na RN11. |
-| `ITEM_RECEBIMENTO` | 66 | Itens das notas, incluindo quantidades aceitas e recusadas. |
-| `CONTA_PAGAR` | 12 | Uma conta por recebimento na amostra, com situações pagas e abertas. |
-| `DEVOLUCAO_FORNECEDOR` | 6 | Os seis casos foram incluídos propositalmente para demonstrar devolução, troca e abatimento. Essa quantidade é didática e não representa a frequência real informada pelo responsável. |
-| `ITEM_DEVOLUCAO` | 6 | Itens específicos vinculados às seis ocorrências de devolução/troca/abatimento. |
-| `LOTE` | 126 | Mais de um lote para parte dos itens, permitindo variar validade, saldo e FEFO. |
-| `MOTIVO_PERDA` | 8 | Inclui vencimento, maturação excessiva e dano causado por cliente, confirmados no levantamento, a opção "Outros" e quatro motivos fictícios adicionais definidos pelo grupo para variar os testes. |
-| `PERDA` | 24 | Casos em diferentes setores, sendo 18 confirmados e 6 com lote a confirmar. |
-| `PROMOCAO` | 5 | Promoções de lotes com validade para demonstrar o P2. |
-| `SESSAO_CAIXA` | 49 | Sessões distribuídas pelos 7 caixas e pelos 7 dias simulados. |
-| `TROCA_OPERADOR` | 5 | Casos pontuais para demonstrar troca de operador durante a sessão. |
-| `SANGRIA` | 16 | Sangrias em parte das sessões, mantendo variedade sem ocorrer em todas. |
-| `VENDA` | 200 | Amostra didática distribuída em sete datas. Não representa sete dias completos da operação real. |
-| `ITEM_VENDA` | 810 | Quatro itens por venda em média, mais linhas canceladas para demonstrar histórico. |
-| `PAGAMENTO` | 220 | Inclui pagamentos simples e vendas com pagamento dividido. |
-| `DOCUMENTO_FISCAL` | 200 | Um documento fiscal por venda simulada. |
-| `SAIDA_LOTE` | 834 | 800 baixas de itens ativos, 18 baixas de perdas confirmadas e 16 estornos das 4 vendas canceladas. |
-| **Total** | **2.993** | Total de registros finais nas 27 tabelas após a carga e os estornos previstos. |
+| `PRODUTO` | 60 | Amostra de produtos vendidos por quilo e por unidade, com e sem validade impressa. |
+| `FORNECEDOR` | 12 | Amostra dos cerca de 340 fornecedores informados pelo responsável. |
+| `FORNECEDOR_PRODUTO` | 90 | Relaciona os produtos aos seus fornecedores. |
+| `FUNCIONARIO` | 16 | Amostra dos cerca de 110 funcionários, cobrindo os perfis usados no projeto. |
+| `ESCALA` | 112 | Sete dias de escala para os 16 funcionários. |
+| `FORMA_PAGAMENTO` | 7 | Formas utilizadas em vendas e pagamentos a fornecedores. |
+| `CAIXA` | 7 | Mesma quantidade informada pelo responsável. |
+| `PEDIDO_COMPRA` | 12 | Casos recebidos, abertos e cancelados. |
+| `ITEM_PEDIDO_COMPRA` | 70 | Produtos distribuídos entre os pedidos. |
+| `RECEBIMENTO` | 12 | Inclui recebimentos com e sem pedido. |
+| `ITEM_RECEBIMENTO` | 66 | Itens aceitos e recusados nas entregas. |
+| `CONTA_PAGAR` | 12 | Contas pagas e em aberto. |
+| `DEVOLUCAO_FORNECEDOR` | 6 | Casos de devolução, troca e abatimento. |
+| `ITEM_DEVOLUCAO` | 6 | Itens ligados às devoluções registradas. |
+| `LOTE` | 126 | Permite trabalhar com diferentes validades e saldos. |
+| `MOTIVO_PERDA` | 8 | Motivos usados nos registros de perda. |
+| `PERDA` | 24 | 18 perdas confirmadas e 6 com lote a confirmar. |
+| `PROMOCAO` | 5 | Casos de produtos próximos do vencimento. |
+| `SESSAO_CAIXA` | 49 | Sessões distribuídas pelos 7 caixas e 7 dias simulados. |
+| `TROCA_OPERADOR` | 5 | Casos de troca de operador durante a sessão. |
+| `SANGRIA` | 16 | Sangrias distribuídas entre algumas sessões. |
+| `VENDA` | 200 | Amostra de vendas utilizada nas consultas e testes. |
+| `ITEM_VENDA` | 810 | Itens das vendas, incluindo alguns cancelados. |
+| `PAGAMENTO` | 220 | Inclui pagamentos simples e divididos em mais de uma forma. |
+| `DOCUMENTO_FISCAL` | 200 | Um documento por venda simulada. |
+| `SAIDA_LOTE` | 834 | Baixas de vendas, perdas e estornos. |
+| **Total** | **2.993** | Total final de registros nas 27 tabelas. |
 
-Os **810 itens de venda** incluem 800 itens ativos e 10 cancelados.
+### Justificativa da quantidade
 
-As **24 perdas** estão distribuídas em 18 confirmadas e 6 com lote a confirmar. Das **49 sessões de caixa**, 47 estão fechadas e 2 permanecem abertas.
+O responsável informou aproximadamente 110 funcionários, 7 caixas, 340 fornecedores, 6 mil itens diferentes vendidos por mês e cerca de 1.800 vendas por dia.
 
-### Justificativa do volume da massa
+Como usar todo esse volume deixaria o trabalho muito pesado para executar e apresentar, usamos uma amostra menor.
 
-O responsável informou, de memória, cerca de 110 funcionários, 7 caixas, 340 fornecedores, 6 mil itens diferentes vendidos por mês e 1.800 vendas por dia. A massa não usa uma escala única, porque os cadastros e o movimento têm naturezas diferentes. Usamos três critérios:
+Mantivemos os cadastros pequenos, como os 7 caixas, próximos da realidade. Já os cadastros maiores foram reduzidos, como funcionários, fornecedores e produtos.
 
-1. **Cadastros pequenos e fixos, na escala real (1:1):** 8 setores, 7 caixas e 7 formas de pagamento. São poucos, e reduzi-los deixaria processos sem demonstração.
-2. **Cadastros grandes, reduzidos, mas com todos os tipos representados:** 16 de cerca de 110 funcionários, cobrindo os 5 perfis de funcionário utilizados na massa: operador, supervisor, repositor, retaguarda e gerência; 12 de cerca de 340 fornecedores; e 60 produtos dos 6 setores, com venda por quilo e por unidade e com e sem validade impressa.
-3. **Movimento reduzido, com todas as situações presentes:** 200 vendas em 7 dias (de 26/10 a 01/11/2026), cerca de 29 por dia, ou aproximadamente 1,6% das 1.800 vendas diárias informadas.
+Para as vendas, usamos **200 registros distribuídos em sete dias**, quantidade suficiente para gerar resultados nas consultas sem deixar o script muito grande.
 
-A quantidade das demais tabelas decorre desses números: 4 itens por venda em média (810 itens de venda), 220 pagamentos para 200 vendas (parte paga em mais de uma forma), 1 documento fiscal por venda, 112 escalas (16 funcionários × 7 dias) e 49 sessões de caixa (7 caixas × 7 dias).
+A massa foi criada para mostrar situações diferentes do banco, como:
 
-Dentro dessa redução, forçamos os casos que as consultas precisam mostrar: 4 vendas canceladas com estorno, 24 perdas (18 com lote confirmado e 6 pendentes), lotes vencidos e próximos do vencimento, produtos abaixo do mínimo, promoções vigentes e encerradas, devoluções, trocas e abatimentos, e contas abertas, vencidas e pagas. Essas proporções (por exemplo, 2% de cancelamento) foram escolhidas para a demonstração e não refletem o mercado real.
+- vendas concluídas e canceladas;
+- pagamentos em diferentes formas;
+- lotes com e sem validade;
+- lotes vencidos e próximos do vencimento;
+- produtos abaixo do estoque mínimo;
+- perdas por diferentes motivos;
+- perdas com lote ainda não confirmado;
+- promoções vigentes e encerradas;
+- devoluções, trocas e abatimentos de fornecedores;
+- contas pagas, abertas e vencidas;
+- recebimentos com e sem pedido;
+- sessões de caixa abertas e fechadas.
 
-Esta massa de 200 vendas foi utilizada para validar as regras e as consultas do projeto e não representa o volume real de operação do mercado. O teste específico de desempenho do RNF09 foi feito separadamente, com uma base sintética de 54.000 registros, equivalente a 1.800 vendas por dia durante 30 dias, conforme descrito na seção 1.5.
-
-### Período simulado
-
-As vendas representam o período de **26/10/2026 a 01/11/2026**, totalizando sete dias consecutivos. A distribuição prevista nos registros do script é de **25, 27, 28, 30, 32, 33 e 25 vendas por dia**, respectivamente, totalizando 200.
-
-Como a massa cobre apenas sete dias e atravessa o fim de outubro e o início de novembro, os indicadores mensais servem para demonstrar o agrupamento das consultas, e não para representar meses completos de operação ou permitir comparação histórica mensal.
-
-Existem recebimentos entre **15/10/2026 e 25/10/2026**, utilizados para formar o estoque inicial da simulação.
-
-### Variedade dos dados
-
-A massa inclui:
-
-- Lotes com e sem validade;
-- Lotes vencidos e próximos do vencimento;
-- Produtos abaixo do estoque mínimo;
-- Promoções vigentes e encerradas;
-- Perdas por diferentes motivos;
-- Vendas canceladas com estorno de estoque;
-- Pagamentos em diferentes modalidades, incluindo pagamentos mistos;
-- Contas pagas e contas abertas, vencidas e a vencer;
-- Devoluções, trocas e abatimentos de fornecedores;
-- Recebimentos com pedido e recebimentos sem pedido;
-- Sessões de caixa abertas e fechadas.
-  
-### Objetivo e validação
-
-A massa permite demonstrar o controle de estoque, lotes, validade, perdas, vendas, pagamentos e fechamento de caixa, além das **12 consultas gerenciais e 12 consultas de auditoria**.
-
-O script foi executado no **MySQL 8.0.46** e a conferência realizada após a carga confirmou **200 vendas, 27 tabelas, 53 chaves estrangeiras, 27 triggers e 9 procedures**, além da distribuição das vendas pelos sete dias simulados.
-
-Também foi feita uma checagem rápida de integridade após a carga. Ela não encontrou saldo disponível negativo, pedido não cancelado sem item, venda concluída sem item ativo, divergência entre pagamento e total da venda concluída, lote ligado a produto diferente do item recebido nem lote com saldo fora do intervalo permitido.
-
-A massa contém **6 perdas com lote a confirmar**, criadas de propósito para demonstrar o acompanhamento das pendências na auditoria A01. As demais auditorias permanecem no script para a conferência das outras regras de integridade.
-
-A amostra foi montada para mostrar os principais cenários do banco sem tentar copiar o volume real do mercado. As sete datas servem para dar variedade às consultas e à demonstração; os 200 registros não correspondem ao movimento completo desses sete dias.
-
-### Limite da amostra
-
-A massa principal do projeto tem 200 vendas e foi criada para demonstrar as regras, consultas e situações previstas no banco. Ela não representa um mês completo de funcionamento do Hortifruti União.
-
-A massa histórica não contém uma perda com `status = substituida`, nem um mesmo pedido com dois recebimentos. A possibilidade desses casos está prevista pelas RN43, RN52 e RN11, mas não é demonstrada diretamente pela massa atual. Da mesma forma, a procedure `concluir_venda`, relacionada à RN57, não foi usada para montar a carga histórica; ela permanece implementada para demonstrar e testar o fluxo de uma nova venda.
-
-Para o RNF09, fizemos separadamente um teste com 54.000 registros fictícios, equivalente a 1.800 vendas por dia durante 30 dias. Esse teste foi usado apenas para avaliar a consulta de vendas por data e o uso do índice, e não o desempenho de todo o sistema.
-
+As vendas simuladas representam o período de **26/10/2026 a 01/11/2026**. Essa massa serve apenas para demonstrar o funcionamento do banco e das consultas e não representa o movimento completo do Hortifruti União.
 ---
 
 ## 5. Repositório GitHub
