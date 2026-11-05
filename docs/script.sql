@@ -1,13 +1,3 @@
--- Revisao KPI01/KPI09: unidades separadas, setores completos e bloqueios por produto.
--- G01: todos os setores de venda nos meses com vendas ou perdas confirmadas;
--- percentual NULL indica faturamento zero. G09: totais separados por kg/unidade.
--- Concorrencia: procedures usam READ COMMITTED e vendas/perdas bloqueiam PRODUTO
--- antes de ler o saldo agregado. Saidas e estornos participam do mesmo bloqueio.
--- Procedures controlam sua propria transacao: chamar fora de transacao externa.
--- Deadlock/timeout aborta a operacao via ROLLBACK; a aplicacao pode repetir a chamada.
--- Validacao: carga, auditorias e 57 verificacoes sequenciais no MySQL 8.0.46.
--- Conexoes simultaneas NAO foram testadas: ambiente de validacao bloqueia sockets.
--- Isso nao comprova concorrencia completa, desempenho ou todos os caminhos de DML.
 -- ================================================================
 -- BANCO DE DADOS - HORTIFRUTI UNIAO
 -- Trabalho academico - Entrega 2
@@ -510,9 +500,6 @@ CREATE TRIGGER trg_pedido_bi_funcionario
 BEFORE INSERT ON PEDIDO_COMPRA
 FOR EACH ROW
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM FORNECEDOR WHERE id_fornecedor=NEW.id_fornecedor AND ativo=1) THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Fornecedor inativo ou inexistente';
-    END IF;
     IF NOT EXISTS(SELECT 1 FROM FUNCIONARIO WHERE id_funcionario=NEW.id_funcionario AND ativo=1) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Funcionario inativo ou inexistente';
     END IF;
@@ -564,18 +551,16 @@ BEGIN
     DECLARE v_produto INT UNSIGNED;
     DECLARE v_aceita DECIMAL(10,3);
     DECLARE v_custo DECIMAL(10,2);
-    DECLARE v_total DECIMAL(10,3);
 
     SELECT id_produto, quantidade_aceita, custo_unitario_nf
       INTO v_produto, v_aceita, v_custo
     FROM ITEM_RECEBIMENTO
-    WHERE id_item_recebimento=NEW.id_item_recebimento FOR UPDATE;
-    SELECT COALESCE(SUM(quantidade_recebida),0) INTO v_total FROM LOTE WHERE id_item_recebimento=NEW.id_item_recebimento;
+    WHERE id_item_recebimento=NEW.id_item_recebimento;
 
     IF v_produto <> NEW.id_produto THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Produto do lote diferente do item recebido';
     END IF;
-    IF NEW.quantidade_recebida + v_total > v_aceita THEN
+    IF NEW.quantidade_recebida > v_aceita THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Quantidade do lote maior que a quantidade aceita no item';
     END IF;
 
@@ -784,7 +769,7 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Funcionario inativo ou inexistente';
     END IF;
 
-    SELECT id_setor INTO v_setor FROM PRODUTO WHERE id_produto=NEW.id_produto FOR UPDATE;
+    SELECT id_setor INTO v_setor FROM PRODUTO WHERE id_produto=NEW.id_produto;
     SELECT vende_produto INTO v_vende FROM SETOR WHERE id_setor=NEW.id_setor;
     IF v_setor <> NEW.id_setor OR v_vende <> 1 THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Setor da perda deve ser o setor atual do produto';
@@ -798,7 +783,6 @@ BEGIN
     ELSE
         SELECT COALESCE(SUM(quantidade_atual),0) INTO v_saldo_lotes
         FROM LOTE WHERE id_produto=NEW.id_produto;
-        SELECT v_saldo_lotes-COALESCE(SUM(quantidade),0) INTO v_saldo_lotes FROM PERDA WHERE id_produto=NEW.id_produto AND status='valida' AND situacao_lote='lote_a_confirmar';
         IF NEW.quantidade > v_saldo_lotes THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Perda pendente maior que o saldo dos lotes do produto';
         END IF;
@@ -820,7 +804,7 @@ BEGIN
     END IF;
 
     IF NEW.id_produto<>OLD.id_produto OR NEW.id_setor<>OLD.id_setor THEN
-        SELECT id_setor INTO v_setor FROM PRODUTO WHERE id_produto=NEW.id_produto FOR UPDATE;
+        SELECT id_setor INTO v_setor FROM PRODUTO WHERE id_produto=NEW.id_produto;
         SELECT vende_produto INTO v_vende FROM SETOR WHERE id_setor=NEW.id_setor;
         IF v_setor <> NEW.id_setor OR v_vende <> 1 THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Setor da perda deve ser o setor atual do produto';
@@ -994,8 +978,6 @@ BEGIN
     DECLARE v_prod_lote INT UNSIGNED;
     DECLARE v_prod_item INT UNSIGNED;
     DECLARE v_data_venda DATETIME;
-    SELECT p.id_produto INTO v_prod_lote FROM PRODUTO p
-    WHERE p.id_produto=(SELECT l.id_produto FROM LOTE l WHERE l.id_lote=NEW.id_lote) FOR UPDATE;
     SELECT quantidade_atual, data_validade, id_produto INTO v_saldo,v_validade,v_prod_lote
     FROM LOTE WHERE id_lote=NEW.id_lote FOR UPDATE;
     IF NEW.tipo IN ('venda','perda') AND NEW.quantidade > v_saldo THEN
@@ -1046,13 +1028,6 @@ BEGIN
     DECLARE v_custo DECIMAL(10,2);
     DECLARE v_soma DECIMAL(10,3);
 
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        RESIGNAL;
-    END;
-
-    SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
     START TRANSACTION;
 
     SELECT id_produto,quantidade_aceita,custo_unitario_nf
@@ -1095,13 +1070,6 @@ BEGIN
     DECLARE v_valor_conta DECIMAL(10,2);
     DECLARE v_soma DECIMAL(10,2);
 
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        RESIGNAL;
-    END;
-
-    SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
     START TRANSACTION;
 
     SELECT valor INTO v_valor_conta
@@ -1144,17 +1112,8 @@ CREATE PROCEDURE registrar_perda_pendente(
 )
 BEGIN
     DECLARE v_saldo DECIMAL(10,3);
-    DECLARE v_lock INT UNSIGNED;
 
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        RESIGNAL;
-    END;
-
-    SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
     START TRANSACTION;
-    SELECT id_produto INTO v_lock FROM PRODUTO WHERE id_produto=p_id_produto FOR UPDATE;
 
     SELECT COALESCE(SUM(quantidade_atual),0)
       INTO v_saldo
@@ -1205,14 +1164,8 @@ BEGIN
     DECLARE v_id_item INT UNSIGNED;
     DECLARE v_recusada DECIMAL(10,3);
 
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        RESIGNAL;
-    END;
-
     SET v_recusada = p_quantidade_nf - p_quantidade_aceita;
-    SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+
     START TRANSACTION;
 
     IF v_recusada < 0 THEN
@@ -1256,13 +1209,6 @@ BEGIN
     DECLARE v_lote INT UNSIGNED;
     DECLARE v_qtd DECIMAL(10,3);
     DECLARE v_tipo VARCHAR(10);
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        RESIGNAL;
-    END;
-
-    SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
     START TRANSACTION;
     SELECT id_lote,quantidade,tipo INTO v_lote,v_qtd,v_tipo
     FROM SAIDA_LOTE WHERE id_saida_lote=p_id_saida FOR UPDATE;
@@ -1286,17 +1232,7 @@ BEGIN
     DECLARE v_qtd DECIMAL(10,3);
     DECLARE v_custo DECIMAL(10,2);
     DECLARE v_data DATETIME;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        RESIGNAL;
-    END;
-
-    SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
     START TRANSACTION;
-    SELECT p.id_produto INTO v_produto FROM PRODUTO p
-    WHERE p.id_produto=(SELECT pe.id_produto FROM PERDA pe WHERE pe.id_perda=p_id_perda) FOR UPDATE;
-    SET v_produto=NULL;
     SELECT id_produto,quantidade,data_hora INTO v_produto,v_qtd,v_data
     FROM PERDA WHERE id_perda=p_id_perda AND status='valida' AND situacao_lote='lote_a_confirmar' FOR UPDATE;
     IF v_produto IS NULL THEN
@@ -1334,13 +1270,6 @@ BEGIN
           AND NOT EXISTS(SELECT 1 FROM SAIDA_LOTE e WHERE e.id_saida_original=sl.id_saida_lote)
         ORDER BY sl.id_saida_lote;
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        RESIGNAL;
-    END;
-
-    SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
     START TRANSACTION;
     SET v_status_venda=NULL;
     SELECT status INTO v_status_venda FROM VENDA WHERE id_venda=p_id_venda FOR UPDATE;
@@ -1365,7 +1294,6 @@ BEGIN
        SET status='cancelada', id_funcionario_supervisor=p_id_supervisor,
            motivo_cancelamento=p_motivo, data_hora_cancelamento=p_data
      WHERE id_venda=p_id_venda;
-    UPDATE DOCUMENTO_FISCAL SET situacao='cancelado' WHERE id_venda=p_id_venda;
     COMMIT;
 END$$
 
@@ -1380,13 +1308,6 @@ BEGIN
     DECLARE v_vendas DECIMAL(10,2);
     DECLARE v_sangrias DECIMAL(10,2);
     DECLARE v_esperado DECIMAL(10,2);
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        RESIGNAL;
-    END;
-
-    SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
     START TRANSACTION;
     SELECT fundo_inicial INTO v_fundo FROM SESSAO_CAIXA WHERE id_sessao=p_id_sessao AND status='aberta' FOR UPDATE;
     IF v_fundo IS NULL THEN
@@ -1399,8 +1320,7 @@ BEGIN
     END IF;
     SELECT COALESCE(SUM(pg.valor),0) INTO v_vendas
     FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda
-    JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma
-    WHERE v.id_sessao=p_id_sessao AND v.status='concluida' AND fp.descricao='Dinheiro';
+    WHERE v.id_sessao=p_id_sessao AND v.status='concluida';
     SELECT COALESCE(SUM(valor),0) INTO v_sangrias FROM SANGRIA WHERE id_sessao=p_id_sessao;
     SET v_esperado=v_fundo+v_vendas-v_sangrias;
     UPDATE SESSAO_CAIXA
@@ -1432,16 +1352,9 @@ BEGIN
     DECLARE c CURSOR FOR
         SELECT id_item_venda,id_produto,quantidade_ou_peso
         FROM ITEM_VENDA WHERE id_venda=p_id_venda AND status='ativo' AND id_item_venda<=v_max_item
-        ORDER BY id_produto,id_item_venda;
+        ORDER BY id_item_venda;
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
 
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        RESIGNAL;
-    END;
-
-    SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
     START TRANSACTION;
     SELECT data_hora INTO v_data FROM VENDA WHERE id_venda=p_id_venda AND status='em_andamento' FOR UPDATE;
     IF v_data IS NULL THEN
@@ -1458,7 +1371,6 @@ BEGIN
     loop_itens: LOOP
         FETCH c INTO v_item,v_produto,v_qtd;
         IF done=1 THEN LEAVE loop_itens; END IF;
-        SELECT preco_venda INTO v_preco FROM PRODUTO WHERE id_produto=v_produto FOR UPDATE;
         SELECT COALESCE(SUM(l.quantidade_atual),0)
                - COALESCE((
                     SELECT SUM(pe.quantidade)
@@ -2333,9 +2245,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (4,4,'NFCe','000004','1','90000000000000000000000000000000000000000004','2026-10-26 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 557.09 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=1 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(1,9,'2026-10-26 18:00:00',@contado_gaveta);
+CALL fechar_sessao(1,9,'2026-10-26 18:00:00',557.09);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (2,2,3,'2026-10-26 08:00:00',200.00,'aberta');
@@ -2424,9 +2334,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (8,8,'NFCe','000008','1','90000000000000000000000000000000000000000008','2026-10-26 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 499.44 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=2 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(2,10,'2026-10-26 18:00:00',@contado_gaveta);
+CALL fechar_sessao(2,10,'2026-10-26 18:00:00',499.44);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (3,3,4,'2026-10-26 08:00:00',225.00,'aberta');
@@ -2519,9 +2427,7 @@ INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_docume
 INSERT INTO SANGRIA (id_sangria,id_sessao,id_funcionario,data_hora,valor) VALUES
 (1,3,9,'2026-10-26 13:00:00',90.00);
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 450.00 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=3 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(3,9,'2026-10-26 18:00:00',@contado_gaveta);
+CALL fechar_sessao(3,9,'2026-10-26 18:00:00',450.00);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (4,4,5,'2026-10-26 08:00:00',150.00,'aberta');
@@ -2610,9 +2516,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (16,16,'NFCe','000016','1','90000000000000000000000000000000000000000016','2026-10-26 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 483.61 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=4 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(4,10,'2026-10-26 18:00:00',@contado_gaveta);
+CALL fechar_sessao(4,10,'2026-10-26 18:00:00',483.61);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (5,5,6,'2026-10-26 08:00:00',175.00,'aberta');
@@ -2683,9 +2587,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (19,19,'NFCe','000019','1','90000000000000000000000000000000000000000019','2026-10-26 15:06:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 437.56 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=5 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(5,9,'2026-10-26 18:00:00',@contado_gaveta);
+CALL fechar_sessao(5,9,'2026-10-26 18:00:00',437.56);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (6,6,7,'2026-10-26 08:00:00',200.00,'aberta');
@@ -2758,9 +2660,7 @@ INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_docume
 INSERT INTO SANGRIA (id_sangria,id_sessao,id_funcionario,data_hora,valor) VALUES
 (2,6,10,'2026-10-26 13:00:00',80.00);
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 402.76 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=6 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(6,10,'2026-10-26 18:00:00',@contado_gaveta);
+CALL fechar_sessao(6,10,'2026-10-26 18:00:00',402.76);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (7,7,8,'2026-10-26 08:00:00',225.00,'aberta');
@@ -2828,9 +2728,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (25,25,'NFCe','000025','1','90000000000000000000000000000000000000000025','2026-10-26 15:06:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 423.89 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=7 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(7,9,'2026-10-26 18:00:00',@contado_gaveta);
+CALL fechar_sessao(7,9,'2026-10-26 18:00:00',423.89);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (8,1,1,'2026-10-27 08:00:00',150.00,'aberta');
@@ -2919,9 +2817,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (29,29,'NFCe','000029','1','90000000000000000000000000000000000000000029','2026-10-27 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 459.43 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=8 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(8,10,'2026-10-27 18:00:00',@contado_gaveta);
+CALL fechar_sessao(8,10,'2026-10-27 18:00:00',459.43);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (9,2,3,'2026-10-27 08:00:00',175.00,'aberta');
@@ -3014,9 +2910,7 @@ INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_docume
 INSERT INTO SANGRIA (id_sangria,id_sessao,id_funcionario,data_hora,valor) VALUES
 (3,9,9,'2026-10-27 13:00:00',70.00);
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 485.05 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=9 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(9,9,'2026-10-27 18:00:00',@contado_gaveta);
+CALL fechar_sessao(9,9,'2026-10-27 18:00:00',485.05);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (10,3,4,'2026-10-27 08:00:00',200.00,'aberta');
@@ -3105,9 +2999,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (37,37,'NFCe','000037','1','90000000000000000000000000000000000000000037','2026-10-27 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 574.34 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=10 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(10,10,'2026-10-27 18:00:00',@contado_gaveta);
+CALL fechar_sessao(10,10,'2026-10-27 18:00:00',574.34);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (11,4,5,'2026-10-27 08:00:00',225.00,'aberta');
@@ -3198,9 +3090,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (41,41,'NFCe','000041','1','90000000000000000000000000000000000000000041','2026-10-27 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 579.89 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=11 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(11,9,'2026-10-27 18:00:00',@contado_gaveta);
+CALL fechar_sessao(11,9,'2026-10-27 18:00:00',579.89);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (12,5,6,'2026-10-27 08:00:00',150.00,'aberta');
@@ -3292,9 +3182,7 @@ INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_docume
 INSERT INTO SANGRIA (id_sangria,id_sessao,id_funcionario,data_hora,valor) VALUES
 (4,12,10,'2026-10-27 13:00:00',60.00);
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 372.12 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=12 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(12,10,'2026-10-27 18:00:00',@contado_gaveta);
+CALL fechar_sessao(12,10,'2026-10-27 18:00:00',372.12);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (13,6,7,'2026-10-27 08:00:00',175.00,'aberta');
@@ -3383,9 +3271,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (49,49,'NFCe','000049','1','90000000000000000000000000000000000000000049','2026-10-27 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 554.59 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=13 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(13,9,'2026-10-27 18:00:00',@contado_gaveta);
+CALL fechar_sessao(13,9,'2026-10-27 18:00:00',554.59);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (14,7,8,'2026-10-27 08:00:00',200.00,'aberta');
@@ -3413,7 +3299,7 @@ INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_docume
 (50,50,'NFCe','000050','1','90000000000000000000000000000000000000000050','2026-10-27 10:36:00','emitido');
 
 CALL cancelar_venda(50,10,'Cancelamento ficticio para teste','2026-10-27 10:40:00');
-
+UPDATE DOCUMENTO_FISCAL SET situacao='cancelado' WHERE id_venda=50;
 
 INSERT INTO VENDA (id_venda,id_sessao,id_funcionario_operador,id_funcionario_supervisor,data_hora,valor_total,status,motivo_cancelamento,data_hora_cancelamento) VALUES
 (51,14,8,NULL,'2026-10-27 12:50:00',72.81,'concluida',NULL,NULL);
@@ -3457,9 +3343,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (52,52,'NFCe','000052','1','90000000000000000000000000000000000000000052','2026-10-27 15:06:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 322.57 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=14 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(14,10,'2026-10-27 18:00:00',@contado_gaveta);
+CALL fechar_sessao(14,10,'2026-10-27 18:00:00',322.57);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (15,1,1,'2026-10-28 08:00:00',225.00,'aberta');
@@ -3554,9 +3438,7 @@ INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_docume
 INSERT INTO SANGRIA (id_sangria,id_sessao,id_funcionario,data_hora,valor) VALUES
 (5,15,9,'2026-10-28 13:00:00',90.00);
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 507.81 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=15 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(15,9,'2026-10-28 18:00:00',@contado_gaveta);
+CALL fechar_sessao(15,9,'2026-10-28 18:00:00',507.81);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (16,2,2,'2026-10-28 08:00:00',150.00,'aberta');
@@ -3647,9 +3529,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (60,60,'SAT','000060','1','90000000000000000000000000000000000000000060','2026-10-28 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 516.19 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=16 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(16,10,'2026-10-28 18:00:00',@contado_gaveta);
+CALL fechar_sessao(16,10,'2026-10-28 18:00:00',516.19);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (17,3,4,'2026-10-28 08:00:00',175.00,'aberta');
@@ -3738,9 +3618,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (64,64,'NFCe','000064','1','90000000000000000000000000000000000000000064','2026-10-28 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 479.11 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=17 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(17,9,'2026-10-28 18:00:00',@contado_gaveta);
+CALL fechar_sessao(17,9,'2026-10-28 18:00:00',479.11);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (18,4,5,'2026-10-28 08:00:00',200.00,'aberta');
@@ -3832,9 +3710,7 @@ INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_docume
 INSERT INTO SANGRIA (id_sangria,id_sessao,id_funcionario,data_hora,valor) VALUES
 (6,18,10,'2026-10-28 13:00:00',80.00);
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 445.85 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=18 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(18,10,'2026-10-28 18:00:00',@contado_gaveta);
+CALL fechar_sessao(18,10,'2026-10-28 18:00:00',445.85);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (19,5,6,'2026-10-28 08:00:00',225.00,'aberta');
@@ -3924,9 +3800,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (72,72,'NFCe','000072','1','90000000000000000000000000000000000000000072','2026-10-28 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 607.09 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=19 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(19,9,'2026-10-28 18:00:00',@contado_gaveta);
+CALL fechar_sessao(19,9,'2026-10-28 18:00:00',607.09);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (20,6,7,'2026-10-28 08:00:00',150.00,'aberta');
@@ -4015,9 +3889,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (76,76,'NFCe','000076','1','90000000000000000000000000000000000000000076','2026-10-28 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 480.98 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=20 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(20,10,'2026-10-28 18:00:00',@contado_gaveta);
+CALL fechar_sessao(20,10,'2026-10-28 18:00:00',480.98);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (21,7,8,'2026-10-28 08:00:00',175.00,'aberta');
@@ -4111,9 +3983,7 @@ INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_docume
 INSERT INTO SANGRIA (id_sangria,id_sessao,id_funcionario,data_hora,valor) VALUES
 (7,21,9,'2026-10-28 13:00:00',70.00);
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 382.54 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=21 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(21,9,'2026-10-28 18:00:00',@contado_gaveta);
+CALL fechar_sessao(21,9,'2026-10-28 18:00:00',382.54);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (22,1,1,'2026-10-29 08:00:00',200.00,'aberta');
@@ -4223,9 +4093,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (85,85,'NFCe','000085','1','90000000000000000000000000000000000000000085','2026-10-29 15:51:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 683.54 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=22 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(22,10,'2026-10-29 18:00:00',@contado_gaveta);
+CALL fechar_sessao(22,10,'2026-10-29 18:00:00',683.54);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (23,2,2,'2026-10-29 08:00:00',225.00,'aberta');
@@ -4336,9 +4204,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (90,90,'NFCe','000090','1','90000000000000000000000000000000000000000090','2026-10-29 15:51:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 596.39 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=23 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(23,9,'2026-10-29 18:00:00',@contado_gaveta);
+CALL fechar_sessao(23,9,'2026-10-29 18:00:00',596.39);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (24,3,3,'2026-10-29 08:00:00',150.00,'aberta');
@@ -4430,9 +4296,7 @@ INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_docume
 INSERT INTO SANGRIA (id_sangria,id_sessao,id_funcionario,data_hora,valor) VALUES
 (8,24,10,'2026-10-29 13:00:00',60.00);
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 439.41 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=24 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(24,10,'2026-10-29 18:00:00',@contado_gaveta);
+CALL fechar_sessao(24,10,'2026-10-29 18:00:00',439.41);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (25,4,5,'2026-10-29 08:00:00',175.00,'aberta');
@@ -4524,9 +4388,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (98,98,'NFCe','000098','1','90000000000000000000000000000000000000000098','2026-10-29 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 472.51 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=25 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(25,9,'2026-10-29 18:00:00',@contado_gaveta);
+CALL fechar_sessao(25,9,'2026-10-29 18:00:00',472.51);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (26,5,6,'2026-10-29 08:00:00',200.00,'aberta');
@@ -4576,7 +4438,7 @@ INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_docume
 (100,100,'SAT','000100','1','90000000000000000000000000000000000000000100','2026-10-29 11:57:00','emitido');
 
 CALL cancelar_venda(100,10,'Cancelamento ficticio para teste','2026-10-29 12:01:00');
-
+UPDATE DOCUMENTO_FISCAL SET situacao='cancelado' WHERE id_venda=100;
 
 INSERT INTO VENDA (id_venda,id_sessao,id_funcionario_operador,id_funcionario_supervisor,data_hora,valor_total,status,motivo_cancelamento,data_hora_cancelamento) VALUES
 (101,26,6,NULL,'2026-10-29 13:43:59',67.94,'concluida',NULL,NULL);
@@ -4620,9 +4482,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (102,102,'NFCe','000102','1','90000000000000000000000000000000000000000102','2026-10-29 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 427.09 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=26 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(26,10,'2026-10-29 18:00:00',@contado_gaveta);
+CALL fechar_sessao(26,10,'2026-10-29 18:00:00',427.09);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (27,6,7,'2026-10-29 08:00:00',225.00,'aberta');
@@ -4714,9 +4574,7 @@ INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_docume
 INSERT INTO SANGRIA (id_sangria,id_sessao,id_funcionario,data_hora,valor) VALUES
 (9,27,9,'2026-10-29 13:00:00',90.00);
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 517.22 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=27 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(27,9,'2026-10-29 18:00:00',@contado_gaveta);
+CALL fechar_sessao(27,9,'2026-10-29 18:00:00',517.22);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (28,7,8,'2026-10-29 08:00:00',150.00,'aberta');
@@ -4806,9 +4664,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (110,110,'NFCe','000110','1','90000000000000000000000000000000000000000110','2026-10-29 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 533.82 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=28 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(28,10,'2026-10-29 18:00:00',@contado_gaveta);
+CALL fechar_sessao(28,10,'2026-10-29 18:00:00',533.82);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (29,1,1,'2026-10-30 08:00:00',175.00,'aberta');
@@ -4918,9 +4774,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (115,115,'NFCe','000115','1','90000000000000000000000000000000000000000115','2026-10-30 15:51:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 570.99 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=29 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(29,9,'2026-10-30 18:00:00',@contado_gaveta);
+CALL fechar_sessao(29,9,'2026-10-30 18:00:00',570.99);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (30,2,2,'2026-10-30 08:00:00',200.00,'aberta');
@@ -5035,9 +4889,7 @@ INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_docume
 INSERT INTO SANGRIA (id_sangria,id_sessao,id_funcionario,data_hora,valor) VALUES
 (10,30,10,'2026-10-30 13:00:00',80.00);
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 501.67 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=30 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(30,10,'2026-10-30 18:00:00',@contado_gaveta);
+CALL fechar_sessao(30,10,'2026-10-30 18:00:00',501.67);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (31,3,3,'2026-10-30 08:00:00',225.00,'aberta');
@@ -5147,9 +4999,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (125,125,'NFCe','000125','1','90000000000000000000000000000000000000000125','2026-10-30 15:51:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 653.04 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=31 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(31,9,'2026-10-30 18:00:00',@contado_gaveta);
+CALL fechar_sessao(31,9,'2026-10-30 18:00:00',653.04);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (32,4,4,'2026-10-30 08:00:00',150.00,'aberta');
@@ -5260,9 +5110,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (130,130,'NFCe','000130','1','90000000000000000000000000000000000000000130','2026-10-30 15:51:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 583.01 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=32 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(32,10,'2026-10-30 18:00:00',@contado_gaveta);
+CALL fechar_sessao(32,10,'2026-10-30 18:00:00',583.01);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (33,5,6,'2026-10-30 08:00:00',175.00,'aberta');
@@ -5354,9 +5202,7 @@ INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_docume
 INSERT INTO SANGRIA (id_sangria,id_sessao,id_funcionario,data_hora,valor) VALUES
 (11,33,9,'2026-10-30 13:00:00',70.00);
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 403.28 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=33 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(33,9,'2026-10-30 18:00:00',@contado_gaveta);
+CALL fechar_sessao(33,9,'2026-10-30 18:00:00',403.28);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (34,6,7,'2026-10-30 08:00:00',200.00,'aberta');
@@ -5445,9 +5291,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (138,138,'NFCe','000138','1','90000000000000000000000000000000000000000138','2026-10-30 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 552.64 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=34 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(34,10,'2026-10-30 18:00:00',@contado_gaveta);
+CALL fechar_sessao(34,10,'2026-10-30 18:00:00',552.64);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (35,7,8,'2026-10-30 08:00:00',225.00,'aberta');
@@ -5541,9 +5385,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (142,142,'NFCe','000142','1','90000000000000000000000000000000000000000142','2026-10-30 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 587.30 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=35 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(35,9,'2026-10-30 18:00:00',@contado_gaveta);
+CALL fechar_sessao(35,9,'2026-10-30 18:00:00',587.30);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (36,1,1,'2026-10-31 08:00:00',150.00,'aberta');
@@ -5656,9 +5498,7 @@ INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_docume
 INSERT INTO SANGRIA (id_sangria,id_sessao,id_funcionario,data_hora,valor) VALUES
 (12,36,10,'2026-10-31 13:00:00',60.00);
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 515.62 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=36 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(36,10,'2026-10-31 18:00:00',@contado_gaveta);
+CALL fechar_sessao(36,10,'2026-10-31 18:00:00',515.62);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (37,2,2,'2026-10-31 08:00:00',175.00,'aberta');
@@ -5728,7 +5568,7 @@ INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_docume
 (150,150,'NFCe','000150','1','90000000000000000000000000000000000000000150','2026-10-31 12:51:00','emitido');
 
 CALL cancelar_venda(150,9,'Cancelamento ficticio para teste','2026-10-31 12:55:00');
-
+UPDATE DOCUMENTO_FISCAL SET situacao='cancelado' WHERE id_venda=150;
 
 INSERT INTO VENDA (id_venda,id_sessao,id_funcionario_operador,id_funcionario_supervisor,data_hora,valor_total,status,motivo_cancelamento,data_hora_cancelamento) VALUES
 (151,37,2,NULL,'2026-10-31 14:20:00',104.76,'concluida',NULL,NULL);
@@ -5772,9 +5612,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (152,152,'NFCe','000152','1','90000000000000000000000000000000000000000152','2026-10-31 15:51:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 474.83 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=37 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(37,9,'2026-10-31 18:00:00',@contado_gaveta);
+CALL fechar_sessao(37,9,'2026-10-31 18:00:00',474.83);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (38,3,3,'2026-10-31 08:00:00',200.00,'aberta');
@@ -5884,9 +5722,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (157,157,'NFCe','000157','1','90000000000000000000000000000000000000000157','2026-10-31 15:51:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 675.49 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=38 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(38,10,'2026-10-31 18:00:00',@contado_gaveta);
+CALL fechar_sessao(38,10,'2026-10-31 18:00:00',675.49);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (39,4,4,'2026-10-31 08:00:00',225.00,'aberta');
@@ -6001,9 +5837,7 @@ INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_docume
 INSERT INTO SANGRIA (id_sangria,id_sessao,id_funcionario,data_hora,valor) VALUES
 (13,39,9,'2026-10-31 13:00:00',90.00);
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 552.63 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=39 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(39,9,'2026-10-31 18:00:00',@contado_gaveta);
+CALL fechar_sessao(39,9,'2026-10-31 18:00:00',552.63);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (40,5,5,'2026-10-31 08:00:00',150.00,'aberta');
@@ -6113,9 +5947,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (167,167,'NFCe','000167','1','90000000000000000000000000000000000000000167','2026-10-31 15:51:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 576.32 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=40 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(40,10,'2026-10-31 18:00:00',@contado_gaveta);
+CALL fechar_sessao(40,10,'2026-10-31 18:00:00',576.32);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (41,6,7,'2026-10-31 08:00:00',175.00,'aberta');
@@ -6205,9 +6037,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (171,171,'NFCe','000171','1','90000000000000000000000000000000000000000171','2026-10-31 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 466.62 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=41 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(41,9,'2026-10-31 18:00:00',@contado_gaveta);
+CALL fechar_sessao(41,9,'2026-10-31 18:00:00',466.62);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (42,7,8,'2026-10-31 08:00:00',200.00,'aberta');
@@ -6299,9 +6129,7 @@ INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_docume
 INSERT INTO SANGRIA (id_sangria,id_sessao,id_funcionario,data_hora,valor) VALUES
 (14,42,10,'2026-10-31 13:00:00',80.00);
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 486.84 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=42 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(42,10,'2026-10-31 18:00:00',@contado_gaveta);
+CALL fechar_sessao(42,10,'2026-10-31 18:00:00',486.84);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (43,1,1,'2026-11-01 08:00:00',225.00,'aberta');
@@ -6390,9 +6218,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (179,179,'NFCe','000179','1','90000000000000000000000000000000000000000179','2026-11-01 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 620.57 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=43 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(43,9,'2026-11-01 18:00:00',@contado_gaveta);
+CALL fechar_sessao(43,9,'2026-11-01 18:00:00',620.57);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (44,2,2,'2026-11-01 08:00:00',150.00,'aberta');
@@ -6483,9 +6309,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (183,183,'NFCe','000183','1','90000000000000000000000000000000000000000183','2026-11-01 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 496.28 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=44 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(44,10,'2026-11-01 18:00:00',@contado_gaveta);
+CALL fechar_sessao(44,10,'2026-11-01 18:00:00',496.28);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (45,3,3,'2026-11-01 08:00:00',175.00,'aberta');
@@ -6580,9 +6404,7 @@ INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_docume
 INSERT INTO SANGRIA (id_sangria,id_sessao,id_funcionario,data_hora,valor) VALUES
 (15,45,9,'2026-11-01 13:00:00',70.00);
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 397.91 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=45 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(45,9,'2026-11-01 18:00:00',@contado_gaveta);
+CALL fechar_sessao(45,9,'2026-11-01 18:00:00',397.91);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (46,4,4,'2026-11-01 08:00:00',200.00,'aberta');
@@ -6672,9 +6494,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (191,191,'NFCe','000191','1','90000000000000000000000000000000000000000191','2026-11-01 15:33:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 585.85 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=46 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(46,10,'2026-11-01 18:00:00',@contado_gaveta);
+CALL fechar_sessao(46,10,'2026-11-01 18:00:00',585.85);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (47,5,5,'2026-11-01 08:00:00',225.00,'aberta');
@@ -6742,9 +6562,7 @@ INSERT INTO PAGAMENTO (id_pagamento,id_venda,id_forma,valor) VALUES
 INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_documento,serie,chave_acesso,data_emissao,situacao) VALUES
 (194,194,'NFCe','000194','1','90000000000000000000000000000000000000000194','2026-11-01 15:06:00','emitido');
 
--- Contagem ficticia da gaveta: exclui recebimentos que nao sao dinheiro.
-SET @contado_gaveta = 450.11 - (SELECT COALESCE(SUM(pg.valor),0) FROM PAGAMENTO pg JOIN VENDA v ON v.id_venda=pg.id_venda JOIN FORMA_PAGAMENTO fp ON fp.id_forma=pg.id_forma WHERE v.id_sessao=47 AND v.status='concluida' AND fp.descricao<>'Dinheiro');
-CALL fechar_sessao(47,9,'2026-11-01 18:00:00',@contado_gaveta);
+CALL fechar_sessao(47,9,'2026-11-01 18:00:00',450.11);
 
 INSERT INTO SESSAO_CAIXA (id_sessao,id_caixa,id_funcionario_abertura,data_abertura,fundo_inicial,status) VALUES
 (48,6,6,'2026-11-01 08:00:00',150.00,'aberta');
@@ -6886,7 +6704,7 @@ INSERT INTO DOCUMENTO_FISCAL (id_documento,id_venda,tipo_documento,numero_docume
 (200,200,'SAT','000200','1','90000000000000000000000000000000000000000200','2026-11-01 15:06:00','emitido');
 
 CALL cancelar_venda(200,9,'Cancelamento ficticio para teste','2026-11-01 15:10:00');
-
+UPDATE DOCUMENTO_FISCAL SET situacao='cancelado' WHERE id_venda=200;
 
 -- Sessao mantida aberta de proposito para demonstrar estado atual.
 
@@ -6995,31 +6813,25 @@ DELETE FROM ESCALA WHERE id_funcionario=1 AND data='2027-01-15';
 -- ================================================================
 
 -- G01 - Qual o custo das perdas em relacao as vendas de cada setor por mes?
--- Atende: P1 e KPI01. Inclui todos os setores de venda nos meses com movimento.
--- Sem faturamento, percentual NULL significa nao aplicavel (nunca zero artificial).
+-- Atende: P1 e KPI01
 WITH perdas AS (
- SELECT id_setor,DATE_FORMAT(data_hora,'%Y-%m') mes,SUM(valor_estimado) valor_perdas
- FROM PERDA WHERE status='valida' AND situacao_lote='confirmado'
- GROUP BY id_setor,DATE_FORMAT(data_hora,'%Y-%m')
+    SELECT id_setor,DATE_FORMAT(data_hora,'%Y-%m') mes,SUM(valor_estimado) valor_perdas
+    FROM PERDA
+    WHERE status='valida' AND situacao_lote='confirmado'
+    GROUP BY id_setor,DATE_FORMAT(data_hora,'%Y-%m')
 ), vendas AS (
- SELECT p.id_setor,DATE_FORMAT(v.data_hora,'%Y-%m') mes,SUM(i.subtotal) valor_vendas
- FROM VENDA v JOIN ITEM_VENDA i ON i.id_venda=v.id_venda AND i.status='ativo'
- JOIN PRODUTO p ON p.id_produto=i.id_produto
- WHERE v.status='concluida'
- GROUP BY p.id_setor,DATE_FORMAT(v.data_hora,'%Y-%m')
-), meses AS (
- SELECT mes FROM perdas UNION SELECT mes FROM vendas
-), setores AS (
- SELECT id_setor FROM SETOR WHERE vende_produto=1
- UNION SELECT id_setor FROM perdas UNION SELECT id_setor FROM vendas
+    SELECT p.id_setor,DATE_FORMAT(v.data_hora,'%Y-%m') mes,SUM(iv.subtotal) valor_vendas
+    FROM VENDA v
+    JOIN ITEM_VENDA iv ON iv.id_venda=v.id_venda AND iv.status='ativo'
+    JOIN PRODUTO p ON p.id_produto=iv.id_produto
+    WHERE v.status='concluida'
+    GROUP BY p.id_setor,DATE_FORMAT(v.data_hora,'%Y-%m')
 )
-SELECT s.nome AS setor,m.mes,COALESCE(v.valor_vendas,0) AS valor_vendas,
- COALESCE(pe.valor_perdas,0) AS valor_perdas,
- ROUND(COALESCE(pe.valor_perdas,0)/NULLIF(COALESCE(v.valor_vendas,0),0)*100,2) AS percentual_perdas
-FROM setores base JOIN SETOR s ON s.id_setor=base.id_setor CROSS JOIN meses m
-LEFT JOIN vendas v ON v.id_setor=s.id_setor AND v.mes=m.mes
-LEFT JOIN perdas pe ON pe.id_setor=s.id_setor AND pe.mes=m.mes
-ORDER BY m.mes,s.nome;
+SELECT s.nome AS setor,v.mes,v.valor_vendas,COALESCE(pe.valor_perdas,0) valor_perdas,
+       ROUND(COALESCE(pe.valor_perdas,0)/NULLIF(v.valor_vendas,0)*100,2) percentual_perdas
+FROM vendas v JOIN SETOR s ON s.id_setor=v.id_setor
+LEFT JOIN perdas pe ON pe.id_setor=v.id_setor AND pe.mes=v.mes
+ORDER BY v.mes,s.nome;
 
 -- G02 - Quantas ocorrencias de perda houve por motivo e por mes?
 -- Atende: P1 e KPI02
@@ -7082,17 +6894,15 @@ SELECT DATE_FORMAT(data_hora,'%Y-%m') AS mes,COUNT(*) AS vendas_registradas,
 FROM VENDA
 GROUP BY DATE_FORMAT(data_hora,'%Y-%m') ORDER BY mes;
 
--- G09 - Quais fornecedores tiveram mais mercadoria recusada por unidade de medida?
--- Atende: KPI09. Compare quantidades apenas dentro da mesma unidade_medida.
-SELECT f.id_fornecedor,f.razao_social,
- p.tipo_venda AS unidade_medida,SUM(ir.quantidade_recusada) AS quantidade_recusada
+-- G09 - Quais fornecedores tiveram mais mercadoria recusada?
+-- Atende: KPI09
+SELECT f.id_fornecedor,f.razao_social,SUM(ir.quantidade_recusada) AS quantidade_recusada
 FROM ITEM_RECEBIMENTO ir
 JOIN RECEBIMENTO r ON r.id_recebimento=ir.id_recebimento
 JOIN FORNECEDOR f ON f.id_fornecedor=r.id_fornecedor
-JOIN PRODUTO p ON p.id_produto=ir.id_produto
-GROUP BY f.id_fornecedor,f.razao_social,p.tipo_venda
+GROUP BY f.id_fornecedor,f.razao_social
 HAVING SUM(ir.quantidade_recusada)>0
-ORDER BY unidade_medida,quantidade_recusada DESC,f.id_fornecedor;
+ORDER BY quantidade_recusada DESC;
 
 -- G10 - Quanto existe de contas em aberto, separando vencidas e a vencer?
 -- Atende: KPI10
@@ -7166,12 +6976,11 @@ HAVING COUNT(iv.id_item_venda)=0;
 
 -- A04 - Existe venda concluida cujo pagamento nao bate com o total?
 -- Verifica: RN24
--- Como os valores sao DECIMAL(10,2), diferenca de um centavo tambem deve aparecer.
 SELECT v.id_venda,v.valor_total,COALESCE(SUM(pg.valor),0) AS total_pago
 FROM VENDA v LEFT JOIN PAGAMENTO pg ON pg.id_venda=v.id_venda
 WHERE v.status='concluida'
 GROUP BY v.id_venda,v.valor_total
-HAVING v.valor_total<>COALESCE(SUM(pg.valor),0);
+HAVING ABS(v.valor_total-COALESCE(SUM(pg.valor),0))>0.01;
 
 -- A05 - Existe lote ligado a produto diferente do item recebido?
 -- Verifica: RN14 e regra de normalizacao
@@ -7248,152 +7057,29 @@ FROM CONTA_PAGAR
 WHERE status='paga' AND (id_forma IS NULL OR data_pagamento IS NULL OR id_funcionario_pagamento IS NULL);
 
 -- ================================================================
-
--- A carga acima e uma importacao historica administrativa. A partir daqui,
--- estas protecoes exigem o fluxo de venda em andamento para novas operacoes.
-DELIMITER $$
-CREATE TRIGGER trg_venda_bi_status
-BEFORE INSERT ON VENDA FOR EACH ROW
-BEGIN
- IF NEW.status<>'em_andamento' OR NEW.valor_total<>0 THEN
-  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Nova venda deve iniciar em andamento e sem total';
- END IF;
-END$$
-CREATE TRIGGER trg_venda_bu_fluxo
-BEFORE UPDATE ON VENDA FOR EACH ROW
-BEGIN
- IF OLD.status='cancelada' THEN
-  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Venda cancelada nao pode ser alterada';
- END IF;
- IF NEW.id_sessao<>OLD.id_sessao OR NEW.id_funcionario_operador<>OLD.id_funcionario_operador OR NEW.data_hora<>OLD.data_hora THEN
-  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Origem da venda nao pode ser alterada';
- END IF;
- IF OLD.status='concluida' AND NEW.status<>'cancelada' THEN
-  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Venda concluida somente pode ser cancelada';
- END IF;
- IF NEW.status='concluida' THEN
-  IF NOT EXISTS(SELECT 1 FROM ITEM_VENDA WHERE id_venda=OLD.id_venda AND status='ativo')
-    OR NEW.valor_total<>(SELECT COALESCE(SUM(subtotal),0) FROM ITEM_VENDA WHERE id_venda=OLD.id_venda AND status='ativo')
-    OR NEW.valor_total<>(SELECT COALESCE(SUM(valor),0) FROM PAGAMENTO WHERE id_venda=OLD.id_venda)
-    OR EXISTS(SELECT 1 FROM ITEM_VENDA i WHERE i.id_venda=OLD.id_venda AND i.status='ativo' AND i.quantidade_ou_peso<>(SELECT COALESCE(SUM(sl.quantidade),0) FROM SAIDA_LOTE sl WHERE sl.id_item_venda=i.id_item_venda AND sl.tipo='venda')) THEN
-   SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Conclusao exige itens pagamentos e baixas correspondentes';
-  END IF;
- END IF;
- IF NEW.status='cancelada' THEN
-  IF OLD.status<>'concluida' OR NOT EXISTS(SELECT 1 FROM FUNCIONARIO WHERE id_funcionario=NEW.id_funcionario_supervisor AND ativo=1 AND perfil_acesso IN ('supervisor','gerencia'))
-    OR EXISTS(SELECT 1 FROM SAIDA_LOTE sl JOIN ITEM_VENDA i USING(id_item_venda) WHERE i.id_venda=OLD.id_venda AND sl.tipo='venda' AND NOT EXISTS(SELECT 1 FROM SAIDA_LOTE e WHERE e.id_saida_original=sl.id_saida_lote)) THEN
-   SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Cancelamento exige autorizacao e estorno completo';
-  END IF;
- END IF;
-END$$
-CREATE TRIGGER trg_venda_au_fiscal
-AFTER UPDATE ON VENDA FOR EACH ROW
-BEGIN
- IF NEW.status='cancelada' AND OLD.status<>'cancelada' THEN
-  UPDATE DOCUMENTO_FISCAL SET situacao='cancelado' WHERE id_venda=NEW.id_venda;
- END IF;
-END$$
-CREATE TRIGGER trg_item_venda_bi_fluxo
-BEFORE INSERT ON ITEM_VENDA FOR EACH ROW
-BEGIN
- IF NOT EXISTS(SELECT 1 FROM VENDA WHERE id_venda=NEW.id_venda AND status='em_andamento') THEN
-  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Itens somente em venda em andamento';
- END IF;
-END$$
-CREATE TRIGGER trg_item_venda_bu_fluxo
-BEFORE UPDATE ON ITEM_VENDA FOR EACH ROW
-BEGIN
- IF NEW.id_venda<>OLD.id_venda OR NOT EXISTS(SELECT 1 FROM VENDA WHERE id_venda=OLD.id_venda AND status='em_andamento') THEN
-  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Item de venda encerrada nao pode ser alterado';
- END IF;
- IF NOT EXISTS(SELECT 1 FROM PRODUTO WHERE id_produto=NEW.id_produto AND ativo=1) THEN
-  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Produto inativo';
- END IF;
- IF (SELECT tipo_venda FROM PRODUTO WHERE id_produto=NEW.id_produto)='unidade' AND NEW.quantidade_ou_peso<>FLOOR(NEW.quantidade_ou_peso) THEN
-  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Produto por unidade exige quantidade inteira';
- END IF;
-END$$
-CREATE TRIGGER trg_item_venda_bd_historico
-BEFORE DELETE ON ITEM_VENDA FOR EACH ROW
-BEGIN
- SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Itens devem ser cancelados e nao excluidos';
-END$$
-CREATE TRIGGER trg_perda_bd_historico
-BEFORE DELETE ON PERDA FOR EACH ROW
-BEGIN
- SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Perda deve ser substituida e nao excluida';
-END$$
-CREATE TRIGGER trg_perda_bu_saldo
-BEFORE UPDATE ON PERDA FOR EACH ROW
-BEGIN
- DECLARE v_id INT;
- DECLARE v_saldo DECIMAL(10,3);
- SELECT id_produto INTO v_id FROM PRODUTO WHERE id_produto=NEW.id_produto FOR UPDATE;
- IF NEW.status='valida' AND NEW.situacao_lote='lote_a_confirmar' THEN
-  SELECT COALESCE(SUM(quantidade_atual),0) INTO v_saldo FROM LOTE WHERE id_produto=NEW.id_produto;
-  SELECT v_saldo-COALESCE(SUM(quantidade),0) INTO v_saldo FROM PERDA WHERE id_produto=NEW.id_produto AND id_perda<>OLD.id_perda AND status='valida' AND situacao_lote='lote_a_confirmar';
-  IF NEW.quantidade>v_saldo THEN
-   SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Perda pendente maior que saldo disponivel';
-  END IF;
- END IF;
-END$$
-CREATE TRIGGER trg_pedido_bu_fornecedor
-BEFORE UPDATE ON PEDIDO_COMPRA FOR EACH ROW
-BEGIN
- IF NEW.id_fornecedor<>OLD.id_fornecedor AND NOT EXISTS(SELECT 1 FROM FORNECEDOR WHERE id_fornecedor=NEW.id_fornecedor AND ativo=1) THEN
-  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Fornecedor inativo';
- END IF;
-END$$
-CREATE TRIGGER trg_pagamento_bi_fluxo
-BEFORE INSERT ON PAGAMENTO FOR EACH ROW
-BEGIN
- IF NOT EXISTS(SELECT 1 FROM VENDA WHERE id_venda=NEW.id_venda AND status='em_andamento') THEN
-  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Pagamento exige venda em andamento';
- END IF;
-END$$
-CREATE TRIGGER trg_pagamento_bu_fluxo
-BEFORE UPDATE ON PAGAMENTO FOR EACH ROW
-BEGIN
- IF NEW.id_venda<>OLD.id_venda OR NOT EXISTS(SELECT 1 FROM VENDA WHERE id_venda=OLD.id_venda AND status='em_andamento') THEN
-  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Pagamento de venda encerrada nao pode ser alterado';
- END IF;
-END$$
-DELIMITER ;
-
 -- 10. PERFIS DE ACESSO (ROLES)
 -- ================================================================
 
 CREATE ROLE IF NOT EXISTS 'role_caixa','role_retaguarda','role_gerencia';
-REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'role_caixa','role_retaguarda','role_gerencia';
 
 GRANT SELECT ON hortifruti_uniao.PRODUTO TO 'role_caixa';
 GRANT SELECT ON hortifruti_uniao.FORMA_PAGAMENTO TO 'role_caixa';
-GRANT SELECT,INSERT ON hortifruti_uniao.VENDA TO 'role_caixa';
+GRANT SELECT,INSERT,UPDATE ON hortifruti_uniao.VENDA TO 'role_caixa';
 GRANT SELECT,INSERT,UPDATE ON hortifruti_uniao.ITEM_VENDA TO 'role_caixa';
 GRANT SELECT,INSERT ON hortifruti_uniao.PAGAMENTO TO 'role_caixa';
 
 GRANT SELECT,INSERT,UPDATE ON hortifruti_uniao.PEDIDO_COMPRA TO 'role_retaguarda';
 GRANT SELECT,INSERT,UPDATE ON hortifruti_uniao.ITEM_PEDIDO_COMPRA TO 'role_retaguarda';
-GRANT SELECT ON hortifruti_uniao.RECEBIMENTO TO 'role_retaguarda';
-GRANT SELECT ON hortifruti_uniao.ITEM_RECEBIMENTO TO 'role_retaguarda';
-GRANT SELECT ON hortifruti_uniao.LOTE TO 'role_retaguarda';
+GRANT SELECT,INSERT,UPDATE ON hortifruti_uniao.RECEBIMENTO TO 'role_retaguarda';
+GRANT SELECT,INSERT,UPDATE ON hortifruti_uniao.ITEM_RECEBIMENTO TO 'role_retaguarda';
+GRANT SELECT,INSERT,UPDATE ON hortifruti_uniao.LOTE TO 'role_retaguarda';
 GRANT SELECT,INSERT,UPDATE ON hortifruti_uniao.CONTA_PAGAR TO 'role_retaguarda';
 
 GRANT SELECT ON hortifruti_uniao.* TO 'role_gerencia';
-GRANT SELECT ON hortifruti_uniao.PERDA TO 'role_gerencia';
+GRANT INSERT,UPDATE ON hortifruti_uniao.PERDA TO 'role_gerencia';
 GRANT INSERT,UPDATE ON hortifruti_uniao.PROMOCAO TO 'role_gerencia';
 GRANT SELECT (id_funcionario,nome,cargo,id_setor,perfil_acesso,ativo) ON hortifruti_uniao.FUNCIONARIO TO 'role_caixa';
 GRANT SELECT (id_fornecedor,razao_social,ativo) ON hortifruti_uniao.FORNECEDOR TO 'role_caixa';
 
 -- Observacao: o trabalho nao cria usuarios MySQL reais nem liga usuario ao funcionario.
 -- As roles mostram apenas como as permissoes poderiam ser separadas por perfil.
-
-GRANT EXECUTE ON PROCEDURE hortifruti_uniao.concluir_venda TO 'role_caixa';
-GRANT EXECUTE ON PROCEDURE hortifruti_uniao.registrar_recebimento TO 'role_retaguarda';
-GRANT EXECUTE ON PROCEDURE hortifruti_uniao.adicionar_lote_recebimento TO 'role_retaguarda';
-GRANT EXECUTE ON PROCEDURE hortifruti_uniao.registrar_abatimento_fornecedor TO 'role_retaguarda';
-GRANT EXECUTE ON PROCEDURE hortifruti_uniao.cancelar_venda TO 'role_gerencia';
-GRANT EXECUTE ON PROCEDURE hortifruti_uniao.fechar_sessao TO 'role_gerencia';
-GRANT EXECUTE ON PROCEDURE hortifruti_uniao.registrar_perda_pendente TO 'role_gerencia';
-GRANT EXECUTE ON PROCEDURE hortifruti_uniao.confirmar_lote_perda TO 'role_gerencia';
-GRANT EXECUTE ON PROCEDURE hortifruti_uniao.estornar_saida TO 'role_gerencia';
