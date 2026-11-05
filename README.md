@@ -863,7 +863,7 @@ A tabela abaixo mostra como cada restrição foi pensada e como as regras de int
 | Devolução até o limite recusado e abatimento na conta do mesmo fornecedor | Trigger em ITEM_DEVOLUCAO e em DEVOLUCAO_FORNECEDOR, porque comparam tabelas diferentes | RN37, RN38 |
 | Perda separada de devolução | Tabelas diferentes para a parcela recusada do recebimento e as perdas de estoque. Não há uma identificação geral da mercadoria física que impeça qualquer registro duplicado entre os dois processos | RN28, RN39 |
 | Perda com motivo e situação do lote | FK, `NOT NULL` e validação condicional | RN40 a RN42 |
-| Perda não é apagada | Sem `DELETE` para o perfil de uso. Correção ou divisão por novo registro ligado ao original, que passa a `substituida` e sai dos totais | RN43, RN52 |
+| Perda não é apagada | Sem `DELETE` para o perfil de uso. Correção ou divisão pelas procedures corrigir_perda e dividir_perda. Triggers impedem passos fora de ordem | RN43, RN52 |
 | Valor da perda só com lote confirmado | `valor_estimado` aceita `NULL` e `CHECK` ligado à situação do lote | RN44 |
 | Alerta de validade por setor | `SETOR.dias_alerta_validade` (`NULL` nos setores sem alerta) e consultas por lote | RN45 |
 | Prazo padrão de 7 dias para produto com validade em setor sem alerta | Constante escrita na consulta G03, e não coluna do banco. Para mudar o prazo, edita-se o valor na consulta | RN45 |
@@ -879,7 +879,7 @@ A tabela abaixo mostra como cada restrição foi pensada e como as regras de int
 Algumas regras não dá para garantir só com PK, FK e `CHECK`, porque precisam comparar várias linhas ou tabelas. É o caso da soma dos pagamentos, da soma dos lotes de um recebimento e de a venda concluída ter pelo menos um item. Para essas decidimos o seguinte:
 
 - **Triggers** (a maioria `BEFORE INSERT` e `BEFORE UPDATE`) para as conferências curtas, que olham uma ou duas linhas: saída dentro do saldo, devolução até o limite recusado, produto do lote igual ao do item recebido, setor da perda, forma de pagamento conforme o uso, funcionário ativo. Onze dos 38 triggers só são criados depois da carga histórica, e a partir daí toda venda nova começa com status `em_andamento` e total zero.
-- **Procedures com transação** para os fluxos de vários passos previstos pela RNF04, com rollback nas condições tratadas explicitamente e também nos erros inesperados (`EXIT HANDLER FOR SQLEXCEPTION`): concluir uma venda, cancelar uma venda já concluída, registrar um recebimento com um item e seu lote, confirmar o lote de uma perda, estornar uma baixa e fechar uma sessão de caixa. Quando o mesmo item recebido tiver outros lotes, eles podem ser incluídos pela procedure `adicionar_lote_recebimento`, que confere se a soma dos lotes não ultrapassa a quantidade aceita.
+- **Procedures com transação** para os fluxos de vários passos previstos pela RNF04, com rollback nas condições tratadas explicitamente e também nos erros inesperados (`EXIT HANDLER FOR SQLEXCEPTION`): concluir uma venda, cancelar uma venda já concluída, registrar um recebimento com um item e seu lote, confirmar o lote de uma perda, estornar uma baixa e fechar uma sessão de caixa. Quando o mesmo item recebido tiver outros lotes, eles podem ser incluídos pela procedure `adicionar_lote_recebimento, corrigir_perda e dividir_perda à lista de fluxos`, que confere se a soma dos lotes não ultrapassa a quantidade aceita.
 - **Consultas de auditoria** (A01 a A12) para conferir depois o que o banco não consegue impedir sozinho.
 
 #### Quem fez cada operação (RNF02 e RNF06)
@@ -1099,6 +1099,8 @@ Existem recebimentos entre **15/10/2026 e 25/10/2026**, utilizados para formar o
 | :--- | :--- |
 | `concluir_venda` | Confere a venda, realiza as baixas por lote, calcula o total e verifica se os pagamentos correspondem ao valor final. |
 | `cancelar_venda` | Valida o perfil de supervisor ou gerência, registra o cancelamento, estorna as baixas de estoque e marca o documento fiscal da venda como cancelado. |
+| `corrigir_perda` | Corrige a quantidade de uma perda válida: estorna a baixa do lote, registra a perda nova ligada à original e marca a original como substituida, em uma transação. |
+| `dividir_perda` | Divide uma perda entre lotes do mesmo produto. A soma das partes tem que dar a quantidade original (RN52). |
 | `confirmar_lote_perda` | Vincula uma perda pendente ao lote informado, calcula seu valor e registra a baixa correspondente. |
 | `estornar_saida` | Registra o estorno de uma saída, mantendo o movimento original no histórico. |
 | `fechar_sessao` | Calcula o valor esperado somando o fundo inicial aos pagamentos em dinheiro das vendas concluídas e subtraindo as sangrias. Depois grava o valor contado e quem fechou a sessão. |
