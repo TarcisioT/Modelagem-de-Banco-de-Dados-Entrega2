@@ -981,6 +981,5 @@ A apresentação foi organizada para durar cerca de **8 minutos**, mostrando pri
 | 6. BI e IA | Indicadores criados e possíveis usos futuros dos dados. | 1 min |
 | 7. Benefícios | Melhor controle das perdas, da validade e apoio às decisões do mercado. | 1 min |
 
-**Arquivo da apresentação:** `apresentação/Hortifruti União — Apresentação Acadêmica — Entrega 2.pdf`
-
+**Arquivo da apresentação:** `apresentacao/Apresentacao_HortifrutiUniao_Entrega2.pptx`
 Depois do pitch, todos os integrantes ficam para a defesa do modelo lógico, e cada pergunta é respondida somente pelo aluno a quem foi dirigida. Cada aluno precisa saber explicar as partes do modelo, principalmente chaves, cardinalidades e as decisões de normalização.
