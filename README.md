@@ -170,9 +170,7 @@ Em mercados e hortifrutis costumam existir outros processos além dos listados a
 | Entregas em domicílio | Não realiza | O mercado não faz entregas, nem com equipe própria nem com terceiros. |
 | Venda fiado e crediário | Não realiza | Todas as vendas são pagas no caixa. |
 | Troca ou devolução pelo cliente | Existe, mas é rara | É tratada pela gerência ou retaguarda, com os ajustes feitos no sistema utilizado pelo mercado. Por isso, não foi criado um fluxo próprio no caixa. |
-| Inventário ou contagem periódica de estoque | Existe, no sistema do mercado | O controle é feito pelo sistema, com base nas entradas e saídas. Quando há diferença, o ajuste é feito no próprio sistema (confirmado presencialmente em 30/09/2026). O banco não registra a contagem. O saldo vem dos lotes. |
 | Controle sanitário (limpeza, condições dos produtos, laudos) | Existe | É uma rotina de conformidade e não faz parte do controle de vendas e estoque do sistema (confirmado presencialmente em 30/09/2026). O responsável não informou como é registrada. Não está ligada a P1 nem a P2. |
-| Folha de pagamento, ponto e férias | Existe, fora do banco | É feita pela contabilidade e por sistemas próprios. O banco guarda só o cadastro e a escala dos funcionários (RF08 a RF10), que é organizada separadamente. |
 | Despesas que não vêm de fornecedor de mercadoria (aluguel, energia, impostos) | Existe, fora do banco | São controladas pelo setor financeiro, no sistema usado pela empresa. O modelo cobre só as contas a pagar ligadas a recebimento de mercadoria (RN34). |
 | Precificação e curva ABC | Preço definido pela gerência | A gerência define o preço conforme a necessidade comercial e cadastra no sistema. O banco guarda só o preço no produto (RN04) e o preço praticado em cada venda. O responsável não falou de curva ABC, então ela não entrou. |
 
@@ -374,8 +372,7 @@ Já cadastro de clientes, programa de fidelidade, vendas online, entregas e vend
 - **RN30 [Confirmada + Proposta]** O caixa é aberto com um fundo inicial, que não poderá ser negativo.
 - **RN31 [Confirmada + Proposta]** Sangrias só poderão ser registradas em sessões abertas e com valor positivo.
 - **RN32 [Confirmada + Proposta]** No fechamento, a diferença será calculada pelo valor contado menos o valor esperado.
-- **RN33 [Confirmada + Proposta]** O processo fiscal continua sendo feito no sistema atual. O banco apenas armazenará os dados dos documentos relacionados às vendas.
-
+- 
 ##### Financeiro
 
 - **RN34 [Confirmada + Proposta]** Contas a pagar relacionadas às compras terão vencimento, valor e recebimento de origem.
@@ -418,7 +415,6 @@ Também ficaram de fora regras de processos que o banco não controla:
 
 - **Aferição da balança (Inmetro):** o banco só guarda o peso informado na venda (RN22), e o grupo não confirmou com o responsável como a aferição é feita.
 - **Normas sanitárias:** o responsável confirmou que existe controle sanitário (limpeza e acompanhamento das condições dos produtos), mas fora do sistema de vendas e estoque. O banco não registra temperatura, limpeza nem laudos. A única regra ligada a produto vencido é a RN46, que impede a venda de lote vencido.
-- **Obrigações trabalhistas e fiscais:** ficam no sistema atual e na contabilidade (RN33). O banco guarda só os dados de escala e os dados dos documentos fiscais das vendas.
   
 ##### Rastreabilidade dos problemas P1 e P2
 
