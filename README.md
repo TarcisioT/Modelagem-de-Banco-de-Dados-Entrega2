@@ -510,12 +510,6 @@ Todas as 27 tabelas têm chave primária própria, com o prefixo `id_`. As chave
 | `PAGAMENTO` | `id_pagamento` | `id_venda`, `id_forma` |
 | `DOCUMENTO_FISCAL` | `id_documento` | `id_venda` |
 
-Nos relacionamentos 44 e 45 a chave estrangeira precisa ser única: `DOCUMENTO_FISCAL.id_venda` impede dois documentos para a mesma venda, e `SAIDA_LOTE.id_saida_original` impede estornar a mesma baixa duas vezes. No segundo caso a coluna aceita `NULL`, porque uma baixa normal não aponta para outra.
-
-As FKs de funcionário em `VENDA`, `TROCA_OPERADOR` e `SESSAO_CAIXA` têm nomes diferentes (`id_funcionario_operador` e `id_funcionario_supervisor`, `id_funcionario_anterior` e `id_funcionario_novo`, `id_funcionario_abertura` e `id_funcionario_fechamento`) porque o mesmo funcionário participa com papéis diferentes.
-
-As FKs impedem, por exemplo, um item de venda ligado a um produto que não existe. Mas elas sozinhas não resolvem regras que comparam várias linhas ou tabelas, como conferir se a venda foi paga por inteiro ou se a saída passa do saldo do lote. Essas ficam para as restrições e para as operações do SQL, explicadas na seção 1.5.
-
 ### 1.4 Processo de Normalização (1FN, 2FN e 3FN)
 
 Usamos a normalização para não misturar, numa mesma tabela, informações de cadastro, venda, compra e estoque.
