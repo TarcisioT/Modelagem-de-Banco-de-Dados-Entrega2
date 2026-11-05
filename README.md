@@ -512,67 +512,37 @@ Todas as 27 tabelas têm chave primária própria, com o prefixo `id_`. As chave
 
 ### 1.4 Processo de Normalização (1FN, 2FN e 3FN)
 
-Usamos a normalização para não misturar, numa mesma tabela, informações de cadastro, venda, compra e estoque.
+A normalização foi aplicada para evitar repetição desnecessária de informações e manter os dados organizados entre os diferentes processos do mercado.
 
 #### Primeira Forma Normal (1FN)
 
-Na 1FN cada campo guarda um único valor, sem lista de produtos, pagamentos ou datas dentro de uma coluna. O DER não tem nenhum atributo multivalorado. Os itens de venda ficaram em ITEM_VENDA e os de pedido em ITEM_PEDIDO_COMPRA: uma venda com três produtos gera três linhas de item, e não três produtos num campo só.
+Na 1FN, cada campo deve armazenar apenas um valor e não deve existir uma lista de informações dentro da mesma coluna.
 
-O mesmo vale para recebimentos, devoluções e pagamentos. Cada item e cada pagamento tem a sua linha. Fornecedor e funcionário têm um telefone cada. Se o mercado quiser guardar vários, será preciso uma tabela própria de telefones. O endereço do fornecedor ficou como um texto único, porque é assim que usamos no levantamento. Se um dia for preciso buscar por CEP ou bairro, essa escolha tem que ser revista.
+Por isso, itens de venda, itens de pedido, itens de recebimento, itens de devolução e pagamentos foram separados em registros próprios. Uma venda com vários produtos, por exemplo, possui uma linha em `ITEM_VENDA` para cada item, e uma venda com mais de uma forma de pagamento possui vários registros em `PAGAMENTO`.
 
-**Por que a 1FN foi necessária no nosso caso.** Venda, pedido, recebimento e devolução têm vários itens, e uma venda pode ser paga de mais de um jeito. Se esses dados ficassem numa lista dentro de um campo, não daria para somar o subtotal, baixar o estoque do lote de cada item, cancelar só um item (RN26) nem conferir os pagamentos contra o total (RN24). Com uma linha por item e uma por pagamento, cada uma dessas contas vira uma consulta simples.
+Essa separação permite consultar, calcular e alterar cada item individualmente.
 
 #### Segunda Forma Normal (2FN)
 
-A 2FN pede que cada dado dependa da chave inteira e não de um pedaço dela. Todas as nossas chaves primárias são simples (`id_item_venda`, `id_item_pedido` etc.), então não existe dependência parcial em relação a elas.
+Na 2FN, os atributos devem depender da chave que identifica o registro inteiro.
 
-Só que chave primária simples não encerra o assunto. Algumas tabelas também têm chaves candidatas compostas (colunas que ficam juntas num `UNIQUE`), e conferimos as dependências em relação a elas também:
+As tabelas do projeto utilizam chaves primárias simples, como `id_item_venda` e `id_item_pedido`. Nas tabelas que representam relações entre registros, mantivemos somente as informações que pertencem àquela relação.
 
-- **FORNECEDOR_PRODUTO**, chave candidata (`id_fornecedor`, `id_produto`): o código no fornecedor e o último custo valem para o par, e não para só um dos dois. Os dados do fornecedor e do produto continuam nas tabelas deles.
-- **ESCALA**, chave candidata (`id_funcionario`, `data`): tipo, hora de início e hora de fim pertencem àquele funcionário naquele dia.
-- **RECEBIMENTO**, chave candidata (`id_fornecedor`, `numero_nf`, `serie`): as datas, o valor e o funcionário dependem da nota inteira. O número da nota sozinho não define nada, porque outro fornecedor pode ter a mesma numeração.
+Por exemplo, em `FORNECEDOR_PRODUTO`, o código usado pelo fornecedor e o último custo pertencem à relação entre aquele fornecedor e aquele produto. Os dados cadastrais do fornecedor permanecem em `FORNECEDOR` e os dados do produto permanecem em `PRODUTO`.
 
-O **ITEM_VENDA** não tem chave candidata composta: a mesma venda pode ter o mesmo produto em mais de uma linha, por causa da divisão por lotes (RN57), então não existe `UNIQUE` em venda + produto. Aqui só vale a chave simples: quantidade e preço praticado pertencem àquele item, e o nome e o preço atual do produto continuam em PRODUTO.
-
-Para não repetir o par de FORNECEDOR_PRODUTO, usamos `UNIQUE` nas duas FKs.
-
-**Por que a 2FN foi necessária no nosso caso.** As tabelas que ligam duas coisas (FORNECEDOR_PRODUTO, ESCALA, RECEBIMENTO) têm chave candidata composta, e era ali que o erro podia aparecer: guardar o nome do produto ou a razão social do fornecedor junto do par faria o mesmo dado se repetir em cada linha, e corrigir um nome exigiria alterar várias linhas. Conferindo que cada coluna depende do par inteiro, o nome fica só no cadastro e a tabela de ligação guarda apenas o que é do par (código no fornecedor, último custo, horários do dia).
+Isso evita repetir informações de cadastro em várias linhas.
 
 #### Terceira Forma Normal (3FN)
 
-Na 3FN evitamos que um atributo dependa de outro que não seja a chave. Por isso o nome do setor fica só em SETOR e a razão social do fornecedor só em FORNECEDOR, sem repetir em PRODUTO, RECEBIMENTO ou PEDIDO_COMPRA. VENDA e PAGAMENTO são separadas porque uma venda pode ter mais de uma forma de pagamento, e criamos MOTIVO_PERDA para não repetir a descrição do motivo em cada perda. Pela mesma razão as formas de pagamento ficam num cadastro só (FORMA_PAGAMENTO), usado nas vendas e nas contas a pagar, em vez de um texto digitado em cada pagamento.
+Na 3FN, evitamos que uma informação dependa de outro atributo que não seja a chave do registro.
 
-**Por que a 3FN foi necessária no nosso caso.** O mercado tem poucos setores, motivos de perda e formas de pagamento, mas milhares de produtos, perdas e pagamentos. Se o nome do setor ou a descrição do motivo ficasse em cada linha, uma grafia diferente ("Frios" e "frios") quebraria os indicadores por setor e por motivo (KPI01 e KPI02), que são o centro do P1. Com cada descrição em um lugar só, os totais batem. Onde repetimos de propósito, explicamos o motivo e o controle abaixo.
+Por isso, nomes de setores ficam em `SETOR`, motivos de perda ficam em `MOTIVO_PERDA` e formas de pagamento ficam em `FORMA_PAGAMENTO`, em vez de repetir esses textos em vendas, perdas e outros registros.
 
-Em alguns pontos mantivemos uma repetição de propósito, e ali a 3FN não é estrita. Separamos em três grupos, porque o motivo de cada um é diferente.
+Alguns valores são mantidos propositalmente para preservar o histórico. O preço registrado em um item de venda, por exemplo, representa o valor praticado naquele momento e não deve mudar caso o preço atual do produto seja alterado.
 
-**Repetições de caminho, controladas pelo banco:**
+Também existem campos derivados, como `ITEM_VENDA.subtotal` e `SESSAO_CAIXA.diferenca`, calculados pelo próprio banco. O `VENDA.valor_total` é definido no momento da conclusão da venda após a conferência dos itens e pagamentos.
 
-- **`LOTE.id_produto`:** o item recebido já identifica o produto (lote → item recebido → produto). Guardamos o produto no lote para facilitar consulta por produto. Como o produto de um lote não muda depois de criado, basta o SQL conferir na criação que ele é o mesmo produto do item recebido, e os dois caminhos não divergem.
-- **`PERDA.id_setor`:** o setor já se descobre pelo produto (perda → produto → setor, uma dependência transitiva). Guardamos na perda porque ela precisa lembrar o setor onde a perda aconteceu: se o produto mudar de setor depois, a perda antiga continua no setor de antes e os indicadores por setor não mudam sozinhos. A validação é que, ao registrar a perda, o setor seja o setor do produto naquele momento e seja um setor que vende produto (RN03).
-- **`PERDA.id_produto`:** quando o lote é conhecido, o produto também se descobre pelo lote. Mas na perda com "lote a confirmar" não existe lote, então o produto precisa ficar na própria perda. Quando o lote é identificado, o SQL confere se os dois produtos são o mesmo.
-- **`LOTE.custo_unitario`:** é uma cópia histórica do `custo_unitario_nf` do item recebido, feita quando o lote é criado, e não muda depois. Fica no lote porque é esse custo que calcula o valor da perda (RN44) e porque um mesmo item pode gerar mais de um lote.
-- **`SAIDA_LOTE.id_lote`:** o item de venda já identifica o produto, e o lote também. Os dois caminhos precisam levar ao mesmo produto, e o trigger confere isso na baixa.
-- **`ITEM_DEVOLUCAO.id_item_recebimento`:** o item recebido pertence a um recebimento, e a devolução também aponta para um recebimento. Os dois precisam ser o mesmo, e o trigger confere na criação do item de devolução.
-
-**Dados históricos, que não são repetição:**
-
-- **`ITEM_VENDA.preco_unitario` e `PROMOCAO.preco_normal`:** parecem repetir o preço do produto, mas são outro fato. Eles registram o preço praticado naquela venda e o preço normal naquela promoção, e não dependem do preço atual do cadastro. Se o preço do produto mudar amanhã, o item vendido ontem não pode mudar. Por isso mantemos como dado da ocorrência, e não como exceção à normalização.
-
-**Valores que dariam para calcular e que decidimos guardar:**
-
-- `LOTE.quantidade_atual`, para não somar todas as movimentações a cada consulta;
-- `PERDA.valor_estimado`, para preservar o valor daquela ocorrência;
-- `SESSAO_CAIXA.valor_esperado`, o valor do momento do fechamento;
-- `ITEM_RECEBIMENTO.quantidade_nf` e `quantidade_recusada`. Aqui vale separar duas coisas: a restrição aritmética "quantidade da nota = aceita + recusada", que um `CHECK` garante, e a escolha de guardar os três números mesmo dando para calcular um deles a partir dos outros. A restrição existe sempre; a redundância é opção nossa. Guardamos os três porque o fornecedor reclama em cima do que veio na nota e do que foi recusado, e a consulta de divergências (G09) fica mais simples.
-
-Esses valores precisam ser mantidos junto com cada baixa, estorno, recebimento e fechamento, para não ficarem diferentes do histórico.
-
-`ITEM_VENDA.subtotal`, `VENDA.valor_total` e `SESSAO_CAIXA.diferenca` são **derivados**, porque podem ser calculados a partir de outros campos. No SQL, `ITEM_VENDA.subtotal` é uma coluna gerada a partir da quantidade vezes o preço, e `SESSAO_CAIXA.diferenca` é uma coluna gerada a partir do valor contado menos o valor esperado. Já `VENDA.valor_total` é gravado pela procedure `concluir_venda`, depois da conferência dos itens ativos e dos pagamentos (RN23 e RN24). Assim, os cálculos simples ficam por conta do próprio banco e o total da venda só é fechado quando a venda realmente é concluída.
-
-#### O que ganhamos com isso
-
-Cada informação fica em um lugar só. Se um fornecedor muda de telefone, o grupo atualiza apenas o cadastro dele, sem precisar procurar o mesmo dado em pedido, nota ou conta. Se o mesmo produto chega em lotes diferentes, cada lote guarda a sua validade e o cadastro do produto não muda. E como os números não ficam repetidos por aí, as consultas de perdas, validade, vendas e estoque têm menos chance de dar resultados diferentes para a mesma coisa.
+Com a normalização, os dados ficam mais consistentes, reduzem-se repetições desnecessárias e alterações em um cadastro não precisam ser feitas em várias tabelas.
 
 ### 1.5 Justificativas Técnicas das Decisões
 
