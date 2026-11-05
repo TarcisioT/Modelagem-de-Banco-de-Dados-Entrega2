@@ -871,7 +871,8 @@ A tabela abaixo mostra como cada restrição foi pensada e como as regras de int
 
 Algumas regras não dá para garantir só com PK, FK e `CHECK`, porque precisam comparar várias linhas ou tabelas. É o caso da soma dos pagamentos, da soma dos lotes de um recebimento e de a venda concluída ter pelo menos um item. Para essas decidimos o seguinte:
 
-- **Triggers** (a maioria `BEFORE INSERT` e `BEFORE UPDATE`) para as conferências curtas, que olham uma ou duas linhas: saída dentro do saldo, devolução até o limite recusado, produto do lote igual ao do item recebido, setor da perda, forma de pagamento conforme o uso, funcionário ativo. Onze dos 38 triggers só são criados depois da carga histórica, e a partir daí toda venda nova começa com status `em_andamento` e total zero.
+- **Triggers** (a maioria `BEFORE INSERT` e `BEFORE UPDATE`) para as conferências curtas, que olham uma ou duas linhas: saída dentro do saldo, devolução até o limite recusado, produto do lote igual ao do item recebido, setor da perda, forma de pagamento conforme o uso, funcionário ativo.Os 27 triggers são criados antes da carga da massa de dados e complementam as restrições do banco nas validações entre tabelas. Novas vendas utilizam por padrão o status `em_andamento` e valor total zero, seguindo depois o fluxo previsto pelas procedures.
+  
 - **Procedures com transação** para os fluxos de vários passos previstos pela RNF04, com rollback nas condições tratadas explicitamente e também nos erros inesperados (`EXIT HANDLER FOR SQLEXCEPTION`): concluir uma venda, cancelar uma venda já concluída, registrar um recebimento com um item e seu lote, confirmar o lote de uma perda, estornar uma baixa e fechar uma sessão de caixa. Quando o mesmo item recebido tiver outros lotes, eles podem ser incluídos pela procedure `adicionar_lote_recebimento`, que confere se a soma dos lotes não ultrapassa a quantidade aceita.
 - **Consultas de auditoria** (A01 a A12) para conferir depois o que o banco não consegue impedir sozinho.
 
@@ -1047,7 +1048,7 @@ O script utiliza o banco `hortifruti_uniao`. Cada execução completa apaga e re
 
 ### Execução e conferência
 
-O arquivo final entregue em `docs/script.sql` foi executado pelo grupo no MySQL 8.0.46. Durante uma etapa anterior da revisão, uma cópia utilizada em ambiente isolado exigiu a retirada de uma definição de `DEFINER` específica daquele ambiente. Esse ajuste não faz parte do arquivo oficial entregue. A versão final do script, sem `DEFINER`, foi executada pelo grupo com a carga, as consultas gerenciais e as auditorias sem erro. Foram confirmadas 200 vendas, 27 tabelas, 53 chaves estrangeiras, 38 triggers e 9 procedures.
+O arquivo final entregue em `docs/script.sql` foi executado pelo grupo no MySQL 8.0.46. Durante uma etapa anterior da revisão, uma cópia utilizada em ambiente isolado exigiu a retirada de uma definição de `DEFINER` específica daquele ambiente. Esse ajuste não faz parte do arquivo oficial entregue. A versão final do script, sem `DEFINER`, foi executada pelo grupo com a carga, as consultas gerenciais e as auditorias sem erro. Foram confirmadas 200 vendas, 27 tabelas, 53 chaves estrangeiras, 27 triggers e 9 procedures.
 
 Durante a revisão também foram realizadas 57 verificações auxiliares envolvendo operações válidas e inválidas, estoque, recebimentos, perdas, vendas, pagamentos, cancelamentos, estornos e rollback. Os scripts auxiliares usados nessa etapa não fazem parte da entrega e, por isso, essas 57 verificações são registradas apenas como validação interna do grupo. As verificações reproduzíveis entregues no repositório são as consultas gerenciais G01 a G12 e as auditorias A01 a A12 existentes em `docs/script.sql`.
 
@@ -1059,7 +1060,7 @@ As demais conferências abaixo descrevem a estrutura e a massa definidas no scri
 
 **Backup e restauração (RNF08):** o grupo fez um backup lógico do banco com `mysqldump`, incluindo estrutura, dados, procedures e triggers. Depois, o arquivo foi restaurado em um banco separado, chamado `hortifruti_uniao_restore_atualizado`, sem alterar o banco original.
 
-A exportação e a restauração terminaram sem erro. Comparamos a quantidade de registros das 27 tabelas nos dois bancos e não encontramos diferenças. No banco restaurado também foram confirmadas 53 chaves estrangeiras, 38 triggers, 9 procedures e 1 view.
+A exportação e a restauração terminaram sem erro. Comparamos a quantidade de registros das 27 tabelas nos dois bancos e não encontramos diferenças. No banco restaurado também foram confirmadas 53 chaves estrangeiras, 27 triggers, 9 procedures e 1 view.
 
 A conferência das vendas mostrou os mesmos 200 registros do banco original, sendo 196 vendas concluídas e 4 canceladas. O faturamento das vendas concluídas ficou em R$ 16.539,88 nos dois bancos.
 
@@ -1069,7 +1070,7 @@ Esse teste confirmou a recuperação da estrutura e dos dados nos pontos verific
 | :--- | :--- |
 | Tabelas criadas | 27 |
 | Chaves estrangeiras | 53 |
-| Triggers | 38 |
+| Triggers | 27 |
 | Procedures | 9 |
 | Views | 1 |
 | Índices explícitos adicionais aos de chaves | 12 |
@@ -1175,7 +1176,7 @@ O script traz exemplos de `UPDATE` e `DELETE` na seção 7 do script SQL. Os `DE
 
 ### Ordem e características da carga
 
-As tabelas, restrições, procedures e 27 dos 38 triggers são criados antes da carga dos dados. Os outros 11 triggers são criados depois dela, porque a carga é uma importação histórica de vendas já concluídas. A partir deles, toda venda nova começa como `em_andamento` e só passa a `concluida` ou `cancelada` pelo fluxo previsto.
+As tabelas, restrições, procedures e os 27 triggers são criados antes da carga dos dados. A massa é carregada como uma carga histórica demonstrativa, com vendas já concluídas, enquanto as procedures permanecem disponíveis para demonstrar os fluxos transacionais de novas operações.
 
 A massa é carregada como uma **carga histórica demonstrativa**: as vendas são inseridas como concluídas, acompanhadas de itens, pagamentos e saídas de lote. As procedures `cancelar_venda` e `fechar_sessao` são chamadas durante a carga para gerar os cancelamentos e fechamentos previstos.
 
@@ -1286,7 +1287,7 @@ A massa inclui:
 
 A massa permite demonstrar o controle de estoque, lotes, validade, perdas, vendas, pagamentos e fechamento de caixa, além das **12 consultas gerenciais e 12 consultas de auditoria**.
 
-O script foi executado no **MySQL 8.0.46** e a conferência realizada após a carga confirmou **200 vendas, 27 tabelas, 53 chaves estrangeiras, 38 triggers e 9 procedures**, além da distribuição das vendas pelos sete dias simulados.
+O script foi executado no **MySQL 8.0.46** e a conferência realizada após a carga confirmou **200 vendas, 27 tabelas, 53 chaves estrangeiras, 27 triggers e 9 procedures**, além da distribuição das vendas pelos sete dias simulados.
 
 Também foi feita uma checagem rápida de integridade após a carga. Ela não encontrou saldo disponível negativo, pedido não cancelado sem item, venda concluída sem item ativo, divergência entre pagamento e total da venda concluída, lote ligado a produto diferente do item recebido nem lote com saldo fora do intervalo permitido.
 
