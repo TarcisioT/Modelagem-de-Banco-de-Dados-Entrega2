@@ -392,7 +392,7 @@ Cadastro de clientes, programa de fidelidade, vendas online, entregas e venda fi
 
 ##### Regras comuns não incluídas
 
-Não criamos regras para cadastro de clientes, fidelidade, entrega e venda a prazo, porque o responsável confirmou que esses processos não fazem parte da rotina do mercado.
+Não criamos regras para cadastro de clientes, fidelidade, vendas online, entrega e venda a prazo, porque o responsável confirmou que esses processos não fazem parte da rotina do mercado.
 
 - **Aferição da balança (Inmetro):** o banco só guarda o peso informado na venda (RN22), e o grupo não confirmou com o responsável como a aferição é feita.
 
