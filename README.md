@@ -2,8 +2,6 @@
 
 ### Modelagem de um sistema de gestão de informações — Hortifruti União (Tatuapé)
 
-> **Atualização de revisão:** o SQL corrigido preserva a massa histórica e acrescenta o setor da venda por item, controle das pendências de reembolso e ajustes nas auditorias A08/A10 e nos estornos. As métricas de execução e os testes realizados antes desta revisão devem ser revalidados no MySQL; não são resultados de execução do arquivo revisado. Os diagramas e o dicionário de dados também precisam refletir a nova tabela e as três FKs acrescentadas em relação à contagem anterior de 53.
-
 ## 1. Relatório Técnico Final
 
 ### Integrantes
@@ -91,7 +89,7 @@
 
 - **Quando e onde:** A entrevista inicial foi realizada em **22/09/2026**, por videochamada no WhatsApp. Depois, em **30/09/2026**, o Tarcisio foi até o mercado, na Rua Filipe Camarão, 67, no Tatuapé, para observar o funcionamento do local, tirar fotos e conversar presencialmente com o responsável.
   
-- **O que foi levantado:** Conversamos sobre como o mercado funciona, quantos funcionários e fornecedores tem, o que vende e quais são os principais problemas. Também falamos sobre o VR Software, o controle de estoque, a validade, as perdas, as compras, as vendas e os pagamentos. Na visita de 30/09/2026, conversamos presencialmente sobre inventário, despesas gerais e definição de preços. Depois, em 26/10/2026, confirmamos com o responsável, por WhatsApp, alguns detalhes sobre pedidos, notas fiscais, formas de pagamento, fechamento de caixa, cadastro de clientes, fidelidade, vendas online, entregas, devoluções a fornecedores, escala dos funcionários, cancelamento de vendas, venda restrita por idade, validade dos produtos por setor, venda fiado e troca ou devolução feita pelo cliente.
+- **O que foi levantado:** Conversamos sobre como o mercado funciona, quantos funcionários e fornecedores tem, o que vende e quais são os principais problemas. Também falamos sobre o VR Software, o controle de estoque, a validade, as perdas, as compras, as vendas e os pagamentos. Na visita de 30/09/2026, conversamos presencialmente sobre inventário, controle sanitário, folha e ponto, despesas gerais e definição de preços. Depois, em 26/10/2026, confirmamos com o responsável, por WhatsApp, alguns detalhes sobre pedidos, notas fiscais, formas de pagamento, fechamento de caixa, cadastro de clientes, fidelidade, vendas online, entregas, devoluções a fornecedores, escala dos funcionários, cancelamento de vendas, venda restrita por idade, validade dos produtos por setor, venda fiado e troca ou devolução feita pelo cliente.
 
 - **O que o responsável contou:**
   - O mercado perde produtos frescos e de outros setores (padaria, frios e laticínios) por vencimento, por maturação excessiva ou por danos causados por clientes. Essas perdas não são registradas de forma organizada (P1).
@@ -115,8 +113,7 @@
 
 - **O que mudou em relação à Entrega 1:** na Entrega 1, o único problema levantado era o controle de validade dos produtos. Com a entrevista e a visita desta etapa, encontramos um problema novo: a falta de controle sobre as perdas (P1). Os números do mercado continuam os mesmos. Mudaram também duas coisas: a lista de formas de pagamento, em que o Pix não aparecia e agora entrou porque o responsável confirmou que o mercado aceita Pix, e a composição do grupo, já que Victor Hugo dos Santos Maciel, Guilherme Damasceno dos Santos e Lucas Praxedes da Silva entraram, e Henrico e Nicole saíram.
 
-- **Comprovação:** As fotos tiradas na visita e os registros da entrevista e das confirmações ficam na pasta `imagens/evidencias/`. A entrevista de 22/09 foi realizada por videochamada no WhatsApp e é comprovada pelo [registro da videochamada](imagens/evidencias/entrevista_videochamada.jpeg). Como ela não aconteceu no ambiente do mercado, não temos uma foto da entrevista em si. A visita presencial de 30/09 está comprovada pelas fotos do local. Também incluímos os dois prints das confirmações feitas por WhatsApp em 26/10/2026: [primeiro print da confirmação](imagens/evidencias/resposta_proprietario1.jpeg) e [segundo print da confirmação](imagens/evidencias/resposta_proprietario2.jpeg).
-
+- **Comprovação:** As fotos tiradas na visita e os registros da entrevista e das confirmações ficam na pasta `imagens/evidencias/`. A entrevista de 22/09 foi realizada por videochamada no WhatsApp e é comprovada pelo respectivo registro. Como ela não aconteceu no ambiente do mercado, não temos uma foto da entrevista em si. A visita presencial de 30/09 está comprovada pelas fotos do local. Também incluímos os dois prints das confirmações feitas por WhatsApp em 26/10/2026: [videochamada de 22/09/2026](imagens/evidencias/entrevista_videochamada.jpeg), [primeiro print da confirmação](imagens/evidencias/resposta_proprietário1.jpeg) e [segundo print da confirmação](imagens/evidencias/resposta_proprietário2.jpeg)
   
 - **Resumo do levantamento:** Pelo que o responsável explicou, a rotina do mercado funciona assim:
   - **De manhã (retaguarda):** cadastro dos produtos (código de barras, preço, setor, venda por quilo ou por unidade), conferência da nota do fornecedor e entrada no estoque quando a carga chega, e pedidos de compra feitos olhando o giro e os dias de estoque. O fiscal e o financeiro (notas e contas a pagar) também passam pelo sistema. Quando chega algum item fora do padrão, ele pode ser devolvido ou trocado pelo fornecedor, ou então gerar um abatimento na próxima nota.
@@ -173,24 +170,19 @@ Em mercados e hortifrutis costumam existir outros processos além dos listados a
 | Venda fiado e crediário | Não realiza | Todas as vendas são pagas no caixa. |
 | Troca ou devolução pelo cliente | Existe, mas é rara | É tratada pela gerência ou retaguarda, com os ajustes feitos no sistema utilizado pelo mercado. Por isso, não foi criado um fluxo próprio no caixa. |
 | Inventário ou contagem periódica de estoque | Existe, no sistema do mercado | O controle é feito pelo sistema, com base nas entradas e saídas. Quando há diferença, o ajuste é feito no próprio sistema (confirmado presencialmente em 30/09/2026). O banco não registra a contagem. O saldo vem dos lotes. |
+| Controle sanitário (limpeza, condições dos produtos, laudos) | Existe | É uma rotina de conformidade e não faz parte do controle de vendas e estoque do sistema (confirmado presencialmente em 30/09/2026). O responsável não informou como é registrada. Não está ligada a P1 nem a P2. |
+| Folha de pagamento, ponto e férias | Existe, fora do banco | É feita pela contabilidade e por sistemas próprios. O banco guarda só o cadastro e a escala dos funcionários (RF08 a RF10), que é organizada separadamente. |
+| Despesas que não vêm de fornecedor de mercadoria (aluguel, energia, impostos) | Existe, fora do banco | São controladas pelo setor financeiro, no sistema usado pela empresa. O modelo cobre só as contas a pagar ligadas a recebimento de mercadoria (RN34). |
 | Precificação e curva ABC | Preço definido pela gerência | A gerência define o preço conforme a necessidade comercial e cadastra no sistema. O banco guarda só o preço no produto (RN04) e o preço praticado em cada venda. O responsável não falou de curva ABC, então ela não entrou. |
 
 ##### Fluxogramas
 
 **Fluxograma do processo de venda:**
 
-[Fluxograma de Vendas](imagens/fluxogramas/fluxograma_venda.jpeg)
-
-**Fluxograma de Compra e Recebimento:**
-
-[Fluxograma de Compra e Recebimento](imagens/fluxogramas/fluxograma_compra_recebimento.jpeg)
-
-**Fluxograma de Fechamento de Caixa:**
-
-[Fluxograma de Fechamento de Caixa](imagens/fluxogramas/fluxograma_fechamento_caixa.jpeg)
+![Fluxograma de Vendas](imagens/fluxogramas/fluxograma_venda.jpeg)
 
 
-Os três fluxogramas acima mostram a venda no caixa, a compra e o recebimento de mercadorias e o fechamento de caixa. Os detalhes de cada processo estão no levantamento completo.
+O fluxograma acima mostra como uma venda acontece no caixa. As rotinas de compra, recebimento e fechamento de caixa estão descritas no resumo do levantamento e na lista de processos.
 
 #### Requisitos do sistema
 
@@ -207,7 +199,7 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 | RF01 | Cadastrar e atualizar setores. | Nome, descrição, dias de antecedência do alerta de validade e se o setor vende produto. |
 | RF02 | Cadastrar, atualizar e inativar produtos. | Código interno (PLU), código de barras quando existir, nome, setor, unidade de venda, preço, estoque mínimo, situação, indicador de validade impressa e restrição de venda por idade. |
 | RF03 | Cadastrar, atualizar e inativar fornecedores. | Razão social, CNPJ, telefone, e-mail, endereço e situação. |
-| RF04 | Relacionar produtos aos fornecedores. | Fornecedor, produto, código do produto no fornecedor e último custo. |
+| RF04 | Relacionar produtos aos fornecedores. | Fornecedor, produto e código do produto no fornecedor. |
 | RF05 | Cadastrar formas de pagamento. | Descrição, uso (venda, fornecedor ou ambos) e situação. |
 | RF06 | Cadastrar e inativar caixas. | Número e situação. |
 | RF07 | Cadastrar motivos de perda. | Descrição e situação. |
@@ -302,7 +294,9 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 
 ##### Requisitos comuns não incluídos
 
-Em 30/09/2026, durante a visita ao mercado, o responsável explicou que também existem processos de inventário e definição de preços.
+Em 30/09/2026, durante a visita ao mercado, o responsável explicou que também existem processos de inventário, controle sanitário, folha de pagamento e ponto, despesas gerais e definição de preços.
+
+Esses processos foram considerados no levantamento, mas não viraram requisitos próprios no nosso banco porque já são controlados por outros sistemas, pela contabilidade, pelo setor financeiro ou pela própria gestão do mercado.
 
 No nosso projeto, mantivemos apenas as informações desses processos que precisam aparecer no banco. O estoque é controlado pelos lotes, os funcionários têm cadastro e escala, as contas a pagar estão ligadas aos recebimentos de mercadorias e o preço definido pela gerência fica registrado no produto e nas vendas.
 
@@ -363,7 +357,7 @@ Já cadastro de clientes, programa de fidelidade, vendas online, entregas e vend
 - **RN27 [Confirmada + Proposta]** Produtos com venda restrita por idade serão identificados no cadastro e o sistema mostrará um aviso ao operador. O banco não armazenará documento do cliente.
 - **RN28 [Proposta]** Cancelamento, perda e devolução ao fornecedor são situações diferentes. Uma mercadoria de venda cancelada não será registrada como perda.
 - **RN54 [Proposta]** Quando uma venda já concluída é cancelada, todas as baixas de estoque dos itens ativos dela são estornadas na mesma transação, e cada baixa só pode ser estornada uma vez (RN17). Se algum passo falhar, nada é gravado (RNF04).
-- **RN55 [Proposta]** Os pagamentos de uma venda cancelada permanecem no histórico, mas a venda não entra no faturamento nem no cálculo demonstrativo do valor esperado do caixa (RN25). O cancelamento gera uma pendência por pagamento em `REEMBOLSO_VENDA`; a devolução só é marcada como efetivada por `confirmar_reembolso_venda`, com data e responsável. **Limitação:** o cálculo atual de `fechar_sessao` conserva a hipótese de devolução do dinheiro e não reconcilia movimentações de reembolso. Pendências devem ser acompanhadas pela auditoria complementar, inclusive para vendas históricas.
+- **RN55 [Proposta]** Os pagamentos de uma venda cancelada continuam no histórico, mas a venda não entra no faturamento nem no valor esperado do caixa (RN25). O banco não registra a devolução do dinheiro ao cliente: cancelar é desfazer a venda inteira. Por isso o valor esperado do caixa considera que o dinheiro dessa venda voltou ao cliente ou nunca ficou lá. Como essa saída de dinheiro não fica registrada, uma diferença no fechamento causada por ela apareceria no banco sem explicação. Se um dia for preciso separar o que foi recebido do que foi devolvido, o pagamento vai precisar de um campo de situação. Isso ficou fora do nosso trabalho.
 
 ##### Caixa e fiscal
 
@@ -414,7 +408,9 @@ Não criamos regras para cadastro de clientes, fidelidade, entrega, venda a praz
 Também ficaram de fora regras de processos que o banco não controla:
 
 - **Aferição da balança (Inmetro):** o banco só guarda o peso informado na venda (RN22), e o grupo não confirmou com o responsável como a aferição é feita.
-
+- **Normas sanitárias:** o responsável confirmou que existe controle sanitário (limpeza e acompanhamento das condições dos produtos), mas fora do sistema de vendas e estoque. O banco não registra temperatura, limpeza nem laudos. A única regra ligada a produto vencido é a RN46, que impede a venda de lote vencido.
+- **Obrigações trabalhistas e fiscais:** ficam no sistema atual e na contabilidade (RN33). O banco guarda só os dados de escala e os dados dos documentos fiscais das vendas.
+  
 ##### Rastreabilidade dos problemas P1 e P2
 
 | Problema | Requisitos funcionais | Regras de negócio | Como contribuem |
@@ -633,25 +629,20 @@ Revisamos o modelo com base nos apontamentos da Entrega 1 e nas informações no
 | Chaves estrangeiras no conceitual | Foram retiradas | Pertencem ao modelo lógico. |
 | Venda e produto incompletos | Criamos a entidade associativa VENDA–PRODUTO, com quantidade, preço e situação de cada item (vira a tabela ITEM_VENDA no lógico) | Precisamos da quantidade e do preço de cada produto vendido. |
 | Sem entidade de lotes | Criamos LOTE | O controle de validade depende de cada lote. |
-| Sem PEDIDO e ciclo de compra incompleto |Incluímos pedidos, recebimentos, contas a pagar e os itens de pedido e de recebimento (associações com atributos) | Fazem parte da rotina do mercado. |
+| Compra incompleta | Incluímos pedidos, recebimentos, contas a pagar e os itens de pedido e de recebimento (associações com atributos) | Fazem parte da rotina do mercado. |
 | Entidade CLIENTE | Foi retirada | As vendas não têm cadastro de cliente. |
 | Faltava a operação dos caixas | Incluímos caixa, sessão, pagamento, sangria e troca de operador | O banco precisa mostrar o que acontece no atendimento. |
 | Entidade CATEGORIA | Trocada por SETOR | O mercado organiza por setor, e o prazo de alerta de validade varia conforme o setor. A validade de cada produto fica registrada no lote. |
 | Perdas não representadas | Criamos PERDA, MOTIVO_PERDA e as ligações | Foi um dos principais problemas do levantamento. |
 | Sem funcionários e escalas | Incluímos FUNCIONARIO e ESCALA | São cerca de 110 funcionários e a escala é feita em planilha. |
 | Justificativas pouco detalhadas | Passamos a explicar as alternativas e os motivos | Mostra por que cada coisa faz sentido para o mercado. |
-| Processos: faltava o fluxo do ciclo de compra e do fechamento de caixa | Incluímos os fluxogramas de compra e recebimento e de fechamento de caixa, além do de vendas | O apontamento pedia os fluxos que faltavam. |
-| Regras: Inmetro, LGPD, estoque mínimo e permissões | LGPD, estoque mínimo e permissões passaram a constar explicitamente nas regras e requisitos do projeto (RN04, RN25, RN51, RNF01 e RNF07). A aferição da balança pelo Inmetro ficou fora do banco e foi justificada no texto de regras comuns não incluídas. | Os três primeiros pontos foram incorporados ao projeto. O Inmetro não foi modelado porque o banco apenas recebe o peso informado pela venda e o grupo não confirmou com o responsável como é feita a aferição da balança. |
+| Processos: faltava o fluxo do ciclo de compra e do fechamento de caixa | Mantivemos o fluxograma de vendas. O ciclo de compra, o recebimento e o fechamento de caixa estão explicados em texto, na seção de processos | A venda é o processo principal do caixa, e as outras duas rotinas estão descritas no levantamento |
+| Regras: Inmetro, LGPD, estoque mínimo e permissões | LGPD, estoque mínimo e permissões já estavam previstos nas regras e requisitos (RN51, RN04, RN25 e RNF01), então o grupo apenas ajustou o texto. A aferição da balança (Inmetro) ficou de fora de propósito | O banco não controla a balança, e o grupo não confirmou com o responsável como a aferição é feita. O motivo está na tabela de regras comuns não incluídas. |
 | Entrevista e evidências | Nova entrevista (22/09), visita (30/09) e confirmações por WhatsApp (26/10), com fotos e prints no repositório | A comprovação ficou mais completa e os registros ficaram reunidos no repositório. |
 | Dicionário de dados | Ficou em um arquivo Markdown separado, `docs/Dicionario_Dados.md` | A turma é GTI. |
 | Anexos no GitHub | DER, modelo lógico, script, fotos, prints e levantamento ficam em pastas do repositório e têm link no README | O professor corrige pelo repositório. |
 | Forma de pagamento Pix | Entrou no cadastro de formas de pagamento | O responsável confirmou que o mercado aceita Pix. |
 | Integrantes | Victor Hugo, Guilherme e Lucas entraram, Henrico e Nicole saíram | Mudança do grupo desde a Entrega 1. |
-| Fornecedor–produto modelado como 1:N | Revisamos para N:N e criamos a associação FORNECEDOR_PRODUTO, que no modelo lógico virou uma tabela própria | Um fornecedor pode fornecer vários produtos e o mesmo produto pode estar relacionado a mais de um fornecedor. A associação também guarda o código do produto no fornecedor e o último custo. |
-| Dicionário: CPF, CNPJ, telefone e código de barras tratados como número | Esses campos passaram a utilizar `VARCHAR` no modelo lógico e no dicionário | São identificadores ou textos de contato, não valores usados em cálculos, e podem possuir zeros à esquerda. |
-| Dicionário: faltavam versão/data e índices | O dicionário foi atualizado com a versão do MySQL utilizada, data de revisão e os índices definidos no banco | Essas informações passaram a documentar com mais precisão a implementação entregue. |
-| Dicionário: log de acesso | O grupo não criou um log genérico de acesso. A rastreabilidade das operações foi feita por FKs para FUNCIONARIO nas operações relevantes, e o controle de acesso foi representado por roles e permissões do MySQL | Mantivemos essa decisão porque o usuário técnico que executa um comando no banco não identifica necessariamente o funcionário responsável pela operação. |
-| Dicionário e DER: cardinalidades incompletas ou incorretas | As cardinalidades foram revisadas e passaram a mostrar mínimo e máximo nos dois lados dos relacionamentos | A revisão deixa explícito o que é obrigatório, opcional, único ou múltiplo em cada relacionamento. |
 
 Além dos apontamentos, incluímos por conta própria o estorno em SAIDA_LOTE, ligado à baixa original, para corrigir baixas sem apagar o histórico, e as ligações que dizem quem fechou o caixa e quem pagou a conta (relacionamentos 46 e 47) e a que liga uma perda corrigida à original (48).
 
@@ -667,7 +658,7 @@ Na seção seguinte mostramos a conversão das entidades e associações em tabe
 
 Convertemos o DER no brModelo para o modelo lógico do MySQL. O resultado é o seguinte.
 
-**Entidades e associações → tabelas.** As 22 entidades viraram 22 tabelas com o mesmo nome. As 5 associações com atributos (fornece, e os itens de pedido, de recebimento, de devolução e de venda) viraram mais 5 tabelas, cada uma com chave primária própria: FORNECEDOR_PRODUTO, ITEM_PEDIDO_COMPRA, ITEM_RECEBIMENTO, ITEM_DEVOLUCAO e ITEM_VENDA. Isso corresponde a **27 tabelas** derivadas do DER original (22 + 5). A implementação SQL revisada inclui ainda **REEMBOLSO_VENDA**, adicionada posteriormente para registrar as devoluções financeiras de vendas canceladas, totalizando **28 tabelas**. Essa adição ainda precisa ser refletida no DER e no modelo lógico publicados. As outras ligações não geraram tabela associativa adicional.
+**Entidades e associações → tabelas.** As 22 entidades viraram 22 tabelas com o mesmo nome. As 5 associações com atributos (fornece, e os itens de pedido, de recebimento, de devolução e de venda) viraram mais 5 tabelas, cada uma com chave primária própria: FORNECEDOR_PRODUTO, ITEM_PEDIDO_COMPRA, ITEM_RECEBIMENTO, ITEM_DEVOLUCAO e ITEM_VENDA. Dá **27 tabelas** no total. As outras ligações não geraram tabela nova, porque nenhuma é N:N.
 
 **Atributos → colunas.** Cada atributo virou uma coluna. O identificador virou a chave primária (`id_...`), do tipo inteiro com `AUTO_INCREMENT`. Escolhemos os tipos assim:
 
@@ -697,7 +688,7 @@ Algumas colunas pedem um cuidado a mais:
 - as **5 associações com atributos** viram tabela, e cada tabela leva **2 FKs**, uma para cada lado. Isso dá 10 FKs;
 - os **43 relacionamentos restantes** têm máximo 1 em pelo menos uma das pontas. Em cada um, a chave estrangeira ficou na tabela da ponta que tem máximo 1, apontando para a outra. Isso dá 43 FKs.
 
-O mapeamento descrito para o **DER original** corresponde a 53 FKs (43 + 10). No SQL revisado, há **56 FKs**, pois foram acrescentadas `ITEM_VENDA.id_setor_venda → SETOR.id_setor` e `REEMBOLSO_VENDA.id_pagamento → PAGAMENTO.id_pagamento` e `REEMBOLSO_VENDA.id_funcionario → FUNCIONARIO.id_funcionario`. Portanto, os 48 relacionamentos do DER publicado ainda **não representam integralmente** os vínculos implementados. O diagrama e a descrição de cardinalidades devem ser atualizados antes da entrega.
+Somando, são **53 FKs** no modelo lógico (43 + 10), que é a contagem apresentada na seção 1.3. As cinco associações com atributos viram tabelas próprias e geram duas FKs cada; os demais relacionamentos geram as outras 43 FKs.
 
 **Cardinalidades.** A cardinalidade mínima decidiu se a FK aceita nulo:
 
@@ -719,7 +710,7 @@ Os casos que merecem atenção:
 
 ### 1.3 Definição de Chaves Primárias e Estrangeiras
 
-Todas as 28 tabelas têm chave primária própria, com o prefixo `id_`. As chaves estrangeiras seguem os relacionamentos explicados na seção 1.2 e somam 56 no SQL revisado. O novo registro de reembolso referencia PAGAMENTO e FUNCIONARIO; ITEM_VENDA passou a referenciar também o setor histórico.
+Todas as 27 tabelas têm chave primária própria, com o prefixo `id_`. As chaves estrangeiras seguem os relacionamentos explicados na seção 1.2 e somam 53: 43 vindas dos relacionamentos simples e 10 das cinco tabelas de associação (duas em cada).
 
 | Tabela | Chave primária (PK) | Chaves estrangeiras (FK) |
 | :--- | :--- | :--- |
@@ -747,9 +738,8 @@ Todas as 28 tabelas têm chave primária própria, com o prefixo `id_`. As chave
 | `TROCA_OPERADOR` | `id_troca` | `id_sessao`, `id_funcionario_anterior`, `id_funcionario_novo` |
 | `SANGRIA` | `id_sangria` | `id_sessao`, `id_funcionario` |
 | `VENDA` | `id_venda` | `id_sessao`, `id_funcionario_operador`, `id_funcionario_supervisor` |
-| `ITEM_VENDA` | `id_item_venda` | `id_venda`, `id_produto`, `id_setor_venda`, `id_funcionario_cancelamento` |
+| `ITEM_VENDA` | `id_item_venda` | `id_venda`, `id_produto`, `id_funcionario_cancelamento` |
 | `PAGAMENTO` | `id_pagamento` | `id_venda`, `id_forma` |
-| `REEMBOLSO_VENDA` | `id_reembolso` | `id_pagamento`, `id_funcionario` |
 | `DOCUMENTO_FISCAL` | `id_documento` | `id_venda` |
 
 Nos relacionamentos 44 e 45 a chave estrangeira precisa ser única: `DOCUMENTO_FISCAL.id_venda` impede dois documentos para a mesma venda, e `SAIDA_LOTE.id_saida_original` impede estornar a mesma baixa duas vezes. No segundo caso a coluna aceita `NULL`, porque uma baixa normal não aponta para outra.
@@ -838,7 +828,7 @@ A tabela abaixo mostra como cada restrição foi pensada e como as regras de int
 | :--- | :--- | :--- |
 | Código interno, CNPJ e CPF sem repetição | `UNIQUE` em PRODUTO, FORNECEDOR e FUNCIONARIO | RN02, RN06, RN07 |
 | Produto, fornecedor, funcionário e caixa não são apagados | Coluna `ativo` e FKs com `ON DELETE RESTRICT` | RN05 |
-| Funcionário inativo não faz novas operações | Triggers e procedures verificam `ativo` nas operações cobertas pelo script, incluindo venda, recebimento, perda e fechamento. Alterações diretas fora desses fluxos fazem parte dos limites da implementação descritos na seção 3. | RN50 |
+| Funcionário inativo não faz novas operações | Triggers e procedures verificam `ativo` em diferentes operações, incluindo venda, recebimento, perda e fechamento. A cobertura precisa ser conferida também nas alterações diretas de dados | RN50 |
 | Produto com setor definido | `PRODUTO.id_setor NOT NULL` e FK | RN03 |
 | Produto e perda só em setor que vende | Coluna `SETOR.vende_produto` e trigger que recusa produto ou perda em setor com 0 (Caixa e Retaguarda) | RN03, RN41 |
 | Setor da perda igual ao setor do produto no momento do registro | Trigger em PERDA | RN03, RN41 |
@@ -988,10 +978,10 @@ Nos indicadores de perda (KPI01, KPI02 e KPI11) só contam as perdas com `status
 | KPI04 | Lotes vencidos com saldo: lotes vencidos que ainda têm quantidade | Diário | Zero | G04 |
 | KPI05 | Faturamento: soma do valor das vendas concluídas | Diário | Referência de cerca de R$ 167 mil por dia (R$ 5 milhões ÷ 30) | G05 |
 | KPI06 | Ticket médio: valor das vendas concluídas ÷ quantidade de vendas concluídas | Diário | Referência de cerca de R$ 93 (R$ 167 mil ÷ 1.800 vendas) | G06 |
-| KPI07 | Produtos abaixo do mínimo: produtos com saldo disponível (soma dos lotes menos as perdas com lote a confirmar) menor que o estoque mínimo, separando os que já têm pedido de compra aberto ou parcial dos que não têm | Diário | Zero produtos abaixo do mínimo sem pedido de compra em aberto | G07 |
+| KPI07 | Produtos abaixo do mínimo: produtos com saldo disponível (soma dos lotes menos as perdas com lote a confirmar) menor que o estoque mínimo, separando os que já têm pedido de compra em aberto dos que não têm | Diário | Zero produtos abaixo do mínimo sem pedido de compra em aberto | G07 |
 | KPI08 | Taxa de cancelamento: vendas canceladas ÷ total de vendas registradas (concluídas + canceladas) × 100 | Mensal | Até 1% | G08 |
 | KPI09 | Quantidade recusada no recebimento, agrupada por fornecedor e unidade de medida (`kg` ou `unidade`). As quantidades são comparadas somente dentro da mesma unidade de medida. | Por período | Comparar fornecedores dentro da mesma unidade de medida e acompanhar as recusas | G09 |
-| KPI10 | Contas em aberto e vencidas: saldo a pagar (valor da conta menos abatimentos) das contas abertas, separando vencidas e a vencer | Diário | Zero contas vencidas sem pagamento | G10 |
+| KPI10 | Soma do saldo a pagar das contas abertas (valor da conta menos os abatimentos ligados a ela), separando as vencidas das que ainda vão vencer. | Por vencimento | Nenhuma conta vencida sem pagar | G10 |
 | KPI11 | Perdas com lote a confirmar: perdas válidas pendentes ÷ total de perdas válidas × 100, com a idade de cada pendência (data da consulta menos data da perda) | Mensal | Resolver as pendências em até 7 dias, ou seja, nenhuma pendência com mais de 7 dias | G11 |
 
 **Observação sobre o KPI08:** A G08 calcula a taxa por mês, então devolve duas linhas: outubro com 3 canceladas em 175 vendas (≈ 1,71%) e novembro com 1 em 25 (4,00%). A taxa total da massa é 4/200 = 2%, obtida somando os dois meses. Ambos os meses ficam acima da meta sugerida de 1% apenas para deixar casos de cancelamento e estorno na demonstração; não representam a taxa real do Hortifruti União.
@@ -1002,7 +992,7 @@ Os valores de referência de faturamento e ticket médio são contas feitas com 
 
 O KPI01 fica um pouco abaixo do prejuízo real enquanto houver perda com lote a confirmar, porque essa perda ainda não tem valor (RN44). Por isso o KPI11 anda junto com ele.
 
-A perda guarda o setor da época em que aconteceu, e `ITEM_VENDA.id_setor_venda` guarda o setor do produto no registro do item. Assim, a G01 usa o setor histórico tanto nas perdas quanto nas vendas, mesmo que o cadastro do produto mude posteriormente.
+A perda guarda o setor da época em que aconteceu, mas as vendas por setor usam o setor atual do produto. Se um produto mudar de setor no meio do período, o numerador e o denominador do KPI01 passam a olhar setores diferentes. Aceitamos essa diferença porque a mudança de setor é rara, mas deixamos registrado.
 
 #### Rastreabilidade entre problemas, tabelas e consultas
 
@@ -1041,7 +1031,7 @@ Para isso dar resultado, o mercado teria que registrar lotes, validades e perdas
 
 **Software utilizado:** brModelo 3.2.0.
 
-O modelo lógico relacional do Hortifruti União foi desenvolvido a partir do DER conceitual revisado. A estrutura implementada no SQL atual contém **28 tabelas e 56 restrições de chave estrangeira**, além dos atributos, tipos de dados, chaves primárias e restrições de integridade. As associações com atributos do modelo conceitual foram convertidas em tabelas, conforme as seções 1.2 e 1.3. A tabela REEMBOLSO_VENDA e a ligação histórica de ITEM_VENDA com SETOR foram acrescentadas depois da versão do diagrama citada neste relatório e precisam ser incorporadas a ele.
+O modelo lógico relacional do Hortifruti União foi desenvolvido a partir do DER conceitual revisado. A estrutura implementada no SQL atual contém **27 tabelas e 53 restrições de chave estrangeira**, além dos atributos, tipos de dados, chaves primárias e restrições de integridade. As associações com atributos do modelo conceitual foram convertidas em tabelas, conforme as seções 1.2 e 1.3.
 
 **Visualização do modelo lógico:** [Abrir imagem](diagramas/Modelo_Logico_Hortifruti.png)
 
@@ -1053,7 +1043,7 @@ As tabelas representam os cadastros e as operações do mercado, incluindo funci
 
 A implementação está no [script SQL](docs/script.sql), desenvolvido para **MySQL 8.0.16 ou superior**, no banco `hortifruti_uniao`. Os detalhes da execução, das correções realizadas e dos limites da implementação estão na seção 3.
 
-O [Dicionário de Dados](docs/Dicionario_Dados.md) detalha os campos e as restrições das tabelas. As regras que não aparecem no desenho, como `CHECK`, `DEFAULT` e validações entre tabelas, estão descritas no dicionário e no SQL. A imagem e o dicionário foram conferidos pelo grupo contra o script: 28 tabelas e 56 chaves estrangeiras.
+O [Dicionário de Dados](docs/Dicionario_Dados.md) detalha os campos e as restrições das tabelas. As regras que não aparecem no desenho, como `CHECK`, `DEFAULT` e validações entre tabelas, estão descritas no dicionário e no SQL. A imagem e o dicionário foram conferidos pelo grupo contra o script: 27 tabelas e 53 chaves estrangeiras.
 
 ---
 
@@ -1067,19 +1057,19 @@ O script utiliza o banco `hortifruti_uniao`. Cada execução completa apaga e re
 
 ### Execução e conferência
 
-Uma versão anterior de `docs/script.sql` foi executada pelo grupo no MySQL 8.0.46. O SQL revisado com setor histórico, reembolsos e auditorias ajustadas ainda precisa ser executado novamente; os resultados anteriores não validam esta nova versão. Durante uma etapa anterior da revisão, uma cópia utilizada em ambiente isolado exigiu a retirada de uma definição de `DEFINER` específica daquele ambiente. Esse ajuste não faz parte do arquivo oficial entregue. A versão anterior, sem `DEFINER`, foi executada com a carga, consultas gerenciais e auditorias sem erro; a execução completa deve ser repetida para o arquivo revisado. Na execucao anterior foram confirmadas 200 vendas; os totais da estrutura revisada (28 tabelas, 56 FKs, 38 triggers e 12 procedures) foram contados estaticamente, nao testados nessa execucao.
+A versão corrigida foi executada em ambiente isolado no MySQL 8.0.46, com apoio do ChatGPT na revisão e nos testes. Foi necessário ajustar o `DEFINER` somente na cópia usada para teste. A carga e as consultas terminaram sem erro de execução. Foram confirmadas 200 vendas, 27 tabelas, 53 chaves estrangeiras, 38 triggers e 9 procedures.
 
-Durante a revisão também foram realizadas 57 verificações auxiliares envolvendo operações válidas e inválidas, estoque, recebimentos, perdas, vendas, pagamentos, cancelamentos, estornos e rollback. Os scripts auxiliares usados nessa etapa não fazem parte da entrega e, por isso, essas 57 verificações são registradas apenas como validação interna do grupo. As verificações reproduzíveis entregues no repositório são as consultas gerenciais G01 a G12 e as auditorias A01 a A12 existentes em `docs/script.sql`.
+Nesse ambiente, passaram 57 verificações sequenciais. Elas abrangeram operações válidas e inválidas, regras de estoque, recebimentos, perdas, vendas, pagamentos, cancelamentos, estornos e rollback. Também incluíram os cenários de setor com perdas e sem vendas na G01 e de fornecedor com recusas em kg e unidades na G09. Os scripts auxiliares dessa revisão não foram incluídos no repositório nesta entrega.
 
-Na versao anterior, o grupo tambem executou a carga, as consultas gerenciais e as auditorias em seu ambiente MySQL 8.0.46. A conferência do fechamento comparou o valor esperado gravado com o fundo inicial mais os pagamentos em dinheiro das vendas concluídas, menos as sangrias, sem encontrar divergências. A A01 apresentou seis perdas pendentes previstas na massa; as demais auditorias verificadas não apontaram inconsistências.
+O grupo também executou a carga, as consultas gerenciais e as auditorias em seu ambiente MySQL 8.0.46. A conferência do fechamento comparou o valor esperado gravado com o fundo inicial mais os pagamentos em dinheiro das vendas concluídas, menos as sangrias, sem encontrar divergências. A A01 apresentou seis perdas pendentes previstas na massa; as demais auditorias verificadas não apontaram inconsistências.
 
 Foi realizado um teste com duas conexões simultâneas, identificadas pelos IDs 26 e 27. A primeira bloqueou o produto com `SELECT ... FOR UPDATE`. A segunda chamou `registrar_perda_pendente` e aguardou a liberação do bloqueio. Após o `ROLLBACK` na primeira conexão, a segunda prosseguiu e rejeitou a quantidade superior ao saldo disponível. Esse resultado confirma a espera pelo bloqueio nesse cenário, sem comprovar todas as combinações de operações simultâneas.
 
-Os resultados de execucao anteriores precisam ser rechecados com o SQL revisado, em especial as pendencias de reembolso geradas pelas vendas canceladas. As demais conferências abaixo descrevem a estrutura e a massa definidas no script. As consultas gerenciais e de auditoria ficam no próprio arquivo SQL e podem ser executadas novamente durante a demonstração.
+As demais conferências abaixo descrevem a estrutura e a massa definidas no script. As consultas gerenciais e de auditoria ficam no próprio arquivo SQL e podem ser executadas novamente durante a demonstração.
 
 **Backup e restauração (RNF08):** o grupo fez um backup lógico do banco com `mysqldump`, incluindo estrutura, dados, procedures e triggers. Depois, o arquivo foi restaurado em um banco separado, chamado `hortifruti_uniao_restore_atualizado`, sem alterar o banco original.
 
-Na versão anterior, a exportação e a restauração terminaram sem erro. A quantidade de registros do novo esquema de 28 tabelas precisa ser reconferida após executar a revisão. Na restauracao anterior, os totais validados eram os do esquema anterior; a estrutura revisada precisa de nova verificacao.
+A exportação e a restauração terminaram sem erro. Comparamos a quantidade de registros das 27 tabelas nos dois bancos e não encontramos diferenças. No banco restaurado também foram confirmadas 53 chaves estrangeiras, 38 triggers, 9 procedures e 1 view.
 
 A conferência das vendas mostrou os mesmos 200 registros do banco original, sendo 196 vendas concluídas e 4 canceladas. O faturamento das vendas concluídas ficou em R$ 16.539,88 nos dois bancos.
 
@@ -1087,10 +1077,10 @@ Esse teste confirmou a recuperação da estrutura e dos dados nos pontos verific
 
 | Verificação | Resultado |
 | :--- | :--- |
-| Tabelas definidas no SQL revisado | 28 |
-| Chaves estrangeiras definidas | 56 |
-| Triggers definidos | 38 |
-| Procedures definidas | 12 |
+| Tabelas criadas | 27 |
+| Chaves estrangeiras | 53 |
+| Triggers | 38 |
+| Procedures | 9 |
 | Views | 1 |
 | Índices explícitos adicionais aos de chaves | 12 |
 | Vendas simuladas | 200 |
@@ -1111,10 +1101,7 @@ Existem recebimentos entre **15/10/2026 e 25/10/2026**, utilizados para formar o
 | Procedure | Finalidade |
 | :--- | :--- |
 | `concluir_venda` | Confere a venda, realiza as baixas por lote, calcula o total e verifica se os pagamentos correspondem ao valor final. |
-| `cancelar_venda` | Valida o perfil de supervisor ou gerência, registra o cancelamento, estorna as baixas de estoque, marca o documento fiscal como cancelado e cria pendências de reembolso. |
-| `confirmar_reembolso_venda` | Confirma, após a devolução efetiva, o pagamento reembolsado, com data e funcionário responsável. |
-| `corrigir_perda` | Substitui perda registrada, estornando baixas anteriores e preservando historico. |
-| `dividir_perda` | Divide uma perda entre lotes distintos sem duplicar a quantidade total. |
+| `cancelar_venda` | Valida o perfil de supervisor ou gerência, registra o cancelamento, estorna as baixas de estoque e marca o documento fiscal da venda como cancelado. |
 | `confirmar_lote_perda` | Vincula uma perda pendente ao lote informado, calcula seu valor e registra a baixa correspondente. |
 | `estornar_saida` | Registra o estorno de uma saída, mantendo o movimento original no histórico. |
 | `fechar_sessao` | Calcula o valor esperado somando o fundo inicial aos pagamentos em dinheiro das vendas concluídas e subtraindo as sangrias. Depois grava o valor contado e quem fechou a sessão. |
@@ -1149,7 +1136,7 @@ O script contém as consultas gerenciais **G01 a G12** e as auditorias **A01 a A
 
 | Consulta | Objetivo ou resultado da validação |
 | :--- | :--- |
-| G01 | Compara o custo das perdas válidas e confirmadas com o valor das vendas por setor histórico e mês, usando `PERDA.id_setor` e `ITEM_VENDA.id_setor_venda`. Inclui setores sem vendas e usa `NULL` para percentual quando o faturamento é zero. |
+| G01 | Compara o custo das perdas válidas e confirmadas com o valor das vendas por setor e mês. Inclui os setores de venda mesmo quando não tiveram vendas nos meses considerados. Quando o faturamento é zero, o percentual fica `NULL` (não aplicável). |
 | G02 | Apresenta a quantidade de ocorrências de perda por motivo e mês. |
 | G03 | Identifica lotes próximos do vencimento conforme o prazo de alerta definido para cada setor. |
 | G04 | Identifica lotes vencidos que ainda possuem saldo em estoque. |
@@ -1225,27 +1212,26 @@ A carga contempla:
 | `ESCALA` | 112 | Sete dias de escala para os 16 funcionários da amostra. |
 | `FORMA_PAGAMENTO` | 7 | Dinheiro, débito, crédito, Pix, VA, boleto e transferência, conforme o uso em venda/fornecedor. |
 | `CAIXA` | 7 | Corresponde aos 7 caixas informados pelo responsável. |
-| `PEDIDO_COMPRA` | 12 | Dez pedidos recebidos, um aberto e um cancelado, permitindo demonstrar compra, reposição e situações diferentes do pedido. |
+| `PEDIDO_COMPRA` | 12 | Pedidos fictícios suficientes para demonstrar compras e reposição. |
 | `ITEM_PEDIDO_COMPRA` | 70 | Distribui vários produtos entre os 12 pedidos. |
-| `RECEBIMENTO` | 12 | Dez recebimentos ligados a pedidos e dois recebimentos sem pedido, demonstrando uma das situações previstas na RN11. |
+| `RECEBIMENTO` | 12 | Recebimentos fictícios que formam o estoque inicial e cobrem conferência de mercadoria. |
 | `ITEM_RECEBIMENTO` | 66 | Itens das notas, incluindo quantidades aceitas e recusadas. |
 | `CONTA_PAGAR` | 12 | Uma conta por recebimento na amostra, com situações pagas e abertas. |
-| `DEVOLUCAO_FORNECEDOR` | 6 | Os seis casos foram incluídos propositalmente para demonstrar devolução, troca e abatimento. Essa quantidade é didática e não representa a frequência real informada pelo responsável. |
+| `DEVOLUCAO_FORNECEDOR` | 6 | Casos de devolução, troca e abatimento para demonstrar o processo com fornecedores. |
 | `ITEM_DEVOLUCAO` | 6 | Itens específicos vinculados às seis ocorrências de devolução/troca/abatimento. |
 | `LOTE` | 126 | Mais de um lote para parte dos itens, permitindo variar validade, saldo e FEFO. |
-| `MOTIVO_PERDA` | 8 | Inclui vencimento, maturação excessiva e dano causado por cliente, confirmados no levantamento, a opção "Outros" e quatro motivos fictícios adicionais definidos pelo grupo para variar os testes. |
+| `MOTIVO_PERDA` | 8 | Motivos fictícios para classificar as perdas demonstradas. |
 | `PERDA` | 24 | Casos em diferentes setores, sendo 18 confirmados e 6 com lote a confirmar. |
 | `PROMOCAO` | 5 | Promoções de lotes com validade para demonstrar o P2. |
 | `SESSAO_CAIXA` | 49 | Sessões distribuídas pelos 7 caixas e pelos 7 dias simulados. |
 | `TROCA_OPERADOR` | 5 | Casos pontuais para demonstrar troca de operador durante a sessão. |
 | `SANGRIA` | 16 | Sangrias em parte das sessões, mantendo variedade sem ocorrer em todas. |
 | `VENDA` | 200 | Amostra didática distribuída em sete datas. Não representa sete dias completos da operação real. |
-| `ITEM_VENDA` | 810 | Quatro itens por venda em média, mais linhas canceladas; `id_setor_venda` registra o setor no momento da inserção. |
+| `ITEM_VENDA` | 810 | Quatro itens por venda em média, mais linhas canceladas para demonstrar histórico. |
 | `PAGAMENTO` | 220 | Inclui pagamentos simples e vendas com pagamento dividido. |
-| `REEMBOLSO_VENDA` | Variável | Gera uma pendência para cada pagamento de venda cancelada; a quantidade depende dos pagamentos dessas vendas. |
 | `DOCUMENTO_FISCAL` | 200 | Um documento fiscal por venda simulada. |
 | `SAIDA_LOTE` | 834 | 800 baixas de itens ativos, 18 baixas de perdas confirmadas e 16 estornos das 4 vendas canceladas. |
-| **Total** | **2.993** | Total de registros finais nas 28 tabelas após a carga e os estornos previstos. |
+| **Total** | **2.993** | Total de registros finais nas 27 tabelas após a carga e os estornos previstos. |
 
 Os **810 itens de venda** incluem 800 itens ativos e 10 cancelados.
 
@@ -1269,8 +1255,6 @@ Esta massa de 200 vendas foi utilizada para validar as regras e as consultas do 
 
 As vendas representam o período de **26/10/2026 a 01/11/2026**, totalizando sete dias consecutivos. A distribuição prevista nos registros do script é de **25, 27, 28, 30, 32, 33 e 25 vendas por dia**, respectivamente, totalizando 200.
 
-Como a massa cobre apenas sete dias e atravessa o fim de outubro e o início de novembro, os indicadores mensais servem para demonstrar o agrupamento das consultas, e não para representar meses completos de operação ou permitir comparação histórica mensal.
-
 Existem recebimentos entre **15/10/2026 e 25/10/2026**, utilizados para formar o estoque inicial da simulação.
 
 ### Variedade dos dados
@@ -1292,7 +1276,7 @@ A massa inclui:
 
 A massa permite demonstrar o controle de estoque, lotes, validade, perdas, vendas, pagamentos e fechamento de caixa, além das **12 consultas gerenciais e 12 consultas de auditoria**.
 
-A versão anterior foi executada no **MySQL 8.0.46**; o arquivo revisado contém definições de **28 tabelas, 56 chaves estrangeiras, 38 triggers e 12 procedures**, ainda sem revalidação de execução. A carga original previa **200 vendas**, além da distribuição das vendas pelos sete dias simulados.
+O script foi executado no **MySQL 8.0.46** e a conferência realizada após a carga confirmou **200 vendas, 27 tabelas, 53 chaves estrangeiras, 38 triggers e 9 procedures**, além da distribuição das vendas pelos sete dias simulados.
 
 Também foi feita uma checagem rápida de integridade após a carga. Ela não encontrou saldo disponível negativo, pedido não cancelado sem item, venda concluída sem item ativo, divergência entre pagamento e total da venda concluída, lote ligado a produto diferente do item recebido nem lote com saldo fora do intervalo permitido.
 
@@ -1306,8 +1290,6 @@ A massa principal do projeto tem 200 vendas e foi criada para demonstrar as regr
 
 Para o RNF09, fizemos separadamente um teste com 54.000 registros fictícios, equivalente a 1.800 vendas por dia durante 30 dias. Esse teste foi usado apenas para avaliar a consulta de vendas por data e o uso do índice, e não o desempenho de todo o sistema.
 
-A massa histórica não contém uma perda com status = substituida, nem um mesmo pedido com dois recebimentos. A possibilidade desses casos está prevista pelas RN43, RN52 e RN11, mas não é demonstrada diretamente pela massa atual. Da mesma forma, a procedure concluir_venda, relacionada à RN57, não foi usada para montar a carga histórica; ela permanece implementada para demonstrar e testar o fluxo de uma nova venda.
-
 ---
 
 ## 5. Repositório GitHub
@@ -1320,20 +1302,19 @@ O relatório técnico está neste arquivo `README.md`, localizado na raiz da bra
 - `README_Entrega1.md` – Relatório da Entrega 1
 - `diagramas/der.conceitual.png` – DER Conceitual
 - `diagramas/Modelo_Logico_Hortifruti.png` – Modelo Lógico
-- `docs/modelo_logico.brM3` – Arquivo editável do Modelo Lógico no brModelo
+- - `docs/modelo_logico.brM3` – Arquivo editável do Modelo Lógico no brModelo
 - `docs/script.sql` – Script SQL completo
 - `docs/Dicionario_Dados.md` – Dicionário de Dados
 - `levantamento/levantamento.md` – Levantamento de requisitos
-- `apresentacao/Apresentacao_HortifrutiUniao_Entrega2.pptx` – Apresentação final
-- `interface/` – Interface demonstrativa em PHP, HTML e CSS utilizada como complemento visual da apresentação
+- `apresentação/Hortifruti União — Apresentação Acadêmica — Entrega 2.pdf` – Apresentação final
 
 #### Estrutura do repositório
 
 ```text
 README.md
 README_Entrega1.md
-apresentacao/
-  Apresentacao_HortifrutiUniao_Entrega2.pptx
+apresentação/
+  Hortifruti União — Apresentação Acadêmica — Entrega 2.pdf
 diagramas/
   Modelo_Logico_Hortifruti.png
   der.conceitual.png
@@ -1347,36 +1328,17 @@ imagens/
     estoque_mercado.jpeg
     fachada_mercado.jpeg
     interior_mercado.jpeg
-    resposta_proprietario1.jpeg
-    resposta_proprietario2.jpeg
+    resposta_proprietário1.jpeg
+    resposta_proprietário2.jpeg
   fluxogramas/
-    fluxograma_compra_recebimento.jpeg
-    fluxograma_fechamento_caixa.jpeg
     fluxograma_venda.jpeg
-interface/
-  assets/
-    style.css
-  partials/
-    footer.php
-    header.php
-  .gitignore
-  README_INSTALACAO.md
-  auditoria.php
-  conexao.php
-  config.example.php
-  estoque.php
-  funcoes.php
-  index.php
-  perdas.php
-  validade.php
-  vendas.php
 levantamento/
   levantamento.md
 ```
 
-**Dicionário de dados:** [docs/Dicionario_Dados.md](docs/Dicionario_Dados.md). Como a turma é GTI, o dicionário é um único arquivo Markdown, separado do README. Ele traz as 28 tabelas com os campos, tipos, obrigatoriedade, unicidade, valores permitidos e valor padrão, além da versão do MySQL com data, dos índices e da parte de LGPD (que inclui os contatos de fornecedor que são pessoa física ou MEI).
+**Dicionário de dados:** [docs/Dicionario_Dados.md](docs/Dicionario_Dados.md). Como a turma é GTI, o dicionário é um único arquivo Markdown, separado do README. Ele traz as 27 tabelas com os campos, tipos, obrigatoriedade, unicidade, valores permitidos e valor padrão, além da versão do MySQL com data, dos índices e da parte de LGPD (que inclui os contatos de fornecedor que são pessoa física ou MEI).
 
-As fotos da organização, o registro da videochamada e os prints das confirmações por WhatsApp ficam em `imagens/evidencias/`. O levantamento completo fica separado, em `levantamento/levantamento.md`. O DER, o modelo lógico, o script e o dicionário de dados ficam em `diagramas/` e `docs/`, a apresentação final fica em `apresentacao/` e a interface demonstrativa utilizada como complemento visual fica em `interface/`.
+As fotos da organização e o registro da videochamada ficam em `imagens/evidencias/`. O levantamento completo fica separado, em `levantamento/levantamento.md`. O DER, o modelo lógico, o script e o dicionário de dados ficam em `diagramas/` e `docs/`, e a apresentação final fica em `apresentação/`.
 
 Ao longo do trabalho, cada integrante fez seus próprios commits no repositório usando sua conta do GitHub. As contribuições ficaram distribuídas entre as diferentes partes do projeto, e os usuários de cada integrante estão informados na tabela no início do README.
 
@@ -1390,21 +1352,20 @@ Usamos IA como apoio na organização, revisão e validação do trabalho. As in
 
 | Item | Registro |
 | :--- | :--- |
-| **Ferramenta e etapa** | ChatGPT, na revisão do DER (entidades, atributos, relacionamentos e cardinalidades) e das chaves primárias e estrangeiras na conversão para o modelo lógico. |
+| **Ferramenta e etapa** | ChatGPT, na revisão do DER conceitual e na conferência das chaves do modelo lógico. |
 | **Motivação** | Conferir se entidades, atributos, relacionamentos, cardinalidades e chaves estavam coerentes com o levantamento e com a conversão para o modelo lógico. |
 | **Prompt(s) utilizados** | "Analisa nosso DER e vê se as entidades, atributos, relacionamentos e cardinalidades fazem sentido com o levantamento que fizemos. Também verifica se tem algum relacionamento N:N que precisa virar uma entidade associativa. Não coloca chave estrangeira no DER, porque isso vai ficar só no modelo lógico."<br><br>"Analisa as chaves primárias e estrangeiras das tabelas e vê se os relacionamentos estão corretos e me mostre onde esta errado." |
 | **Resposta recebida** | Revisão das entidades e cardinalidades, identificação das associações com atributos e conferência das PKs e FKs geradas na conversão para o lógico. |
-| **Fontes consultadas e verificadas** | Comparamos as sugestões com o levantamento, as regras de negócio, a lista original de 22 entidades, os 48 relacionamentos do DER e as 53 FKs da versão anterior do modelo lógico. O SQL revisado passou a conter 56 FKs. |
+| **Fontes consultadas e verificadas** | Comparamos as sugestões com o levantamento, as regras de negócio, a lista de 22 entidades, os 48 relacionamentos do DER e as 53 FKs do modelo lógico. |
 | **Trechos corrigidos ou rejeitados** | Os itens de pedido, recebimento, devolução e venda foram mantidos como associações com atributos no conceitual e como tabelas no lógico. PAGAMENTO, SAIDA_LOTE e TROCA_OPERADOR foram mantidos como entidades porque têm comportamento e relacionamentos próprios. |
 | **Justificativa da escolha final** | Mantivemos somente as alterações que correspondiam aos processos levantados e à notação escolhida para o DER. |
-| **Reflexão crítica** | O ChatGPT ajudou a localizar divergências e discutir alternativas de modelagem, mas as decisões finais foram revisadas pela equipe. Durante as revisões, PAGAMENTO foi discutido como possível associação e SAIDA_LOTE como um caso que poderia ter outra representação; o grupo decidiu manter ambos como entidades pelas funções que exercem no modelo. TROCA_OPERADOR foi mantida como entidade por precisar preservar o histórico das trocas de operador. |
+| **Reflexão crítica** | A IA ajudou a localizar inconsistências, mas a decisão final dependeu da comparação entre o desenho, as regras e o modelo lógico. |
 
 #### Uso 2 — ChatGPT: revisão do SQL
 
 | Item | Registro |
 | :--- | :--- |
-| **Ferramenta e etapa** | ChatGPT, na criação e revisão do rascunho da estrutura SQL, dos triggers, das procedures e das consultas G01 a G12 e A01 a A12. O grupo revisou e ajustou o que foi necessário. O grupo executou o script no MySQL 8.0.46, instalado em [computador de Tarcisio e aberto pelo MySQL Workbench, em um banco recriado do zero pelo próprio script, e conferiu os resultados. O ChatGPT ajudou a interpretar erros e a revisar as consultas, mas não executou o script. |
-| **Motivação** | Verificar se o script seguia o modelo lógico, se as regras de integridade estavam representadas corretamente e se a execução ocorria sem erros. |
+| **Ferramenta e etapa** | ChatGPT, na criação e revisão do rascunho da estrutura SQL, dos triggers, das procedures e das consultas G01 a G12 e A01 a A12. O grupo revisou e ajustou o que foi necessário. A execução do script no MySQL 8.0.46, em ambiente isolado, e a conferência dos resultados foram feitas pelo grupo com apoio do ChatGPT, com ajuste de `DEFINER` somente na cópia de teste. |
 | **Prompt(s) utilizados** | "Confere esse SQL e vê se está de acordo com o nosso modelo lógico e com as regras de negócio. Verifica chaves, relacionamentos, tipos de dados, NOT NULL, UNIQUE, CHECK e possíveis erros de sintaxe."<br><br>"Executa e testa o script em uma base limpa, verifica se a carga termina sem erros e confere as principais regras, consultas, triggers e procedures." |
 | **Resposta recebida** | O ChatGPT ajudou a revisar as PKs, FKs, tipos de dados, campos obrigatórios, valores únicos, restrições de domínio e regras que precisavam ser tratadas por trigger ou procedure. |
 | **Fontes consultadas e verificadas** | A conferência foi feita contra o modelo lógico, o dicionário de dados, as regras de negócio e a documentação do MySQL 8.0. |
@@ -1444,7 +1405,7 @@ Usamos IA como apoio na organização, revisão e validação do trabalho. As in
 | :--- | :--- |
 | **Ferramenta e etapa** | ChatGPT, na organização do README, dos requisitos funcionais e não funcionais, das regras de negócio, da normalização, do dicionário de dados e na comparação com processos comuns de mercados e hortifrutis. |
 | **Motivação** | Organizar os tópicos pedidos pelo professor, verificar se havia processos comuns não considerados e conferir se as seções do trabalho estavam coerentes entre si. |
-| **Prompt(s) utilizados** | "Me ajuda a criar os requisitos funcionais e não funcionais do nosso sistema, com mais detalhes."<br>"Dá uma olhada nos requisitos do sistema e vê se está faltando alguma coisa importante."<br>"Confere se meu banco de dados está seguindo a 1FN, 2FN e 3FN e me explica o que precisa ajustar."<br>"Me ajuda a organizar o README.md do GitHub seguindo o que o professor pediu na entrega."<br>"Me ajuda a montar o dicionário de dados, colocando os campos, tipos e restrições de cada tabela."<br>"Quais processos são comuns em mercados e hortifrutis e quais deles devemos conferir com o responsável?"<br>"Revisa nossas regras de negócio e vê se estão de acordo com o levantamento e se está faltando alguma regra importante." |
+| **Prompt(s) utilizados** | "Me ajuda a criar os requisitos funcionais e não funcionais do nosso sistema, com mais detalhes."<br>"Dá uma olhada nos requisitos do sistema e vê se está faltando alguma coisa importante."<br>"Confere se meu banco de dados está seguindo a 1FN, 2FN e 3FN e me explica o que precisa ajustar."<br>"Me ajuda a organizar o README.md do GitHub seguindo o que o professor pediu na entrega."<br>"Me ajuda a montar o dicionário de dados, colocando os campos, tipos e restrições de cada tabela." |
 | **Resposta recebida** | Textos em Markdown, sugestões de organização, revisão de normalização e uma lista de processos típicos para comparação com o levantamento. |
 | **Fontes consultadas e verificadas** | Usamos o esqueleto do professor, o levantamento, as confirmações por WhatsApp e as regras do projeto. Os processos genéricos sugeridos pela IA foram comparados com o que o responsável informou. |
 | **Trechos corrigidos ou rejeitados** | Rejeitamos cadastro de clientes, fidelidade, venda online, entrega e fiado porque o mercado não realiza esses processos. A troca pelo cliente existe, mas é rara e ficou fora do fluxo próprio do caixa. Escala, devolução ao fornecedor e fechamento de caixa foram mantidos porque fazem parte da rotina levantada. |
@@ -1455,15 +1416,14 @@ Usamos IA como apoio na organização, revisão e validação do trabalho. As in
 
 | Item | Registro |
 | :--- | :--- |
-| **Ferramenta e etapa** | Claude e ChatGPT, na revisão do README contra o esqueleto do professor, o guia do DER, a correção da Entrega 1 e as versões atualizadas do modelo. O Claude também fez a conferência final do README contra o esqueleto, depois que as correções anteriores foram aplicadas. |
-| **Motivação** | Encontrar divergências de numeração, regras citadas, contagens, rastreabilidade, cardinalidades, trechos que não correspondiam mais à versão atual do DER e do modelo lógico e deixar os textos menos técnicos e mais fáceis de entender. Também conferir se o README seguia a estrutura e os itens exigidos pelo esqueleto. |
-| **Prompt(s) utilizados** | "veja se existe divergências e quais correções precisam ser feitas";<br>"verifique se há alguma divergência e aponte por ordem de mais crítica até as mais leves";<br>"Dá uma revisada no trabalho e vê se está tudo de acordo com o que o professor pediu.";<br>"Deixe os textos com as descrições menos técnicas, e mais fáceis de compreendê-las com um vocabulário mais didático.";<br>Na revisão final também pedimos para corrigir pontos específicos do README, como o rótulo "Caso A", o texto sobre o Pix, o alinhamento das RN18 e RN20 com a seção 1.5, a repetição das tabelas de itens não incluídos, a hierarquia dos títulos e a explicação do porte do mercado.<br>Para o Claude: "com base no esqueleto e nesse trabalho que eu já fiz uma parte, tem umas correções que uma IA apontou, verifique se realmente precisa delas e faça as correções, e se existir mais alguma coisa para arrumar, arrume".<br>Para o Claude (conferência final): enviamos o README e o esqueleto do professor e pedimos "me fala se tá certo e se as coisas batem de acordo com o que é pedido"; depois pedimos a lista exata do que corrigir e uma última revisão. |
-| **Resposta recebida** | Listas de inconsistências, propostas de correção e versões revisadas de partes do README. Na conferência final, o Claude confirmou que a estrutura do README segue o esqueleto e apontou correções pontuais: linha do KPI10 com colunas erradas, texto dos fluxogramas desatualizado, nome e formato do arquivo da apresentação, links das respostas do proprietário e descrição do Uso 1 de IA. |
-| **Fontes consultadas e verificadas** | As correções foram conferidas contra o esqueleto, o levantamento, as regras, as seções 1.2 e 1.3, o DER anteriormente publicado com 22 entidades e 48 relacionamentos, bem como a contagem antiga de 53 FKs. A inspeção estática do SQL revisado apontou 28 tabelas e 56 FKs; não foi feita a conferência de execução integral dessa versão. O total de 2.993 registros continua sendo uma referência histórica a confirmar após executar o arquivo revisado. |
-| **Trechos corrigidos ou rejeitados** | Foram corrigidas referências duplicadas, regras antigas, contagens, rastreabilidade de fechamento de caixa e pagamento de contas, tratamento de perdas corrigidas, forma de pagamento e relação entre KPIs e consultas. Na revisão final, o grupo também aceitou os ajustes de texto sobre Pix, FEFO, operador da sessão, porte, títulos e repetições. Na conferência final com o Claude, aplicamos as correções da linha do KPI10, do texto dos fluxogramas, do nome da apresentação, do link das respostas do proprietário e do Uso 1. As sugestões que mudariam decisões já sustentadas pelo levantamento foram rejeitadas; por isso PAGAMENTO, SAIDA_LOTE e TROCA_OPERADOR permaneceram como entidades. |
-| **Justificativa da escolha final** | O objetivo foi fazer com que README, DER, modelo lógico, regras e SQL descrevessem a mesma solução, e que o README seguisse o esqueleto do professor. |
-| **Reflexão crítica** | A IA foi útil para localizar divergências, mas as contagens e as decisões finais foram revisadas pela equipe com base nos artefatos do projeto. A IA só viu o README e o esqueleto, e não o script SQL, o dicionário nem o repositório, então não conferiu o conteúdo desses arquivos nem o histórico de commits. Ela também sugeriu mudar PAGAMENTO, SAIDA_LOTE e TROCA_OPERADOR, mas a equipe rejeitou porque o levantamento sustentava o modelo atual. |
-
+| **Ferramenta e etapa** | Claude e ChatGPT, na revisão do README contra o esqueleto do professor, o guia do DER, a correção da Entrega 1 e as versões atualizadas do modelo. |
+| **Motivação** | Encontrar divergências de numeração, regras citadas, contagens, rastreabilidade, cardinalidades, trechos que não correspondiam mais à versão atual do DER e do modelo lógico e deixar os textos menos técnicos e mais fáceis de entender. |
+| **Prompt(s) utilizados** | "veja se existe divergências e quais correções precisam ser feitas";<br>"verifique se há alguma divergência e aponte por ordem de mais crítica até as mais leves";<br>"Dá uma revisada no trabalho e vê se está tudo de acordo com o que o professor pediu.";<br>"Deixe os textos com as descrições menos técnicas, e mais fáceis de compreendê-las com um vocabulário mais didático.";<br>Na revisão final também pedimos para corrigir pontos específicos do README, como o rótulo "Caso A", o texto sobre o Pix, o alinhamento das RN18 e RN20 com a seção 1.5, a repetição das tabelas de itens não incluídos, a hierarquia dos títulos e a explicação do porte do mercado.<br>Para o Claude: "com base no esqueleto e nesse trabalho que eu já fiz uma parte, tem umas correções que uma IA apontou, verifique se realmente precisa delas e faça as correções, e se existir mais alguma coisa para arrumar, arrume". |
+| **Resposta recebida** | Listas de inconsistências, propostas de correção e versões revisadas de partes do README. |
+| **Fontes consultadas e verificadas** | As correções foram conferidas contra o esqueleto, o levantamento, as regras, as seções 1.2 e 1.3, o DER de 22 entidades, os 48 relacionamentos e as 53 FKs do lógico. |
+| **Trechos corrigidos ou rejeitados** | Foram corrigidas referências duplicadas, regras antigas, contagens, rastreabilidade de fechamento de caixa e pagamento de contas, tratamento de perdas corrigidas, forma de pagamento e relação entre KPIs e consultas. Na revisão final, o grupo também aceitou os ajustes de texto sobre Pix, FEFO, operador da sessão, porte, títulos e repetições. As sugestões que mudariam decisões já sustentadas pelo levantamento foram rejeitadas; por isso PAGAMENTO, SAIDA_LOTE e TROCA_OPERADOR permaneceram como entidades. |
+| **Justificativa da escolha final** | O objetivo foi fazer com que README, DER, modelo lógico, regras e SQL descrevessem a mesma solução. |
+| **Reflexão crítica** | A IA foi útil para localizar divergências, mas as contagens e as decisões finais foram revisadas pela equipe com base nos artefatos do projeto. Ela também sugeriu mudar PAGAMENTO, SAIDA_LOTE e TROCA_OPERADOR, mas a equipe rejeitou porque o levantamento sustentava o modelo atual.|
 
 #### Uso 7 — ChatGPT: organização e revisão da apresentação final
 
@@ -1477,19 +1437,6 @@ Usamos IA como apoio na organização, revisão e validação do trabalho. As in
 | **Trechos corrigidos ou rejeitados** | Foram corrigidos slides que misturavam DER conceitual e modelo lógico, mantendo os dois assuntos separados. Também reduzimos textos longos para adequar o pitch ao tempo disponível. |
 | **Justificativa da escolha final** | A apresentação foi mantida alinhada à ordem exigida e aos artefatos efetivamente entregues no repositório. |
 | **Reflexão crítica** | A IA ajudou na síntese visual, mas os slides precisam continuar fiéis ao modelo e ao SQL; simplificar demais poderia esconder diferenças entre o conceitual e o lógico. |
-
-#### Uso 8 — ChatGPT: interface demonstrativa do banco
-
-| Item | Registro |
-| :--- | :--- |
-| **Ferramenta e etapa** | ChatGPT, na criação de uma interface demonstrativa em PHP, HTML e CSS ligada ao banco MySQL do projeto. |
-| **Motivação** | Criar uma visualização simples para mostrar, como complemento da apresentação, como os dados e consultas do banco poderiam aparecer em um sistema. |
-| **Prompt(s) utilizados** | "Crie uma interface simples para demonstrar o nosso banco, com Dashboard, Perdas, Validade, Vendas, Estoque e Auditoria, usando as tabelas, consultas e procedures que já existem no script." |
-| **Resposta recebida** | Foi gerada uma interface acadêmica com menu lateral, cards e páginas que consultam os dados do banco `hortifruti_uniao`. |
-| **Fontes consultadas e verificadas** | A interface foi conferida com o script SQL do projeto e com os resultados da massa de dados. |
-| **Trechos corrigidos ou rejeitados** | A conexão foi ajustada para o MySQL 8 utilizado pelo grupo. O registro de perdas foi mantido desativado durante a apresentação para não alterar a massa de dados. |
-| **Justificativa da escolha final** | A interface foi usada apenas como complemento visual. A implementação SQL e as consultas continuam sendo os artefatos principais exigidos pelo trabalho. |
-| **Reflexão crítica** | A interface não substitui a validação do SQL e depende da conexão correta com o MySQL. Ela serve apenas para facilitar a visualização dos dados durante a demonstração. |
 
 **Referências técnicas consultadas no SQL:** [restrições CHECK no MySQL 8.0](https://dev.mysql.com/doc/refman/8.0/en/create-table-check-constraints.html) e [colunas geradas no MySQL](https://dev.mysql.com/doc/refman/8.0/en/create-table-generated-columns.html).
 
@@ -1509,6 +1456,6 @@ O pitch tem **8 minutos**, com pouco texto nos slides e a demonstração do banc
 | 6. BI e IA | Indicadores de perdas, lotes perto de vencer e a ideia de prever risco de perda. | 1 min |
 | 7. Benefícios | Mais controle, menos produto perdido e decisões com base em dados. | 1 min |
 
-**Arquivo da apresentação:** `apresentacao/Apresentacao_HortifrutiUniao_Entrega2.pptx`
+**Arquivo da apresentação:** `apresentação/Hortifruti União — Apresentação Acadêmica — Entrega 2.pdf`
 
 Depois do pitch todos os integrantes ficam para a defesa do modelo lógico, e cada um responde o que foi perguntado a ele. Cada aluno precisa saber explicar as partes do modelo, principalmente chaves, cardinalidades e as decisões de normalização.
