@@ -6896,13 +6896,24 @@ GROUP BY DATE_FORMAT(data_hora,'%Y-%m') ORDER BY mes;
 
 -- G09 - Quais fornecedores tiveram mais mercadoria recusada?
 -- Atende: KPI09
-SELECT f.id_fornecedor,f.razao_social,SUM(ir.quantidade_recusada) AS quantidade_recusada
+SELECT
+    f.id_fornecedor,
+    f.razao_social,
+    p.tipo_venda AS unidade_medida,
+    SUM(ir.quantidade_recusada) AS quantidade_recusada
 FROM ITEM_RECEBIMENTO ir
-JOIN RECEBIMENTO r ON r.id_recebimento=ir.id_recebimento
-JOIN FORNECEDOR f ON f.id_fornecedor=r.id_fornecedor
-GROUP BY f.id_fornecedor,f.razao_social
-HAVING SUM(ir.quantidade_recusada)>0
-ORDER BY quantidade_recusada DESC;
+JOIN RECEBIMENTO r
+    ON r.id_recebimento=ir.id_recebimento
+JOIN FORNECEDOR f
+    ON f.id_fornecedor=r.id_fornecedor
+JOIN PRODUTO p
+    ON p.id_produto=ir.id_produto
+WHERE ir.quantidade_recusada>0
+GROUP BY
+    f.id_fornecedor,
+    f.razao_social,
+    p.tipo_venda
+ORDER BY quantidade_recusada DESC,f.razao_social;
 
 -- G10 - Quanto existe de contas em aberto, separando vencidas e a vencer?
 -- Atende: KPI10
