@@ -1040,160 +1040,42 @@ O [Dicionário de Dados](docs/Dicionario_Dados.md) detalha os campos e as restri
 
 ## 3. Script SQL Completo
 
-O script foi desenvolvido para **MySQL 8.0.16 ou superior** e contém a criação do banco, as tabelas, as restrições de integridade (`PK`, `FK`, `NOT NULL`, `UNIQUE` e `CHECK`), índices, uma view de saldo, triggers, procedures, massa de dados fictícia, consultas com `JOIN`, exemplos de `UPDATE` e `DELETE`, consultas gerenciais e de auditoria e perfis de acesso (roles) com `GRANT`.
+O script final do projeto está disponível em [docs/script.sql](docs/script.sql) e foi desenvolvido para MySQL 8.0.16 ou superior. A versão utilizada pelo grupo para a execução final foi o MySQL 8.0.46.
 
-**Arquivo SQL:** [docs/script.sql](docs/script.sql)
-
-O script utiliza o banco `hortifruti_uniao`. Cada execução completa apaga e recria esse banco, permitindo repetir a demonstração com a mesma massa de dados.
+O arquivo contém a criação do banco `hortifruti_uniao`, as 27 tabelas, chaves primárias e estrangeiras, restrições de integridade, índices, triggers, procedures, uma view, a massa de dados fictícia, consultas com `JOIN`, exemplos de `UPDATE` e `DELETE`, consultas gerenciais e consultas de auditoria.
 
 ### Execução e conferência
 
-O arquivo final entregue em `docs/script.sql` foi executado pelo grupo no MySQL 8.0.46. Durante uma etapa anterior da revisão, uma cópia utilizada em ambiente isolado exigiu a retirada de uma definição de `DEFINER` específica daquele ambiente. Esse ajuste não faz parte do arquivo oficial entregue. A versão final do script, sem `DEFINER`, foi executada pelo grupo com a carga, as consultas gerenciais e as auditorias sem erro. Foram confirmadas 200 vendas, 27 tabelas, 53 chaves estrangeiras, 27 triggers e 9 procedures.
+O grupo executou o arquivo `docs/script.sql` a partir de um banco vazio no MySQL 8.0.46. A execução completa terminou sem erros e recriou o banco com a massa de dados utilizada na demonstração.
 
-Durante a revisão também foram realizadas 57 verificações auxiliares envolvendo operações válidas e inválidas, estoque, recebimentos, perdas, vendas, pagamentos, cancelamentos, estornos e rollback. Os scripts auxiliares usados nessa etapa não fazem parte da entrega e, por isso, essas 57 verificações são registradas apenas como validação interna do grupo. As verificações reproduzíveis entregues no repositório são as consultas gerenciais G01 a G12 e as auditorias A01 a A12 existentes em `docs/script.sql`.
+Na conferência final foram confirmados:
 
-O grupo também executou a carga, as consultas gerenciais e as auditorias em seu ambiente MySQL 8.0.46. A conferência do fechamento comparou o valor esperado gravado com o fundo inicial mais os pagamentos em dinheiro das vendas concluídas, menos as sangrias, sem encontrar divergências. A A01 apresentou seis perdas pendentes previstas na massa; as demais auditorias verificadas não apontaram inconsistências.
+- 27 tabelas;
+- 53 chaves estrangeiras;
+- 27 triggers;
+- 9 procedures;
+- 1 view;
+- 200 vendas simuladas, sendo 196 concluídas e 4 canceladas.
 
-Foi realizado um teste com duas conexões simultâneas, identificadas pelos IDs 26 e 27. A primeira bloqueou o produto com `SELECT ... FOR UPDATE`. A segunda chamou `registrar_perda_pendente` e aguardou a liberação do bloqueio. Após o `ROLLBACK` na primeira conexão, a segunda prosseguiu e rejeitou a quantidade superior ao saldo disponível. Esse resultado confirma a espera pelo bloqueio nesse cenário, sem comprovar todas as combinações de operações simultâneas.
+### Consultas gerenciais e de auditoria
 
-As demais conferências abaixo descrevem a estrutura e a massa definidas no script. As consultas gerenciais e de auditoria ficam no próprio arquivo SQL e podem ser executadas novamente durante a demonstração.
+O script contém as consultas gerenciais **G01 a G12** e as consultas de auditoria **A01 a A12**.
 
-**Backup e restauração (RNF08):** o grupo fez um backup lógico do banco com `mysqldump`, incluindo estrutura, dados, procedures e triggers. Depois, o arquivo foi restaurado em um banco separado, chamado `hortifruti_uniao_restore_atualizado`, sem alterar o banco original.
+Cada consulta gerencial possui, no próprio SQL, um cabeçalho com:
 
-A exportação e a restauração terminaram sem erro. Comparamos a quantidade de registros das 27 tabelas nos dois bancos e não encontramos diferenças. No banco restaurado também foram confirmadas 53 chaves estrangeiras, 27 triggers, 9 procedures e 1 view.
+- código da consulta;
+- pergunta que ela responde;
+- indicação `Atende`, relacionando a consulta ao problema ou KPI correspondente.
 
-A conferência das vendas mostrou os mesmos 200 registros do banco original, sendo 196 vendas concluídas e 4 canceladas. O faturamento das vendas concluídas ficou em R$ 16.539,88 nos dois bancos.
+Cada consulta de auditoria possui:
 
-Esse teste confirmou a recuperação da estrutura e dos dados nos pontos verificados. Não fizemos comparação campo a campo de todos os registros, restauração em outro servidor nem teste de recuperação de usuários e permissões.
+- código da consulta;
+- pergunta que ela verifica;
+- indicação `Verifica`, com a regra de negócio relacionada.
 
-| Verificação | Resultado |
-| :--- | :--- |
-| Tabelas criadas | 27 |
-| Chaves estrangeiras | 53 |
-| Triggers | 27 |
-| Procedures | 9 |
-| Views | 1 |
-| Índices explícitos adicionais aos de chaves | 12 |
-| Vendas simuladas | 200 |
-| Vendas concluídas | 196 |
-| Vendas canceladas | 4 |
-| Período das vendas | 26/10/2026 a 01/11/2026 |
-| Caixas cadastrados | 7 |
-| Sessões de caixa | 49 |
-| Sessões fechadas | 47 |
-| Sessões abertas | 2 |
+As consultas G01 a G11 estão ligadas aos KPIs apresentados na seção 1.6. A G12 é uma consulta complementar para acompanhamento das promoções. As auditorias verificam condições de integridade definidas pelas regras de negócio.
 
-A massa inclui vendas concluídas e canceladas, pagamentos em diferentes modalidades, troca de operador, sangrias, perdas confirmadas, perdas com lote a confirmar, promoções, devoluções, trocas e abatimentos de fornecedores, além de contas a pagar.
-
-Existem recebimentos entre **15/10/2026 e 25/10/2026**, utilizados para formar o estoque inicial da simulação.
-
-### Procedures implementadas
-
-| Procedure | Finalidade |
-| :--- | :--- |
-| `concluir_venda` | Confere a venda, realiza as baixas por lote, calcula o total e verifica se os pagamentos correspondem ao valor final. |
-| `cancelar_venda` | Valida o perfil de supervisor ou gerência, registra o cancelamento, estorna as baixas de estoque e marca o documento fiscal da venda como cancelado. |
-| `confirmar_lote_perda` | Vincula uma perda pendente ao lote informado, calcula seu valor e registra a baixa correspondente. |
-| `estornar_saida` | Registra o estorno de uma saída, mantendo o movimento original no histórico. |
-| `fechar_sessao` | Calcula o valor esperado somando o fundo inicial aos pagamentos em dinheiro das vendas concluídas e subtraindo as sangrias. Depois grava o valor contado e quem fechou a sessão. |
-| `adicionar_lote_recebimento` | Adiciona um lote vinculado a um item de recebimento. |
-| `registrar_recebimento` | Registra o recebimento de mercadorias. |
-| `registrar_perda_pendente` | Registra uma perda com lote a confirmar. |
-| `registrar_abatimento_fornecedor` | Registra um abatimento concedido pelo fornecedor. |
-
-As procedures utilizam transações e executam `ROLLBACK` nas condições de erro tratadas explicitamente. Todas têm também um `EXIT HANDLER FOR SQLEXCEPTION`, que desfaz a transação e repassa o erro quando acontece uma falha inesperada.
-
-As procedures demonstram os fluxos transacionais do projeto. Na `concluir_venda`, o produto é bloqueado antes da conferência do saldo disponível, os lotes são escolhidos pela ordem FEFO e o lote selecionado é lido com `FOR UPDATE`. O preço considera a promoção vigente daquele lote, quando houver. Se for necessário utilizar mais de um lote, o item é dividido.
-
-As procedures usam `READ COMMITTED` e controlam suas próprias transações. O teste com duas conexões confirmou a espera por um produto bloqueado durante uma chamada a `registrar_perda_pendente`. Esse teste não equivale à validação de duas conclusões de venda simultâneas ou de todas as combinações entre vendas, perdas e estornos.
-
-### Correções realizadas e limites da implementação
-
-A revisão corrigiu a G01 para incluir setores sem vendas nos meses com movimentação considerada pela consulta. Quando o faturamento do setor é zero, o percentual de perdas fica `NULL`, indicando que não é aplicável.
-
-A G09 passou a separar as quantidades recusadas por fornecedor e unidade de medida (`kg` ou `unidade`), evitando somar medidas diferentes em um mesmo total.
-
-Também foram acrescentados bloqueios por produto e ajustada a leitura dos saldos dentro das transações. O teste de concorrência cobriu um cenário com duas conexões: uma bloqueando o produto e outra chamando `registrar_perda_pendente`.
-
-Permanecem os seguintes limites:
-
-- Não foram testadas todas as combinações de operações simultâneas.
-- Alterações diretas nas tabelas, fora das procedures e das permissões previstas, podem não aplicar todas as validações acumuladas.
-- A correção e a divisão de perdas entre lotes ainda precisam de testes específicos.
-
-### Resultados e validação das consultas
-
-O script contém as consultas gerenciais **G01 a G12** e as auditorias **A01 a A12** para a massa de 200 vendas. Os indicadores de faturamento e ticket médio consideram apenas as vendas concluídas.
-
-| Consulta | Objetivo ou resultado da validação |
-| :--- | :--- |
-| G01 | Compara o custo das perdas válidas e confirmadas com o valor das vendas por setor e mês. Inclui os setores de venda mesmo quando não tiveram vendas nos meses considerados. Quando o faturamento é zero, o percentual fica `NULL` (não aplicável). |
-| G02 | Apresenta a quantidade de ocorrências de perda por motivo e mês. |
-| G03 | Identifica lotes próximos do vencimento conforme o prazo de alerta definido para cada setor. |
-| G04 | Identifica lotes vencidos que ainda possuem saldo em estoque. |
-| G05 | Apresenta o faturamento diário das vendas concluídas. |
-| G06 | Calcula o ticket médio diário das vendas concluídas. |
-| G07 | Identifica produtos abaixo do estoque mínimo e informa se possuem pedido de compra aberto ou parcial. |
-| G08 | Calcula a taxa de cancelamento por mês. Por mês, a massa tem 1,71% em outubro (3/175) e 4,00% em novembro (1/25); o total é 4/200 = 2%. |
-| G09 | Soma as quantidades recusadas por fornecedor e unidade de medida, separando `kg` e `unidade`. A comparação das quantidades deve ser feita dentro da mesma unidade de medida. |
-| G10 | Apresenta as contas abertas, separando vencidas e a vencer e considerando os abatimentos registrados. |
-| G11 | Identifica perdas com lote a confirmar e calcula o tempo de pendência. Na massa, são 6 perdas pendentes entre 24 perdas válidas, equivalentes a 25%. |
-| G12 | Apresenta as promoções como vigentes ou encerradas em relação à data de referência. |
-| A01 | Foi preparada para localizar as 6 perdas com lote a confirmar, que são pendências intencionais da massa. |
-| A04 | Procura vendas concluídas em que o total pago é diferente do valor da venda, inclusive quando a diferença é de apenas um centavo. |
-| A02, A03 e A05 a A12 | Verificam as demais condições de integridade e devem retornar vazio quando não houver inconsistência no cenário analisado. |
-
-No arquivo SQL, cada consulta gerencial possui cabeçalho com código, pergunta e `Atende`, e cada consulta de auditoria possui código, pergunta e `Verifica`, seguindo o formato exigido para relacionar as consultas aos problemas, KPIs e regras de negócio.
-
-| Auditoria | Regra principal verificada |
-| :--- | :--- |
-| A01 | RN42 e RN52 — perdas válidas ainda sem lote confirmado |
-| A02 | RN09 — pedido não cancelado sem item |
-| A03 | RN23 — venda concluída sem item ativo |
-| A04 | RN24 — pagamento diferente do total da venda |
-| A05 | RN14 — lote ligado a produto diferente do item recebido |
-| A06 | RN16 e RN17 — saldo de lote fora dos limites |
-| A07 | RN12 — quantidade aceita + recusada diferente da quantidade da nota |
-| A08 | RN37 — devolução acima da quantidade recusada |
-| A09 | RN17 e RN28 — saída de lote com origem incompatível com o tipo |
-| A10 | RN54 — venda cancelada com baixa ainda sem estorno |
-| A11 | RN32 e RN56 — sessão fechada sem dados obrigatórios de fechamento |
-| A12 | RN35 e RN56 — conta paga sem forma, data ou funcionário responsável |
-
-A ausência de registros em uma consulta de auditoria é o resultado esperado quando nenhum dado viola a condição investigada. Isso não comprova, isoladamente, o atendimento a todas as regras de negócio do sistema.
-
-As consultas que dependem de uma data de referência usam diretamente a data fixa **01/11/2026** no SQL (G03, G04, G10, G11 e G12), para permitir a reprodução dos resultados da demonstração. Em uso real, essa data poderia ser substituída pela data atual ou por um parâmetro.
-
-Os resultados dependem da massa carregada e podem mudar caso os dados ou a data de referência sejam alterados. Os resultados detalhados ficam disponíveis pela execução das consultas no script SQL.
-
-### Integridade e histórico
-
-As chaves estrangeiras mantêm os relacionamentos entre os registros, enquanto as restrições `CHECK` validam domínios e condições dos dados. Os triggers complementam essas verificações, incluindo compatibilidade entre produto e lote, controle de saldo e limites de quantidades.
-
-Os cancelamentos de venda mantêm o histórico e geram estornos das saídas de estoque. Os pagamentos dessas vendas permanecem registrados, mas não entram nos totais de vendas concluídas.
-
-O script traz exemplos de `UPDATE` e `DELETE` na seção 7 do script SQL. Os `DELETE`s só atingem registros criados na hora, sem nenhum histórico. Os exemplos de manutenção não apagam vendas, perdas ou lotes com histórico. A execução completa do arquivo, porém, apaga e recria o banco; a seção de recarga também limpa os dados de demonstração.
-
-### Ordem e características da carga
-
-As tabelas, restrições, procedures e os 27 triggers são criados antes da carga dos dados. A massa é carregada como uma carga histórica demonstrativa, com vendas já concluídas, enquanto as procedures permanecem disponíveis para demonstrar os fluxos transacionais de novas operações.
-
-A massa é carregada como uma **carga histórica demonstrativa**: as vendas são inseridas como concluídas, acompanhadas de itens, pagamentos e saídas de lote. As procedures `cancelar_venda` e `fechar_sessao` são chamadas durante a carga para gerar os cancelamentos e fechamentos previstos.
-
-Por isso, a carga não reproduz integralmente a sequência de uso de uma aplicação. A procedure `concluir_venda` não é usada para montar essa carga histórica; ela permanece no script para demonstrar o fluxo transacional de conclusão de uma venda.
-
-Na organização da massa:
-
-- os recebimentos formam o estoque utilizado nas movimentações;
-- as vendas não utilizam lotes vencidos nem anteriores ao recebimento;
-- as sangrias são registradas enquanto a sessão está aberta;
-- as vendas canceladas possuem os estornos correspondentes;
-- as perdas com lote a confirmar permanecem identificadas como pendências;
-- os totais das vendas, os pagamentos e os saldos foram conferidos.
-
-Os testes foram feitos para conferir se o banco e as principais regras estavam funcionando como esperado. Também testamos uma situação com duas conexões ao mesmo tempo e fizemos um teste separado da consulta de vendas por data com 54.000 registros fictícios.
-
-Esse teste maior serviu para verificar o uso do índice e o comportamento dessa consulta, mas não representa o funcionamento completo do sistema com itens, pagamentos, estoque e vários usuários ao mesmo tempo. Também não testamos todas as combinações possíveis das regras de negócio e das operações simultâneas.
+As consultas podem ser executadas novamente após a carga da massa de dados para reproduzir os resultados utilizados na demonstração.
 
 ---
 
