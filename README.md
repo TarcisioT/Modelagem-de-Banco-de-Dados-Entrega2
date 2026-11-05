@@ -458,7 +458,7 @@ Revisamos o modelo com base nos apontamentos da Entrega 1 e nas informações no
 | Fornecedor–produto modelado como 1:N | Revisamos para N:N e criamos a associação FORNECEDOR_PRODUTO, que no modelo lógico virou uma tabela própria | Um fornecedor pode fornecer vários produtos e o mesmo produto pode estar relacionado a mais de um fornecedor. A associação também guarda o código do produto no fornecedor e o último custo. |
 | Dicionário: CPF, CNPJ, telefone e código de barras tratados como número | Esses campos passaram a utilizar `VARCHAR` no modelo lógico e no dicionário | São identificadores ou textos de contato, não valores usados em cálculos, e podem possuir zeros à esquerda. |
 | Dicionário: faltavam versão/data e índices | O dicionário foi atualizado com a versão do MySQL utilizada, data de revisão e os índices definidos no banco | Essas informações passaram a documentar com mais precisão a implementação entregue. |
-| Dicionário: log de acesso | O grupo não criou um log genérico de acesso. A rastreabilidade das operações foi feita por FKs para FUNCIONARIO nas operações relevantes, e o controle de acesso foi representado por roles e permissões do MySQL | Mantivemos essa decisão porque o usuário técnico que executa um comando no banco não identifica necessariamente o funcionário responsável pela operação. |
+| Dicionário: log de acesso | O grupo não criou um log genérico de acesso. A rastreabilidade das operações foi feita por FKs para FUNCIONARIO, e o controle de acesso ficou representado pelo perfil de acesso dos funcionários e pelo RNF01. | Não implementamos roles ou `GRANT` específicos no script. O foco foi identificar o funcionário responsável pelas operações relevantes. |
 | Dicionário e DER: cardinalidades incompletas ou incorretas | As cardinalidades foram revisadas e passaram a mostrar mínimo e máximo nos dois lados dos relacionamentos | A revisão deixa explícito o que é obrigatório, opcional, único ou múltiplo em cada relacionamento. |
 
 Além dos apontamentos, incluímos por conta própria o estorno em SAIDA_LOTE, ligado à baixa original, para corrigir baixas sem apagar o histórico, e as ligações que dizem quem fechou o caixa e quem pagou a conta (relacionamentos 46 e 47) e a que liga uma perda corrigida à original (48).
@@ -545,6 +545,8 @@ Alguns valores são mantidos propositalmente para preservar o histórico. O pre�
 
 Também existem campos derivados, como `ITEM_VENDA.subtotal` e `SESSAO_CAIXA.diferenca`, calculados pelo próprio banco. O `VENDA.valor_total` é definido no momento da conclusão da venda após a conferência dos itens e pagamentos.
 
+Algumas informações foram mantidas de forma redundante de propósito para facilitar a operação e preservar o histórico. O `LOTE.id_produto` facilita a identificação do produto do lote; em `PERDA`, o produto e o setor são mantidos mesmo quando o lote ainda não foi confirmado. O saldo do lote é armazenado para permitir a consulta rápida do estoque, enquanto as movimentações ficam registradas para rastreabilidade. Valores como o valor da perda e o valor esperado do caixa são calculados pelo banco e mantidos para registrar o resultado daquele momento.
+
 Com a normalização, os dados ficam mais consistentes, reduzem-se repetições desnecessárias e alterações em um cadastro não precisam ser feitas em várias tabelas.
 
 ### 1.5 Justificativas Técnicas das Decisões
@@ -591,7 +593,7 @@ As consultas de auditoria A01 a A12 complementam essas validações e ajudam a l
 
 Algumas escolhas foram importantes para manter o banco mais organizado.
 
-O estoque não recebeu uma tabela separada. O saldo é controlado pelos lotes e pelas movimentações, evitando manter a mesma informação em dois lugares.
+O estoque não recebeu uma tabela separada. O saldo operacional fica registrado nos lotes, enquanto as movimentações ficam em `SAIDA_LOTE` para manter o histórico e a rastreabilidade.
 
 A validade também ficou no lote, e não no produto, porque o mesmo produto pode chegar em datas diferentes e ter vencimentos diferentes.
 
