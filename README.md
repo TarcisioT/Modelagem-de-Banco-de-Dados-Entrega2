@@ -943,7 +943,7 @@ Usamos IA como apoio na organização, revisão e validação do trabalho. As in
 | **Justificativa da escolha final** | A interface foi mantida apenas como complemento visual da apresentação. O script SQL, o modelo lógico e as consultas continuam sendo os principais artefatos da entrega. |
 | **Reflexão crítica** | A interface facilita a visualização dos dados, mas depende da conexão correta com o banco e não substitui os testes e a validação do SQL. Por isso ela foi usada apenas como apoio na demonstração. |
 
-## 7. Apresentação Final
+## 7. Apresentação Corporativa Final
 
 A apresentação foi organizada para durar cerca de **8 minutos**, mostrando primeiro os problemas encontrados no Hortifruti União e depois como o banco ajuda a organizar essas informações.
 
