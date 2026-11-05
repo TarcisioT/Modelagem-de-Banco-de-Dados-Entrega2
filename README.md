@@ -608,112 +608,95 @@ O banco é uma implementação acadêmica e independente do VR Software utilizad
 
 ### 1.6 Proposta de Arquitetura Analítica para BI e IA
 
-Pensamos em indicadores que ajudem o responsável com os problemas do levantamento. O foco é perdas e validade, mas também entram vendas, estoque, fornecedores e contas a pagar.
+Os dados do banco podem ajudar a gestão do mercado a acompanhar melhor perdas, validade, estoque, vendas, fornecedores e contas a pagar.
 
 #### Informações estratégicas
 
-Com os dados registrados, o mercado passa a responder perguntas que hoje não tem como responder:
+Com os dados registrados, seria possível responder perguntas como:
 
-- Quais setores e produtos mais perdem, e quanto isso custa.
-- Quais motivos de perda aparecem mais (vencimento, maturação ou dano de cliente).
-- Quais lotes vão vencer nos próximos dias e se já foram para promoção.
-- Quais fornecedores mais entregam mercadoria fora do padrão e quanto foi recusado.
-- Quais produtos estão abaixo do estoque mínimo e precisam de pedido.
-- Como estão as vendas, o ticket médio e os cancelamentos por dia, caixa e operador.
-- Quanto há de contas a pagar em aberto, quanto já venceu sem pagar e quando o resto vence.
+- quais setores e produtos têm mais perdas;
+- quais motivos de perda aparecem com mais frequência;
+- quais lotes estão próximos do vencimento;
+- quais fornecedores entregam mais produtos fora do padrão;
+- quais produtos estão abaixo do estoque mínimo;
+- como estão o faturamento e o ticket médio;
+- quantas vendas são canceladas;
+- quais contas estão vencidas ou próximas do vencimento.
 
-#### Como o hortifruti entra no controle de validade
+Essas informações podem ser usadas em relatórios e painéis para ajudar nas decisões do dia a dia.
 
-O hortifruti é o setor mais forte do mercado, mas frutas, legumes e verduras quase nunca têm validade impressa (RN15). Por isso, nesse setor, o P2 não funciona do mesmo jeito que na padaria, nos frios ou nos laticínios, e o `SETOR.dias_alerta_validade` do hortifruti fica vazio. O banco ajuda o setor de três formas:
+#### Indicadores gerenciais
 
-- a data de recebimento da carga fica no recebimento ligado ao lote, e o lote mais antigo sai primeiro (RN18), mesmo sem validade;
-- a perda por **maturação excessiva** é o principal motivo de perda do setor, e o P1 mostra quanto custa (KPI01 e KPI02);
-- o recebimento recusa ou devolve a carga que já chega mole ou murcha, e isso aparece nos relatórios de fornecedor (KPI09).
+Os indicadores abaixo foram escolhidos porque podem ser calculados com os dados existentes no banco.
 
-Os lotes perto do vencimento (KPI03 e KPI04) só valem para os produtos que têm data impressa, em qualquer setor. No hortifruti a validade é conferida no olho, e o banco não muda isso.
+| Código | Indicador | Período | Consulta SQL |
+| :--- | :--- | :--- | :--- |
+| KPI01 | Custo das perdas em relação às vendas do setor | Mensal | G01 |
+| KPI02 | Ocorrências de perda por motivo | Mensal | G02 |
+| KPI03 | Lotes próximos do vencimento | Diário | G03 |
+| KPI04 | Lotes vencidos com saldo | Diário | G04 |
+| KPI05 | Faturamento das vendas concluídas | Diário | G05 |
+| KPI06 | Ticket médio das vendas concluídas | Diário | G06 |
+| KPI07 | Produtos abaixo do estoque mínimo | Diário | G07 |
+| KPI08 | Taxa de cancelamento de vendas | Mensal | G08 |
+| KPI09 | Quantidade recusada por fornecedor | Por período | G09 |
+| KPI10 | Contas abertas e vencidas | Por vencimento | G10 |
+| KPI11 | Perdas com lote ainda não confirmado | Mensal | G11 |
 
-**Limite do controle de validade.** O banco só avisa de vencimento dos produtos que têm data conhecida. Nos perecíveis sem data, que são a maior parte do hortifruti, ele não prevê quando o produto vai estragar, e isso continua com os funcionários. O que o banco faz é registrar a perda depois que acontece e mostrar onde ela mais ocorre. Para ir além, seria preciso um registro de inspeção ou uma estimativa de prazo por produto, que seria proposta nossa e não está no modelo atual.
+As metas usadas durante a demonstração são apenas referências do grupo. Elas não foram definidas pelo responsável do mercado e não representam metas reais da organização.
 
-#### Indicadores gerenciais (KPIs)
+A consulta G12 acompanha promoções vigentes e encerradas. Ela foi mantida como uma consulta gerencial complementar e não como um KPI separado.
 
-Cada indicador tem fórmula, período e uma consulta no script SQL. As metas abaixo são **sugestões do grupo**. Não conversamos metas com o responsável, e elas precisam ser validadas com ele. São metas hipotéticas, escolhidas por nós sem dados históricos do mercado: os 2% do KPI01, o 1% do KPI08 e o prazo de 7 dias do KPI11 não vieram do responsável. Só as referências de faturamento e ticket médio partem de números que ele informou.
-
-Nos indicadores de perda (KPI01, KPI02 e KPI11) só contam as perdas com `status = valida`. As perdas `substituida` ficam de fora, como diz a RN43, para uma perda corrigida ou dividida não ser contada duas vezes. Na massa atual, as 24 perdas estão com `status = valida`: 18 já têm lote confirmado e 6 ainda estão com lote a confirmar. Por isso, no KPI11, o cálculo fica 6 ÷ 24 = 25%.
-
-| Código | Indicador e cálculo | Período | Meta sugerida (a validar) | Consulta SQL |
-| :--- | :--- | :--- | :--- | :--- |
-| KPI01 | Custo das perdas em relação às vendas do setor: valor estimado das perdas válidas e confirmadas ÷ valor vendido pelo setor no mesmo período × 100. A consulta inclui setores sem vendas; quando o faturamento é zero, o percentual fica `NULL` (não aplicável). Compara custo de perda com receita de venda, servindo para acompanhar a tendência, não como margem de prejuízo. | Mensal | Até 2% do que o setor vende; avaliar separadamente os setores sem faturamento | G01 |
-| KPI02 | Ocorrências de perda por motivo: contagem de registros de perda válidos por motivo (mede o número de ocorrências, não unidades nem valor) | Mensal | Queda das ocorrências de perda por vencimento mês a mês | G02 |
-| KPI03 | Lotes perto do vencimento: lotes com saldo dentro do alerta do setor, mostrando se já têm promoção registrada | Diário | Acompanhar a lista todo dia. Promover ou não é decisão comercial do responsável, e a consulta só mostra a situação | G03 |
-| KPI04 | Lotes vencidos com saldo: lotes vencidos que ainda têm quantidade | Diário | Zero | G04 |
-| KPI05 | Faturamento: soma do valor das vendas concluídas | Diário | Referência de cerca de R$ 167 mil por dia (R$ 5 milhões ÷ 30) | G05 |
-| KPI06 | Ticket médio: valor das vendas concluídas ÷ quantidade de vendas concluídas | Diário | Referência de cerca de R$ 93 (R$ 167 mil ÷ 1.800 vendas) | G06 |
-| KPI07 | Produtos abaixo do mínimo: produtos com saldo disponível (soma dos lotes menos as perdas com lote a confirmar) menor que o estoque mínimo, separando os que já têm pedido de compra em aberto dos que não têm | Diário | Zero produtos abaixo do mínimo sem pedido de compra em aberto | G07 |
-| KPI08 | Taxa de cancelamento: vendas canceladas ÷ total de vendas registradas (concluídas + canceladas) × 100 | Mensal | Até 1% | G08 |
-| KPI09 | Quantidade recusada no recebimento, agrupada por fornecedor e unidade de medida (`kg` ou `unidade`). As quantidades são comparadas somente dentro da mesma unidade de medida. | Por período | Comparar fornecedores dentro da mesma unidade de medida e acompanhar as recusas | G09 |
-| KPI10 | Soma do saldo a pagar das contas abertas (valor da conta menos os abatimentos ligados a ela), separando as vencidas das que ainda vão vencer. | Por vencimento | Nenhuma conta vencida sem pagar | G10 |
-| KPI11 | Perdas com lote a confirmar: perdas válidas pendentes ÷ total de perdas válidas × 100, com a idade de cada pendência (data da consulta menos data da perda) | Mensal | Resolver as pendências em até 7 dias, ou seja, nenhuma pendência com mais de 7 dias | G11 |
-
-**Observação sobre o KPI08:** A G08 calcula a taxa por mês, então devolve duas linhas: outubro com 3 canceladas em 175 vendas (≈ 1,71%) e novembro com 1 em 25 (4,00%). A taxa total da massa é 4/200 = 2%, obtida somando os dois meses. Ambos os meses ficam acima da meta sugerida de 1% apenas para deixar casos de cancelamento e estorno na demonstração; não representam a taxa real do Hortifruti União.
-
-As consultas gerenciais vão de G01 a G12. As consultas G01 a G11 estão ligadas aos KPIs da seção 1.6. A G12 é uma consulta complementar para acompanhar promoções vigentes e encerradas, por isso não foi tratada como KPI.
-
-Os valores de referência de faturamento e ticket médio são contas feitas com os números que o responsável informou de memória, então são aproximados.
-
-O KPI01 fica um pouco abaixo do prejuízo real enquanto houver perda com lote a confirmar, porque essa perda ainda não tem valor (RN44). Por isso o KPI11 anda junto com ele.
-
-A perda guarda o setor da época em que aconteceu, mas as vendas por setor usam o setor atual do produto. Se um produto mudar de setor no meio do período, o numerador e o denominador do KPI01 passam a olhar setores diferentes. Aceitamos essa diferença porque a mudança de setor é rara, mas deixamos registrado.
-
-#### Rastreabilidade entre problemas, tabelas e consultas
+#### Rastreabilidade entre problemas, indicadores e consultas
 
 | Problema ou indicador | Tabelas principais | Consulta no script |
 | :--- | :--- | :--- |
 | P1 — Falta de controle das perdas | PERDA, MOTIVO_PERDA, PRODUTO, SETOR | G01, G02, G11 |
 | P2 — Falta de controle de validade | LOTE, PRODUTO, SETOR, PROMOCAO | G03, G04, G12 |
-| KPI01 — Custo das perdas em relação às vendas do setor | PERDA, SETOR, PRODUTO, ITEM_VENDA, VENDA | G01 |
-| KPI02 — Ocorrências de perda por motivo | PERDA, MOTIVO_PERDA | G02 |
-| KPI03 — Lotes perto do vencimento | LOTE, PRODUTO, SETOR, PROMOCAO | G03 |
-| KPI04 — Lotes vencidos | LOTE, PRODUTO, SETOR | G04 |
-| KPI05 — Faturamento diário | VENDA | G05 |
+| KPI01 — Custo das perdas | PERDA, SETOR, PRODUTO, ITEM_VENDA, VENDA | G01 |
+| KPI02 — Perdas por motivo | PERDA, MOTIVO_PERDA | G02 |
+| KPI03 — Lotes próximos do vencimento | LOTE, PRODUTO, SETOR, PROMOCAO | G03 |
+| KPI04 — Lotes vencidos com saldo | LOTE, PRODUTO, SETOR | G04 |
+| KPI05 — Faturamento | VENDA | G05 |
 | KPI06 — Ticket médio | VENDA | G06 |
-| KPI07 — Produtos com estoque baixo | PRODUTO, LOTE, PERDA, PEDIDO_COMPRA, ITEM_PEDIDO_COMPRA | G07 |
-| KPI08 — Taxa de cancelamentos | VENDA | G08 |
+| KPI07 — Estoque abaixo do mínimo | PRODUTO, LOTE, PERDA, PEDIDO_COMPRA, ITEM_PEDIDO_COMPRA | G07 |
+| KPI08 — Taxa de cancelamento | VENDA | G08 |
 | KPI09 — Mercadorias recusadas | ITEM_RECEBIMENTO, RECEBIMENTO, FORNECEDOR, PRODUTO | G09 |
 | KPI10 — Contas em aberto e vencidas | CONTA_PAGAR, RECEBIMENTO, FORNECEDOR, DEVOLUCAO_FORNECEDOR | G10 |
 | KPI11 — Perdas sem lote confirmado | PERDA | G11 |
 
-#### Uso dos dados para BI e IA
+#### Potencial para BI e IA
 
-**BI.** Os dados permitem montar painéis com perdas por setor e por motivo, lotes perto de vencer, estoque abaixo do mínimo, vendas por dia e por caixa, recusas por fornecedor e contas a pagar. As consultas usam só o que já está no modelo, sem inventar informação nova.
+Os dados podem ser usados em dashboards de perdas, validade, estoque, vendas, fornecedores e financeiro.
 
-**IA.** Algumas ideias, que ficam como possibilidade futura e não estão implementadas neste trabalho:
+No futuro, também poderiam apoiar análises com IA, por exemplo para:
 
-- estimar o risco de perda de um produto, juntando histórico de vendas, validade, saldo e perdas anteriores;
-- sugerir quais lotes colocar em promoção e com que desconto, antes de vencerem;
-- sugerir a quantidade de cada pedido de compra com base no giro e nas perdas;
-- avisar quando houver um padrão estranho de cancelamentos ou de diferença de caixa por operador.
+- estimar o risco de perda de produtos;
+- sugerir quais lotes podem entrar em promoção;
+- ajudar a prever necessidades de compra;
+- identificar padrões fora do normal em cancelamentos ou diferenças de caixa.
 
-Para isso dar resultado, o mercado teria que registrar lotes, validades e perdas todos os dias, coisa que hoje não acontece.
+Essas aplicações não fazem parte da implementação atual. Elas são apenas possibilidades de uso dos dados no futuro.
 
 ---
 
 ## 2. Modelo Lógico Relacional
 
-**Software utilizado:** brModelo 3.2.0.
+O modelo lógico foi criado no **brModelo 3.2.0** a partir do DER conceitual revisado.
 
-O modelo lógico relacional do Hortifruti União foi desenvolvido a partir do DER conceitual revisado. A estrutura implementada no SQL atual contém **27 tabelas e 53 restrições de chave estrangeira**, além dos atributos, tipos de dados, chaves primárias e restrições de integridade. As associações com atributos do modelo conceitual foram convertidas em tabelas, conforme as seções 1.2 e 1.3.
+Ele possui **27 tabelas e 53 chaves estrangeiras**, representando os principais cadastros e processos do mercado, como produtos, fornecedores, funcionários, compras, recebimentos, lotes, perdas, vendas, pagamentos e caixa.
 
 **Visualização do modelo lógico:** [Abrir imagem](diagramas/Modelo_Logico_Hortifruti.png)
 
 ![Modelo Lógico do Hortifruti União](diagramas/Modelo_Logico_Hortifruti.png)
 
-**Arquivo editável do modelo lógico:** [Abrir no brModelo](docs/modelo_logico.brM3)
+**Arquivo editável:** [Abrir no brModelo](docs/modelo_logico.brM3)
 
-As tabelas representam os cadastros e as operações do mercado, incluindo funcionários, fornecedores, produtos, compras, recebimentos, lotes, perdas, vendas, pagamentos e sessões de caixa. As chaves estrangeiras relacionam esses registros e impedem referências a registros inexistentes.
+O modelo lógico mostra as tabelas, chaves primárias, chaves estrangeiras e os relacionamentos usados na implementação do banco.
 
-A implementação está no [script SQL](docs/script.sql), desenvolvido para **MySQL 8.0.16 ou superior**, no banco `hortifruti_uniao`. Os detalhes da execução, das correções realizadas e dos limites da implementação estão na seção 3.
+O [Dicionário de Dados](docs/Dicionario_Dados.md) apresenta os campos, tipos e principais restrições de cada tabela.
 
-O [Dicionário de Dados](docs/Dicionario_Dados.md) detalha os campos e as restrições das tabelas. As regras que não aparecem no desenho, como `CHECK`, `DEFAULT` e validações entre tabelas, estão descritas no dicionário e no SQL. A imagem e o dicionário foram conferidos pelo grupo contra o script: 27 tabelas e 53 chaves estrangeiras.
+A implementação completa está disponível no [script SQL](docs/script.sql).
 
 ---
 
