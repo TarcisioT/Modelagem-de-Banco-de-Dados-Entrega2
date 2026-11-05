@@ -988,7 +988,7 @@ Nos indicadores de perda (KPI01, KPI02 e KPI11) só contam as perdas com `status
 | KPI04 | Lotes vencidos com saldo: lotes vencidos que ainda têm quantidade | Diário | Zero | G04 |
 | KPI05 | Faturamento: soma do valor das vendas concluídas | Diário | Referência de cerca de R$ 167 mil por dia (R$ 5 milhões ÷ 30) | G05 |
 | KPI06 | Ticket médio: valor das vendas concluídas ÷ quantidade de vendas concluídas | Diário | Referência de cerca de R$ 93 (R$ 167 mil ÷ 1.800 vendas) | G06 |
-| KPI07 | Produtos abaixo do mínimo: produtos com saldo disponível (soma dos lotes menos as perdas com lote a confirmar) menor que o estoque mínimo, separando os que já têm pedido de compra em aberto dos que não têm | Diário | Zero produtos abaixo do mínimo sem pedido de compra em aberto | G07 |
+| KPI07 | Produtos abaixo do mínimo: produtos com saldo disponível (soma dos lotes menos as perdas com lote a confirmar) menor que o estoque mínimo, separando os que já têm pedido de compra aberto ou parcial dos que não têm | Diário | Zero produtos abaixo do mínimo sem pedido de compra em aberto | G07 |
 | KPI08 | Taxa de cancelamento: vendas canceladas ÷ total de vendas registradas (concluídas + canceladas) × 100 | Mensal | Até 1% | G08 |
 | KPI09 | Quantidade recusada no recebimento, agrupada por fornecedor e unidade de medida (`kg` ou `unidade`). As quantidades são comparadas somente dentro da mesma unidade de medida. | Por período | Comparar fornecedores dentro da mesma unidade de medida e acompanhar as recusas | G09 |
 | KPI10 | Contas em aberto e vencidas: saldo a pagar (valor da conta menos abatimentos) das contas abertas, separando vencidas e a vencer | Diário | Zero contas vencidas sem pagamento | G10 |
