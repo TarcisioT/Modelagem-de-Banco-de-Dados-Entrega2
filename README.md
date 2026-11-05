@@ -460,14 +460,6 @@ Revisamos o modelo com base nos apontamentos da Entrega 1 e nas informações no
 
 Além dos apontamentos, incluímos por conta própria o estorno em SAIDA_LOTE, ligado à baixa original, para corrigir baixas sem apagar o histórico, e as ligações que dizem quem fechou o caixa e quem pagou a conta (relacionamentos 46 e 47) e a que liga uma perda corrigida à original (48).
 
-##### Considerações sobre o modelo conceitual
-
-O DER passou a cobrir o mercado todo, e não só estoque e vendas: cadastros, compras, recebimentos, pagamentos, funcionários e escalas também estão nele. Mesmo assim, o maior cuidado foi com lotes e perdas, que foram os pontos que o responsável mais destacou. O que o mercado não faz, como fidelidade, venda online e entrega, ficou de fora.
-
-Algumas regras não aparecem no desenho, como impedir saída maior que o saldo do lote, impedir venda de lote vencido, conferir as quantidades recebidas e exigir autorização para cancelar. Elas ficam para o modelo lógico e o script SQL.
-
-Na seção seguinte mostramos a conversão das entidades e associações em tabelas, com as chaves primárias e estrangeiras usadas no MySQL.
-
 ### 1.2 Conversão do Modelo Conceitual para o Modelo Lógico
 
 Convertemos o DER no brModelo para o modelo lógico do MySQL. O resultado é o seguinte.
