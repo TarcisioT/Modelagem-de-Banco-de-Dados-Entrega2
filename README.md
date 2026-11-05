@@ -919,7 +919,6 @@ Usamos IA como apoio na organização, revisão e validação do trabalho. As in
 | **Reflexão crítica** | As IAs ajudaram a localizar divergências e discutir alternativas de modelagem, mas as decisões finais foram revisadas pela equipe com base no levantamento, no DER, no modelo lógico e no SQL. As sugestões foram tratadas como possibilidades de revisão, e não como decisões automáticas sobre a modelagem. |
 
 #### Uso 7 — ChatGPT: organização e revisão da apresentação final
-#### Uso 7 — ChatGPT: organização e revisão da apresentação final
 
 | Item | Registro |
 | :--- | :--- |
