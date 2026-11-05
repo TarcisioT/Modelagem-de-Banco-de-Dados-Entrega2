@@ -644,7 +644,7 @@ Os indicadores abaixo foram escolhidos porque podem ser calculados com os dados 
 | KPI06 | Ticket médio | Faturamento ÷ quantidade de vendas concluídas | Diário | G06 |
 | KPI07 | Produtos abaixo do estoque mínimo | Quantidade de produtos com saldo disponível abaixo do mínimo | Diário | G07 |
 | KPI08 | Taxa de cancelamento | Vendas canceladas ÷ total de vendas × 100 | Mensal | G08 |
-| KPI09 | Mercadorias recusadas | Soma das quantidades recusadas por fornecedor e unidade de medida | Por período | G09 |
+| KPI09 | Mercadorias recusadas | Soma das quantidades recusadas por fornecedor, separadas entre kg e unidade | Geral | G09 |
 | KPI10 — Contas em aberto e vencidas | CONTA_PAGAR, DEVOLUCAO_FORNECEDOR | G10 |
 | KPI11 | Perdas com lote a confirmar | Perdas pendentes ÷ total de perdas válidas × 100 | Mensal | G11 |
 
