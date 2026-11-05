@@ -89,7 +89,7 @@
 
 - **Quando e onde:** A entrevista inicial foi realizada em **22/09/2026**, por videochamada no WhatsApp. Depois, em **30/09/2026**, o Tarcisio foi até o mercado, na Rua Filipe Camarão, 67, no Tatuapé, para observar o funcionamento do local, tirar fotos e conversar presencialmente com o responsável.
   
-- **O que foi levantado:** Conversamos sobre como o mercado funciona, quantos funcionários e fornecedores tem, o que vende e quais são os principais problemas. Também falamos sobre o VR Software, o controle de estoque, a validade, as perdas, as compras, as vendas e os pagamentos. Na visita de 30/09/2026, conversamos presencialmente sobre inventário, controle sanitário, folha e ponto, despesas gerais e definição de preços. Depois, em 26/10/2026, confirmamos com o responsável, por WhatsApp, alguns detalhes sobre pedidos, notas fiscais, formas de pagamento, fechamento de caixa, cadastro de clientes, fidelidade, vendas online, entregas, devoluções a fornecedores, escala dos funcionários, cancelamento de vendas, venda restrita por idade, validade dos produtos por setor, venda fiado e troca ou devolução feita pelo cliente.
+- **O que foi levantado:** Conversamos sobre como o mercado funciona, quantos funcionários e fornecedores tem, o que vende e quais são os principais problemas. Também falamos sobre o VR Software, o controle de estoque, a validade, as perdas, as compras, as vendas e os pagamentos. Na visita de 30/09/2026, conversamos presencialmente sobre inventário, despesas gerais e definição de preços. Depois, em 26/10/2026, confirmamos com o responsável, por WhatsApp, alguns detalhes sobre pedidos, notas fiscais, formas de pagamento, fechamento de caixa, cadastro de clientes, fidelidade, vendas online, entregas, devoluções a fornecedores, escala dos funcionários, cancelamento de vendas, venda restrita por idade, validade dos produtos por setor, venda fiado e troca ou devolução feita pelo cliente.
 
 - **O que o responsável contou:**
   - O mercado perde produtos frescos e de outros setores (padaria, frios e laticínios) por vencimento, por maturação excessiva ou por danos causados por clientes. Essas perdas não são registradas de forma organizada (P1).
@@ -300,7 +300,7 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 
 ##### Requisitos comuns não incluídos
 
-Em 30/09/2026, durante a visita ao mercado, o responsável explicou que também existem processos de inventário, controle sanitário e definição de preços.
+Em 30/09/2026, durante a visita ao mercado, o responsável explicou que também existem processos de inventário e definição de preços.
 
 No nosso projeto, mantivemos apenas as informações desses processos que precisam aparecer no banco. O estoque é controlado pelos lotes, os funcionários têm cadastro e escala, as contas a pagar estão ligadas aos recebimentos de mercadorias e o preço definido pela gerência fica registrado no produto e nas vendas.
 
@@ -412,9 +412,7 @@ Não criamos regras para cadastro de clientes, fidelidade, entrega, venda a praz
 Também ficaram de fora regras de processos que o banco não controla:
 
 - **Aferição da balança (Inmetro):** o banco só guarda o peso informado na venda (RN22), e o grupo não confirmou com o responsável como a aferição é feita.
-- **Normas sanitárias:** o responsável confirmou que existe controle sanitário (limpeza e acompanhamento das condições dos produtos), mas fora do sistema de vendas e estoque. O banco não registra temperatura, limpeza nem laudos. A única regra ligada a produto vencido é a RN46, que impede a venda de lote vencido.
-- **Obrigações trabalhistas e fiscais:** ficam no sistema atual e na contabilidade (RN33). O banco guarda só os dados de escala e os dados dos documentos fiscais das vendas.
-  
+
 ##### Rastreabilidade dos problemas P1 e P2
 
 | Problema | Requisitos funcionais | Regras de negócio | Como contribuem |
