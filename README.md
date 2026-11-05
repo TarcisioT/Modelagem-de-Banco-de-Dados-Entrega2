@@ -171,7 +171,6 @@ Em mercados e hortifrutis costumam existir outros processos além dos listados a
 | Venda fiado e crediário | Não realiza | Todas as vendas são pagas no caixa. |
 | Troca ou devolução pelo cliente | Existe, mas é rara | É tratada pela gerência ou retaguarda, com os ajustes feitos no sistema utilizado pelo mercado. Por isso, não foi criado um fluxo próprio no caixa. |
 | Inventário ou contagem periódica de estoque | Existe, no sistema do mercado | O controle é feito pelo sistema, com base nas entradas e saídas. Quando há diferença, o ajuste é feito no próprio sistema (confirmado presencialmente em 30/09/2026). O banco não registra a contagem. O saldo vem dos lotes. |
-| Controle sanitário (limpeza, condições dos produtos, laudos) | Existe | É uma rotina de conformidade e não faz parte do controle de vendas e estoque do sistema (confirmado presencialmente em 30/09/2026). O responsável não informou como é registrada. Não está ligada a P1 nem a P2. |
 | Precificação e curva ABC | Preço definido pela gerência | A gerência define o preço conforme a necessidade comercial e cadastra no sistema. O banco guarda só o preço no produto (RN04) e o preço praticado em cada venda. O responsável não falou de curva ABC, então ela não entrou. |
 
 ##### Fluxogramas
