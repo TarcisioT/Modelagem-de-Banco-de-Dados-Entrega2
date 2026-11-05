@@ -425,7 +425,7 @@ A modelagem mantém **PERDA** separada de **DEVOLUCAO_FORNECEDOR**, porque uma r
 
 Os detalhes da conversão das entidades, atributos, relacionamentos e cardinalidades para tabelas e chaves estão apresentados nas seções **1.2 e 1.3**.
 
-##### Revisão em relação à Entrega 1
+##### Caso A — Revisão em relação à Entrega 1
 
 Revisamos o modelo com base nos apontamentos da Entrega 1 e nas informações novas do mercado. A principal mudança foi sair de um modelo focado em produtos, estoque e vendas para um que cobre também os outros processos da organização.
 
