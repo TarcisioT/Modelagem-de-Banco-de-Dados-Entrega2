@@ -628,20 +628,19 @@ Essas informações podem ser usadas em relatórios e painéis para ajudar nas d
 #### Indicadores gerenciais
 
 Os indicadores abaixo foram escolhidos porque podem ser calculados com os dados existentes no banco.
-
-| Código | Indicador | Período | Consulta SQL |
-| :--- | :--- | :--- | :--- |
-| KPI01 | Custo das perdas em relação às vendas do setor | Mensal | G01 |
-| KPI02 | Ocorrências de perda por motivo | Mensal | G02 |
-| KPI03 | Lotes próximos do vencimento | Diário | G03 |
-| KPI04 | Lotes vencidos com saldo | Diário | G04 |
-| KPI05 | Faturamento das vendas concluídas | Diário | G05 |
-| KPI06 | Ticket médio das vendas concluídas | Diário | G06 |
-| KPI07 | Produtos abaixo do estoque mínimo | Diário | G07 |
-| KPI08 | Taxa de cancelamento de vendas | Mensal | G08 |
-| KPI09 | Quantidade recusada por fornecedor | Por período | G09 |
-| KPI10 | Contas abertas e vencidas | Por vencimento | G10 |
-| KPI11 | Perdas com lote ainda não confirmado | Mensal | G11 |
+| Código | Indicador | Como calcular | Período | Consulta |
+| :--- | :--- | :--- | :--- | :--- |
+| KPI01 | Custo das perdas em relação às vendas do setor | Valor das perdas ÷ valor vendido no setor × 100 | Mensal | G01 |
+| KPI02 | Perdas por motivo | Quantidade de ocorrências por motivo | Mensal | G02 |
+| KPI03 | Lotes próximos do vencimento | Quantidade de lotes dentro do prazo de alerta e com saldo | Diário | G03 |
+| KPI04 | Lotes vencidos com saldo | Quantidade de lotes vencidos que ainda possuem saldo | Diário | G04 |
+| KPI05 | Faturamento | Soma das vendas concluídas | Diário | G05 |
+| KPI06 | Ticket médio | Faturamento ÷ quantidade de vendas concluídas | Diário | G06 |
+| KPI07 | Produtos abaixo do estoque mínimo | Quantidade de produtos com saldo disponível abaixo do mínimo | Diário | G07 |
+| KPI08 | Taxa de cancelamento | Vendas canceladas ÷ total de vendas × 100 | Mensal | G08 |
+| KPI09 | Mercadorias recusadas | Soma das quantidades recusadas por fornecedor e unidade de medida | Por período | G09 |
+| KPI10 | Contas em aberto | Soma do saldo a pagar das contas abertas | Por vencimento | G10 |
+| KPI11 | Perdas com lote a confirmar | Perdas pendentes ÷ total de perdas válidas × 100 | Mensal | G11 |
 
 As metas usadas durante a demonstração são apenas referências do grupo. Elas não foram definidas pelo responsável do mercado e não representam metas reais da organização.
 
