@@ -695,7 +695,7 @@ Ele possui **27 tabelas e 53 chaves estrangeiras**, representando os principais 
 
 **Arquivo editável:** [Abrir no brModelo](docs/modelo_logico.brM3)
 
-O modelo lógico mostra as tabelas, chaves primárias, chaves estrangeiras e os relacionamentos usados na implementação do banco.
+O modelo lógico mostra as 27 tabelas, suas colunas e tipos de dados, chaves primárias, chaves estrangeiras e cardinalidades entre as tabelas.
 
 O [Dicionário de Dados](docs/Dicionario_Dados.md) apresenta os campos, tipos e principais restrições de cada tabela.
 
