@@ -810,71 +810,29 @@ As vendas simuladas representam o período de **26/10/2026 a 01/11/2026**. Essa 
 
 ## 5. Repositório GitHub
 
-O relatório técnico está neste arquivo `README.md`, localizado na raiz da branch `main` do projeto.
+O projeto foi organizado na branch `main`, com o README principal e os arquivos usados no desenvolvimento e na apresentação.
 
-#### Principais arquivos da entrega
+Os principais arquivos da entrega são:
 
-- `README.md` – Relatório Técnico Final
-- `README_Entrega1.md` – Relatório da Entrega 1
-- `diagramas/der.conceitual.png` – DER Conceitual
-- `diagramas/Modelo_Logico_Hortifruti.png` – Modelo Lógico
-- `docs/modelo_logico.brM3` – Arquivo editável do Modelo Lógico no brModelo
-- `docs/script.sql` – Script SQL completo
-- `docs/Dicionario_Dados.md` – Dicionário de Dados
-- `levantamento/levantamento.md` – Levantamento de requisitos
-- `apresentação/Hortifruti União — Apresentação Acadêmica — Entrega 2.pdf` – Apresentação final
-- `interface/` – Interface demonstrativa em PHP, HTML e CSS utilizada como complemento visual da apresentação
+- `README.md` – relatório técnico final;
+- `README_Entrega1.md` – versão da primeira entrega;
+- `diagramas/der.conceitual.png` – DER conceitual;
+- `diagramas/Modelo_Logico_Hortifruti.png` – modelo lógico;
+- `docs/modelo_logico.brM3` – arquivo editável do modelo lógico;
+- `docs/script.sql` – script SQL completo;
+- `docs/Dicionario_Dados.md` – dicionário de dados;
+- `levantamento/levantamento.md` – levantamento feito com a organização;
+- `imagens/evidencias/` – fotos e registros usados como evidência;
+- `apresentação/Hortifruti União — Apresentação Acadêmica — Entrega 2.pdf` – apresentação final;
+- `interface/` – interface demonstrativa em PHP, HTML e CSS usada como complemento visual.
 
-#### Estrutura do repositório
+O dicionário de dados foi mantido em um arquivo separado e reúne os campos, tipos e restrições das 27 tabelas.
 
-```text
-README.md
-README_Entrega1.md
-apresentação/
-  Hortifruti União — Apresentação Acadêmica — Entrega 2.pdf
-diagramas/
-  Modelo_Logico_Hortifruti.png
-  der.conceitual.png
-docs/
-  Dicionario_Dados.md
-  modelo_logico.brM3
-  script.sql
-imagens/
-  evidencias/
-    entrevista_videochamada.jpeg
-    estoque_mercado.jpeg
-    fachada_mercado.jpeg
-    interior_mercado.jpeg
-    resposta_proprietário1.jpeg
-    resposta_proprietário2.jpeg
-  fluxogramas/
-    fluxograma_venda.jpeg
-interface/
-  assets/
-    style.css
-  partials/
-    footer.php
-    header.php
-  .gitignore
-  README_INSTALACAO.md
-  auditoria.php
-  conexao.php
-  config.example.php
-  estoque.php
-  funcoes.php
-  index.php
-  perdas.php
-  validade.php
-  vendas.php
-levantamento/
-  levantamento.md
-```
+O DER, o modelo lógico, o SQL, o levantamento e as evidências também ficaram separados em suas respectivas pastas para facilitar a consulta.
 
-**Dicionário de dados:** [docs/Dicionario_Dados.md](docs/Dicionario_Dados.md). Como a turma é GTI, o dicionário é um único arquivo Markdown, separado do README. Ele traz as 27 tabelas com os campos, tipos, obrigatoriedade, unicidade, valores permitidos e valor padrão, além da versão do MySQL com data, dos índices e da parte de LGPD (que inclui os contatos de fornecedor que são pessoa física ou MEI).
+Durante o desenvolvimento, os integrantes utilizaram suas próprias contas do GitHub para registrar as contribuições. Os usuários de cada integrante estão informados no início deste README, e o histórico de commits mostra a participação do grupo ao longo do trabalho.
 
-As fotos da organização, o registro da videochamada e os prints das confirmações por WhatsApp ficam em `imagens/evidencias/`. O levantamento completo fica separado, em `levantamento/levantamento.md`. O DER, o modelo lógico, o script e o dicionário de dados ficam em `diagramas/` e `docs/`, a apresentação final fica em `apresentação/` e a interface demonstrativa utilizada como complemento visual fica em `interface/`.
-
-Ao longo do trabalho, cada integrante fez seus próprios commits no repositório usando sua conta do GitHub. As contribuições ficaram distribuídas entre as diferentes partes do projeto, e os usuários de cada integrante estão informados na tabela no início do README.
+A interface demonstrativa foi mantida como um complemento da apresentação. Ela ajuda a visualizar os dados do banco, mas não substitui o script SQL, o modelo lógico ou as consultas exigidas na entrega.
 
 ---
 
