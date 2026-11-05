@@ -102,6 +102,7 @@
   - O cancelamento de uma venda no caixa precisa da autorização de um supervisor.
   - Alguns produtos têm venda restrita por idade, e o operador precisa ficar atento a isso no atendimento.
   - O mercado não vende fiado. Todas as vendas são pagas no caixa.
+  - - O responsável também confirmou que uma mesma venda pode ser paga utilizando mais de uma forma de pagamento.
 
 - **O que observamos na visita (30/09/2026):**
   - A validade é conferida a olho nu pelos funcionários, sem etiqueta de controle, lista ou qualquer registro das datas (P2).
