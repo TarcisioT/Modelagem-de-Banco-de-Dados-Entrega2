@@ -462,57 +462,19 @@ Além dos apontamentos, incluímos por conta própria o estorno em SAIDA_LOTE, l
 
 ### 1.2 Conversão do Modelo Conceitual para o Modelo Lógico
 
-Convertemos o DER no brModelo para o modelo lógico do MySQL. O resultado é o seguinte.
+Convertemos o DER conceitual feito no brModelo para o modelo lógico utilizado na implementação em MySQL.
 
-**Entidades e associações → tabelas.** As 22 entidades viraram 22 tabelas com o mesmo nome. As 5 associações com atributos (fornece, e os itens de pedido, de recebimento, de devolução e de venda) viraram mais 5 tabelas, cada uma com chave primária própria: FORNECEDOR_PRODUTO, ITEM_PEDIDO_COMPRA, ITEM_RECEBIMENTO, ITEM_DEVOLUCAO e ITEM_VENDA. Dá **27 tabelas** no total. As outras ligações não geraram tabela nova, porque nenhuma é N:N.
+**Entidades e associações → tabelas.** As 22 entidades do DER viraram 22 tabelas. As cinco associações com atributos — fornecedor/produto e os itens de pedido, recebimento, devolução e venda — também viraram tabelas próprias: `FORNECEDOR_PRODUTO`, `ITEM_PEDIDO_COMPRA`, `ITEM_RECEBIMENTO`, `ITEM_DEVOLUCAO` e `ITEM_VENDA`. Com isso, o modelo lógico possui **27 tabelas**.
 
-**Atributos → colunas.** Cada atributo virou uma coluna. O identificador virou a chave primária (`id_...`), do tipo inteiro com `AUTO_INCREMENT`. Escolhemos os tipos assim:
+**Atributos → colunas.** Os atributos do DER foram convertidos em colunas das tabelas. Os identificadores passaram a ser chaves primárias numéricas com `AUTO_INCREMENT`. Textos e identificadores como CPF, CNPJ, telefone e código de barras utilizam `VARCHAR`; valores monetários utilizam `DECIMAL`; quantidades e pesos permitem casas decimais; datas e horários utilizam `DATE`, `DATETIME` ou `TIME`, conforme o caso.
 
-| Tipo de informação | Tipo no MySQL | Observação |
-| :--- | :--- | :--- |
-| Identificadores | `INT UNSIGNED` | Chave primária com `AUTO_INCREMENT`. |
-| Nomes, descrições, observações | `VARCHAR` | Tamanho conforme o campo. |
-| CPF, CNPJ, telefone, código de barras, número e chave de acesso da nota | `VARCHAR` | Texto, e não número, para não perder zeros à esquerda. |
-| Valores em reais | `DECIMAL(10,2)` | Nada de `FLOAT` para dinheiro. |
-| Quantidade e peso | `DECIMAL(10,3)` | Aceita decimal nos produtos vendidos por quilo. |
-| Data | `DATE` | Validade, fabricação, vencimento e escala. |
-| Data e hora | `DATETIME` | Vendas, baixas, perdas, sessões de caixa (abertura e fechamento) e pagamento de conta. |
-| Sim ou não (`ativo`, `tem_validade_impressa`, `vende_produto` etc.) | `TINYINT(1)` | Com `CHECK` para aceitar só 0 ou 1. |
-| Situações e tipos (`status`, `tipo`, `uso`) | `VARCHAR` | Com `CHECK` listando os valores permitidos. |
-| Horário | `TIME` | Início e fim da escala de trabalho. |
+**Relacionamentos → chaves estrangeiras.** Os relacionamentos do DER foram convertidos em chaves estrangeiras. As cinco tabelas criadas a partir das associações possuem duas FKs principais, uma para cada lado da associação. Os demais relacionamentos foram representados por FKs nas tabelas correspondentes. O modelo lógico possui **53 chaves estrangeiras**.
 
-Algumas colunas pedem um cuidado a mais:
+**Cardinalidades.** As cardinalidades mínimas e máximas do DER orientaram a obrigatoriedade das chaves estrangeiras. Quando a participação é obrigatória, a FK utiliza `NOT NULL`; quando o relacionamento é opcional, a FK pode aceitar `NULL`. Relacionamentos N:N foram convertidos em tabelas associativas.
 
-- `SETOR.dias_alerta_validade` aceita `NULL`. Setor sem alerta por validade (hortifruti, que quase não tem data impressa, além de Caixa e Retaguarda) fica com `NULL`;
-- `SETOR.vende_produto` diz se o setor tem produto à venda. Caixa e Retaguarda ficam com 0, e por isso não recebem produto nem perda;
-- `FORMA_PAGAMENTO.uso` aceita `venda`, `fornecedor` ou `ambos`;
-- `PRODUTO.codigo_barras` aceita `NULL` (produto a granel) e é `UNIQUE`, porque o MySQL permite vários `NULL` numa coluna única;
-- `LOTE.data_validade` aceita `NULL`, para o lote de produto sem validade impressa.
+Alguns relacionamentos possuem tratamento específico no modelo lógico, como o autorrelacionamento de `SAIDA_LOTE` para registrar estornos, o autorrelacionamento de `PERDA` para manter o histórico de correções e as diferentes ligações de `FUNCIONARIO` com operações como venda, troca de operador, fechamento de caixa e pagamento de conta.
 
-**Relacionamentos → chaves.** O DER tem 48 relacionamentos, e eles viram chaves estrangeiras de dois jeitos:
-
-- as **5 associações com atributos** viram tabela, e cada tabela leva **2 FKs**, uma para cada lado. Isso dá 10 FKs;
-- os **43 relacionamentos restantes** têm máximo 1 em pelo menos uma das pontas. Em cada um, a chave estrangeira ficou na tabela da ponta que tem máximo 1, apontando para a outra. Isso dá 43 FKs.
-
-Somando, são **53 FKs** no modelo lógico (43 + 10), que é a contagem apresentada na seção 1.3. As cinco associações com atributos viram tabelas próprias e geram duas FKs cada; os demais relacionamentos geram as outras 43 FKs.
-
-**Cardinalidades.** A cardinalidade mínima decidiu se a FK aceita nulo:
-
-- mínimo 1 (por exemplo `(1,1)`): a FK é `NOT NULL`. Exemplo: todo produto tem um setor;
-- mínimo 0 (por exemplo `(0,1)`): a FK aceita `NULL`. Exemplos: `RECEBIMENTO.id_pedido` (recebimento sem pedido), `CONTA_PAGAR.id_forma` (conta ainda não paga), `DEVOLUCAO_FORNECEDOR.id_conta`, `PERDA.id_lote` (lote a confirmar), `VENDA.id_funcionario_supervisor` (só em venda cancelada), `ITEM_VENDA.id_funcionario_cancelamento`, `SESSAO_CAIXA.id_funcionario_fechamento` (sessão ainda aberta) e `CONTA_PAGAR.id_funcionario_pagamento` (conta ainda não paga).
-
-Os casos que merecem atenção:
-
-- **Relacionamento 44 (1:1):** a FK está em `DOCUMENTO_FISCAL.id_venda`, `NOT NULL` e `UNIQUE`, para a venda ter no máximo um documento.
-- **Relacionamento 45 (autorrelacionamento):** `SAIDA_LOTE.id_saida_original` aponta para a própria tabela, aceita `NULL` e é `UNIQUE`, para a mesma baixa não ser estornada duas vezes.
-- **Relacionamentos 21 e 22:** `SAIDA_LOTE` tem duas FKs que aceitam nulo (`id_item_venda` e `id_perda`). Uma baixa de venda preenche a primeira, uma de perda preenche a segunda, e um `CHECK` impede preencher as duas. Como o estorno não tem origem própria, o `CHECK` também leva em conta o `tipo`: no estorno as duas ficam vazias e a `id_saida_original` é obrigatória.
-- **Dois papéis do mesmo funcionário:** em `VENDA` (operador e supervisor), em `TROCA_OPERADOR` (anterior e novo) e em `SESSAO_CAIXA` (quem abriu e quem fechou) existem duas FKs para `FUNCIONARIO`, com nomes diferentes.
-- **Relacionamento 48 (autorrelacionamento):** `PERDA.id_perda_original` aponta para a própria tabela e aceita `NULL`, porque só a perda que corrige ou divide outra tem original.
-- **Relacionamentos 46 e 47:** `SESSAO_CAIXA.id_funcionario_fechamento` e `CONTA_PAGAR.id_funcionario_pagamento` aceitam `NULL`, mas um `CHECK` exige o preenchimento quando a sessão está fechada ou a conta está paga (RN56).
-
-**O que a chave estrangeira obrigatória resolve, e o que fica de fora.** Uma FK `NOT NULL` garante que todo registro filho tem um pai: nenhum item de venda fica sem venda e nenhum lote fica sem item recebido. O contrário ela não garante. O mínimo 1 do lado "n" (como o `(1,n)` do pedido na associação de itens de pedido, ou o da venda na de itens de venda) diz que todo pedido tem que ter pelo menos um item e que toda venda concluída tem que ter itens e pagamentos. Nenhuma chave consegue exigir isso sozinha, porque o pai é gravado antes dos filhos. Por isso essa conferência fica na procedure que conclui a venda, que olha itens e pagamentos antes de concluir, e nas consultas de auditoria, que procuram pedido sem item e venda concluída sem pagamento.
-
-**Generalização/especialização.** O nosso DER não tem generalização nem especialização, então não foi preciso escolher uma estratégia de conversão (tabela única, uma tabela por entidade ou só as especializadas).
+**Generalização/especialização.** O DER não possui generalização ou especialização, portanto não foi necessário aplicar uma estratégia específica de conversão.
 
 ### 1.3 Definição de Chaves Primárias e Estrangeiras
 
