@@ -546,128 +546,65 @@ Com a normalização, os dados ficam mais consistentes, reduzem-se repetições 
 
 ### 1.5 Justificativas Técnicas das Decisões
 
+Nesta seção explicamos as principais escolhas feitas no banco e como elas ajudam a manter os dados corretos.
+
 #### Chaves primárias e estrangeiras
 
-Usamos uma chave numérica própria em cada tabela, porque ela não muda quando um nome, telefone ou código comercial precisa ser corrigido. O `codigo_interno` (PLU) e o código de barras continuam em PRODUTO, mas não ligam uma tabela à outra. CPF e CNPJ também não servem de chave: são dados pessoais ou comerciais que podem ser corrigidos, e preferimos não espalhá-los pelas tabelas filhas.
+Todas as tabelas possuem uma chave primária numérica própria. Escolhemos esse padrão porque dados como nome, CPF, CNPJ ou código de barras podem precisar de correção, enquanto o identificador interno do registro não muda.
 
-As chaves estrangeiras seguem as cardinalidades do DER. Por exemplo, PRODUTO aponta para SETOR, ITEM_VENDA aponta para VENDA e PRODUTO, e LOTE aponta para o item recebido. Assim não sobra item solto, e dá para cruzar informações de várias tabelas. Nas FKs usamos `ON DELETE RESTRICT`, para ninguém apagar um cadastro que já tem histórico (RN05).
+As chaves estrangeiras seguem os relacionamentos definidos no DER e no modelo lógico. Elas garantem, por exemplo, que um produto esteja ligado a um setor existente, que um item de venda pertença a uma venda e que um lote esteja relacionado a um produto recebido.
+
+Também usamos `ON DELETE RESTRICT` nos relacionamentos com histórico. Assim, um cadastro que já foi usado em alguma operação não pode simplesmente ser apagado (RN05).
 
 #### Restrições de integridade
 
-A tabela abaixo mostra como cada restrição foi pensada e como as regras de integridade foram distribuídas entre chaves, `CHECK`, triggers, procedures e perfis de acesso.
+As principais regras do projeto foram aplicadas com `NOT NULL`, `UNIQUE`, `CHECK`, chaves estrangeiras, triggers e procedures.
 
-| Decisão | Como o banco controla | Regra ligada |
+| Regra aplicada | Como foi tratada no banco | Regra relacionada |
 | :--- | :--- | :--- |
-| Código interno, CNPJ e CPF sem repetição | `UNIQUE` em PRODUTO, FORNECEDOR e FUNCIONARIO | RN02, RN06, RN07 |
-| Produto, fornecedor, funcionário e caixa não são apagados | Coluna `ativo` e FKs com `ON DELETE RESTRICT` | RN05 |
-| Funcionário inativo não faz novas operações | Triggers e procedures verificam `ativo` nas operações cobertas pelo script, incluindo venda, recebimento, perda e fechamento. Alterações diretas fora desses fluxos fazem parte dos limites da implementação descritos na seção 3. | RN50 |
-| Produto com setor definido | `PRODUTO.id_setor NOT NULL` e FK | RN03 |
-| Produto e perda só em setor que vende | Coluna `SETOR.vende_produto` e trigger que recusa produto ou perda em setor com 0 (Caixa e Retaguarda) | RN03, RN41 |
-| Setor da perda igual ao setor do produto no momento do registro | Trigger em PERDA | RN03, RN41 |
-| Preço positivo e estoque mínimo sem valor negativo | `CHECK` em PRODUTO | RN04 |
-| Formas de pagamento cadastradas | Tabela FORMA_PAGAMENTO com carga inicial (dinheiro, débito, crédito, Pix, VA, boleto e transferência) | RN08 |
-| Forma de pagamento coerente com o uso | `CHECK` nos valores de `uso` e trigger em PAGAMENTO (aceita `venda` ou `ambos`) e em CONTA_PAGAR (aceita `fornecedor` ou `ambos`). Outro trigger impede mudar o `uso` depois que a forma tem histórico | RN08, RN08A |
-| Nota fiscal sem duplicidade | `UNIQUE` em fornecedor + número + série, e na chave de acesso quando existir | RN10 |
-| Recebimento com ou sem pedido | `RECEBIMENTO.id_pedido` aceita `NULL` | RN11 |
-| Quantidades aceitas e recusadas coerentes | `CHECK` no item (aceita + recusada = quantidade da nota) e validação da soma dos lotes | RN12, RN14 |
-| Saldo do lote sem negativo e saída dentro do saldo | `CHECK` no lote e trigger antes de cada baixa | RN16, RN17 |
-| Venda dentro do saldo disponível do produto | A procedure `concluir_venda` bloqueia o produto antes de conferir o saldo disponível e bloqueia o lote escolhido com `SELECT ... FOR UPDATE`. Foi testada a espera pelo bloqueio entre duas conexões em um cenário envolvendo `registrar_perda_pendente`; não foram testadas todas as combinações de operações simultâneas | RN16, RN17, RN53 |
-| Estorno sem exclusão nem duplicação | Autorrelacionamento com UNIQUE em id_saida_original (impede estornar a mesma baixa duas vezes) e CHECK no tipo. A conferência da baixa original é feita pela procedure estornar_saida e pela auditoria A09 | RN17 |
-| Baixa com uma única origem | `CHECK` impedindo preencher item de venda e perda ao mesmo tempo | RN17, RN28 |
-| Saldo disponível do produto | Consulta (view) que soma os lotes e desconta as perdas com "lote a confirmar" | RN16, RN42 |
-| Perda pendente não passa do saldo disponível | Validação no registro da perda com lote a confirmar | RN42 |
-| Lote da perda confirmado sem contar duas vezes | Procedure com transação: baixa o lote, marca a perda como confirmada e calcula o valor juntos, e a perda confirmada deixa de entrar no desconto das pendentes | RN42, RN44, RN52 |
-| Produto vendido por quilo ou por unidade | Validação da quantidade conforme o tipo do produto | RN22 |
-| Venda só em sessão de caixa aberta e com o operador correto | Trigger em VENDA que confere se a sessão está aberta e se o funcionário da venda é o operador atual da sessão, considerando a última troca de operador quando existir | RN20, RN29 |
-| Lote com validade mais próxima sai primeiro, e lote vencido não é vendido | A procedure de venda prioriza o lote pela validade, seguindo FEFO, ou o lote mais antigo quando não houver validade. O trigger de SAIDA_LOTE recusa baixa de venda em lote vencido | RN18, RN46 |
-| Baixa de estoque na conclusão da venda | Procedure `concluir_venda`, dentro de uma transação | RN19 |
-| Preço promocional só no lote promocional | A procedure de venda cria uma linha de item por lote e aplica o preço promocional só ao lote que tem promoção vigente | RN18, RN47, RN48, RN57 |
-| Venda concluída só com pagamento completo | Conferência da soma dos itens ativos com os pagamentos, dentro da procedure `concluir_venda` | RN23, RN24 |
-| Cancelamento de venda com supervisor | Campos obrigatórios (motivo, data, supervisor) quando o status é cancelada, e conferência do perfil do supervisor | RN25 |
-| Cancelamento de venda concluída estorna todas as baixas | Procedure de cancelamento, em transação: estorna cada baixa dos itens ativos uma única vez e muda o status da venda | RN17, RN54, RNF04 |
-| Pagamento de venda cancelada fica no histórico mas não entra nos totais | As consultas de faturamento e o cálculo do valor esperado do caixa só consideram venda concluída | RN25, RN55 |
-| Item cancelado continua registrado | `status` do item e `CHECK` exigindo motivo e data quando cancelado | RN26 |
-| Aviso de venda restrita por idade | Coluna `venda_restrita_idade` em PRODUTO, que o atendimento consulta | RN27 |
-| Uma sessão aberta por caixa | Coluna gerada com `CASE WHEN status = 'aberta' THEN id_caixa ELSE NULL END` e `UNIQUE` nela (o MySQL não tem índice parcial) | RN29 |
-| Sangria positiva e fundo inicial sem valor negativo | `CHECK`, e validação de sessão aberta na sangria | RN30, RN31 |
-| Diferença do caixa | Calculada no fechamento: contado menos esperado | RN32 |
-| Fechamento de caixa com responsável | `id_funcionario_fechamento` e `CHECK` que exige o preenchimento quando a sessão está fechada | RN56, RNF02 |
-| Pagamento de conta com responsável | `id_funcionario_pagamento` e `CHECK` que exige o preenchimento (junto com a data) quando a conta está paga | RN56, RNF02 |
-| Conta a pagar completa | `NOT NULL` em recebimento, vencimento e valor, e `CHECK` nos status | RN34, RN35 |
-| Conta mantém o valor original | O abatimento fica em DEVOLUCAO_FORNECEDOR, sem alterar `CONTA_PAGAR.valor` | RN36 |
-| Devolução até o limite recusado e abatimento na conta do mesmo fornecedor | Trigger em ITEM_DEVOLUCAO e em DEVOLUCAO_FORNECEDOR, porque comparam tabelas diferentes | RN37, RN38 |
-| Perda separada de devolução | Tabelas diferentes para a parcela recusada do recebimento e as perdas de estoque. Não há uma identificação geral da mercadoria física que impeça qualquer registro duplicado entre os dois processos | RN28, RN39 |
-| Perda com motivo e situação do lote | FK, `NOT NULL` e validação condicional | RN40 a RN42 |
-| Perda não é apagada | Sem `DELETE` para o perfil de uso. Correção ou divisão por novo registro ligado ao original, que passa a `substituida` e sai dos totais | RN43, RN52 |
-| Valor da perda só com lote confirmado | `valor_estimado` aceita `NULL` e `CHECK` ligado à situação do lote | RN44 |
-| Alerta de validade por setor | `SETOR.dias_alerta_validade` (`NULL` nos setores sem alerta) e consultas por lote | RN45 |
-| Prazo padrão de 7 dias para produto com validade em setor sem alerta | Constante escrita na consulta G03, e não coluna do banco. Para mudar o prazo, edita-se o valor na consulta | RN45 |
-| Promoção com preço menor e dentro da validade | `CHECK` (promocional menor que normal) e trigger entre PROMOCAO e LOTE | RN46 a RN48 |
-| Escala de trabalho e folga | `CHECK` por tipo e `UNIQUE` em funcionário + data | RN49 |
-| Reposição por estoque mínimo | Consulta que compara o saldo disponível com `PRODUTO.estoque_minimo` e mostra se já existe pedido de compra em aberto | RN04, RN09, RF20 |
-| Proteção de dados e perfis de acesso | Perfis (roles) do MySQL com `GRANT` por coluna, criados no script (seção 3). O modelo não tem tabela de usuários: `perfil_acesso` só descreve o perfil, e o vínculo entre o funcionário e a conta do MySQL não é modelado | RN51, RNF01, RNF07 |
-| Peso do item vendido por quilo | O banco só guarda o peso informado na venda, e a balança fica fora do banco | RN22 |
-| Baixa de venda no lote do produto certo | Trigger em SAIDA_LOTE que compara o produto do item de venda com o produto do lote | RN17, RN57 |
-| Item devolvido pertence ao recebimento da devolução | Trigger em ITEM_DEVOLUCAO que compara o recebimento do item com o da devolução | RN37 |
-| Item de venda com várias linhas do mesmo produto | Sem `UNIQUE` em venda + produto em ITEM_VENDA: a mesma venda pode ter o mesmo produto em mais de uma linha, uma por lote | RN57 |
+| Código interno, CPF e CNPJ não podem se repetir | `UNIQUE` | RN02, RN06 e RN07 |
+| Produto deve estar ligado a um setor | FK obrigatória em `PRODUTO` | RN03 |
+| Preço deve ser positivo e estoque mínimo não pode ser negativo | `CHECK` | RN04 |
+| Registros com histórico não devem ser apagados | Campo de situação e `ON DELETE RESTRICT` | RN05 |
+| Nota fiscal do fornecedor não pode ser cadastrada duas vezes | `UNIQUE` | RN10 |
+| Quantidade aceita e recusada deve bater com a quantidade recebida | `CHECK` e validações do SQL | RN12 e RN14 |
+| Estoque não pode ficar negativo | `CHECK`, triggers e procedures | RN16 e RN17 |
+| Venda deve estar ligada a uma sessão de caixa válida | FK e validações do SQL | RN20 e RN29 |
+| Venda concluída deve ter itens e pagamento completo | Procedure de conclusão da venda | RN23 e RN24 |
+| Cancelamento precisa manter o histórico | Situação da venda e estorno das baixas | RN25 e RN54 |
+| Perdas precisam guardar produto, motivo, setor e responsável | Campos obrigatórios e FKs | RN40 e RN41 |
+| Lote vencido não pode ser vendido | Validação no SQL | RN46 |
+| Promoção deve ter preço menor que o normal | `CHECK` e validação do lote | RN47 e RN48 |
+| Funcionário inativo não deve realizar novas operações | Validação nas operações do banco | RN50 |
+| Fechamento de caixa e pagamento de conta guardam o responsável | FKs para `FUNCIONARIO` | RN56 |
 
-Algumas regras não dá para garantir só com PK, FK e `CHECK`, porque precisam comparar várias linhas ou tabelas. É o caso da soma dos pagamentos, da soma dos lotes de um recebimento e de a venda concluída ter pelo menos um item. Para essas decidimos o seguinte:
+Algumas regras não conseguem ser garantidas apenas com uma chave ou um `CHECK`, porque dependem de informações de várias tabelas. Nesses casos usamos triggers ou procedures.
 
-- **Triggers** (a maioria `BEFORE INSERT` e `BEFORE UPDATE`) para as conferências curtas, que olham uma ou duas linhas: saída dentro do saldo, devolução até o limite recusado, produto do lote igual ao do item recebido, setor da perda, forma de pagamento conforme o uso, funcionário ativo.Os 27 triggers são criados antes da carga da massa de dados e complementam as restrições do banco nas validações entre tabelas. Novas vendas utilizam por padrão o status `em_andamento` e valor total zero, seguindo depois o fluxo previsto pelas procedures.
-  
-- **Procedures com transação** para os fluxos de vários passos previstos pela RNF04, com rollback nas condições tratadas explicitamente e também nos erros inesperados (`EXIT HANDLER FOR SQLEXCEPTION`): concluir uma venda, cancelar uma venda já concluída, registrar um recebimento com um item e seu lote, confirmar o lote de uma perda, estornar uma baixa e fechar uma sessão de caixa. Quando o mesmo item recebido tiver outros lotes, eles podem ser incluídos pela procedure `adicionar_lote_recebimento`, que confere se a soma dos lotes não ultrapassa a quantidade aceita.
-- **Consultas de auditoria** (A01 a A12) para conferir depois o que o banco não consegue impedir sozinho.
+As triggers cuidam principalmente de validações feitas no momento em que um registro é inserido ou alterado. As procedures são usadas nos processos que envolvem várias etapas, como concluir ou cancelar uma venda, registrar recebimentos, confirmar perdas e fechar uma sessão de caixa.
 
-#### Quem fez cada operação (RNF02 e RNF06)
+As consultas de auditoria A01 a A12 complementam essas validações e ajudam a localizar possíveis inconsistências nos dados.
 
-Quase todas as tabelas de operação têm uma FK para quem registrou: pedido, recebimento, devolução, perda, promoção, sangria, venda, troca de operador e cancelamento. Só faltavam o fechamento do caixa e o pagamento de uma conta a pagar. A primeira ideia era descobrir isso pela sessão e por um log de acesso do banco, mas não funciona: quem abriu o caixa pode não ser quem fechou (por causa da troca de operador), e o usuário técnico que roda um comando no banco nem sempre é o funcionário responsável. Por isso criamos duas ligações próprias com FUNCIONARIO: `SESSAO_CAIXA.id_funcionario_fechamento` e `CONTA_PAGAR.id_funcionario_pagamento` (relacionamentos 46 e 47). Com elas e com a ligação das perdas corrigidas (48), o DER ganhou três relacionamentos, e o responsável passou a ser obrigatório quando a sessão é fechada ou a conta é paga (RN56).
+#### Decisões gerais do modelo
 
-#### Escopo da implementação
+Algumas escolhas foram importantes para manter o banco mais organizado.
 
-O banco é uma implementação acadêmica, feita só para este trabalho, com dados fictícios e sem ligação com o VR Software. Ele modela os processos do mercado (caixa, vendas, pagamentos, documentos fiscais, estoque e fechamento), mas não recebe as vendas reais, então não serve para operar o mercado em paralelo ao sistema que ele já usa. Os dados fiscais guardados são só informações ligadas às vendas e não substituem o sistema fiscal do mercado (RN33).
+O estoque não recebeu uma tabela separada. O saldo é controlado pelos lotes e pelas movimentações, evitando manter a mesma informação em dois lugares.
 
-RN25, RN51, RNF01 e RNF07 dependem do perfil do funcionário. No banco, isso fica como regra de projeto: os perfis (roles) e permissões por coluna estão no script, mas o vínculo entre o funcionário e a conta do MySQL não é modelado. Por isso tratamos essas regras como implementadas só até onde o script chega.
+A validade também ficou no lote, e não no produto, porque o mesmo produto pode chegar em datas diferentes e ter vencimentos diferentes.
 
-#### Índices
+As perdas ficaram separadas das devoluções ao fornecedor. Uma perda representa um prejuízo do mercado, enquanto uma devolução, troca ou abatimento pode ser compensada pelo fornecedor.
 
-Para o volume de cerca de 1.800 vendas por dia (RNF09), além das chaves, criamos índices nas colunas mais usadas nas consultas:
+As formas de pagamento ficaram em um único cadastro, que informa se cada forma pode ser usada em vendas, pagamentos a fornecedores ou nos dois casos.
 
-- `LOTE (data_validade)` e `LOTE (id_produto)`, para validade e saldo;
-- `PERDA (data_hora)`, `PERDA (id_setor)` e `PERDA (id_motivo)`, para as consultas de perdas;
-- `VENDA (data_hora)` e `VENDA (id_sessao)`, para faturamento e fechamento;
-- `ITEM_VENDA (id_venda)` e `ITEM_VENDA (id_produto)`, para os itens e o giro;
-- `PAGAMENTO (id_venda)`, para conferir o pagamento de cada venda;
-- `SAIDA_LOTE (id_lote)`, para a conferência do saldo;
-- `PRODUTO (codigo_barras)`, para a consulta de preço no caixa (esse já vem do `UNIQUE` da coluna, por isso não entra nos 12 índices adicionais da seção 3);
-- `CONTA_PAGAR (data_vencimento, status)`, para contas por vencimento.
+Também registramos o funcionário responsável pelas principais operações. Isso permite saber quem abriu ou fechou um caixa, registrou uma perda, realizou uma venda ou efetuou um pagamento, atendendo à necessidade de rastreabilidade do projeto.
 
-**Teste dos índices (RNF09):** foram realizados testes com `EXPLAIN ANALYZE` para verificar o uso dos índices nas consultas.
+#### Tecnologia utilizada
 
-Na consulta de vendas por data, foi utilizada uma base sintética com **54.000 registros**, representando aproximadamente **1.800 vendas por dia durante 30 dias**. Ao consultar apenas um dos dias, o MySQL utilizou o índice `idx_venda_data` e leu os **1.800 registros** correspondentes à data selecionada. Nessa execução, o operador final apresentou tempo aproximado de **2,93 ms**.
+O banco foi desenvolvido em **MySQL 8.0**, utilizando tabelas InnoDB e `utf8mb4`.
 
-Esse teste mostra que o índice foi utilizado corretamente nesse cenário com volume equivalente ao informado pelo responsável. Porém, ele foi feito em uma tabela isolada e com dados sintéticos. Não foram avaliados, nesse mesmo volume, os itens das vendas, pagamentos, movimentações de estoque ou vários usuários utilizando o banco ao mesmo tempo.
+Também foram criados índices nas colunas mais utilizadas em filtros e relacionamentos, principalmente nas consultas de vendas, perdas, lotes e contas a pagar, para ajudar no desempenho considerando o volume informado pelo responsável (RNF09).
 
-Por isso, o resultado serve como evidência favorável para essa consulta, mas não comprova o desempenho de todo o sistema.
-
-#### Alternativas que descartamos
-
-- **Tabela ESTOQUE separada.** O saldo ficaria guardado em dois lugares (no estoque e nos lotes) e podia divergir. Preferimos somar os lotes e guardar só `LOTE.quantidade_atual`.
-- **Entidade CLIENTE.** A Entrega 1 tinha, mas o mercado não cadastra cliente. Manter só criaria uma tabela sem uso.
-- **Entidade CATEGORIA.** O mercado se organiza por setor, e o prazo de alerta de validade muda por setor. Por isso trocamos CATEGORIA por SETOR.
-- **Validade no produto.** Cada entrega do mesmo produto pode ter validade diferente, então a validade ficou no lote.
-- **Perda como um tipo de devolução ao fornecedor.** Misturar esconderia o prejuízo do mercado, porque devolução e troca com o fornecedor não são prejuízo. Mantivemos as duas separadas.
-- **Perda só como `tipo = perda` em SAIDA_LOTE.** Perdemos o motivo, o setor e a perda sem lote ("lote a confirmar"). Por isso PERDA é uma entidade própria, ligada à saída quando o lote é conhecido.
-- **Chave natural no lugar da chave numérica.** CNPJ, CPF e código de barras podem faltar ou mudar, então ficaram como colunas com `UNIQUE`.
-- **Duas tabelas de formas de pagamento (uma para venda e outra para fornecedor).** Repetiria o cadastro de formas como o Pix, que vale para os dois lados. Ficamos com uma tabela só e a coluna `uso`.
-- **Deixar quem trabalha em compras e financeiro sem setor.** `FUNCIONARIO.id_setor` ficaria opcional e as consultas por setor teriam de tratar o `NULL`. Preferimos criar os setores Caixa e Retaguarda, que não vendem produto.
-- **Descobrir quem fechou o caixa e quem pagou a conta pelo log do banco.** Não prova quem foi o funcionário responsável, então preferimos as duas FKs.
-- **Representar os itens como entidades comuns no DER.** Descartamos essa opção porque esses itens existem por causa da ligação entre outras entidades. Por isso, no conceitual eles aparecem como associações com atributos (e como entidade associativa quando a linha precisa ser referenciada), enquanto as tabelas de item ficam no modelo lógico.
-
-#### Outras escolhas do modelo
-
-O banco é em **MySQL**, com tabelas InnoDB e `utf8mb4`, para aproveitar as chaves estrangeiras e as transações. Usamos o MySQL 8.0, porque as restrições `CHECK` só são aplicadas de fato a partir da versão 8.0.16. O modelo funciona separado do VR Software. Não afirmamos que existe integração automática entre os dois.
-
-Sobre dados pessoais (LGPD): além dos dados dos funcionários, o telefone e o e-mail de fornecedor que é MEI ou pessoa física também podem ser dado pessoal. Por isso essas colunas entram na mesma restrição de acesso por perfil (RN51).
+O banco é uma implementação acadêmica e independente do VR Software utilizado pelo mercado. Não existe integração automática entre os dois sistemas.
 
 ### 1.6 Proposta de Arquitetura Analítica para BI e IA
 
