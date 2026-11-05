@@ -722,6 +722,24 @@ Na conferência final foram confirmados:
 - 1 view;
 - 200 vendas simuladas, sendo 196 concluídas e 4 canceladas.
 
+### Testes finais de execução
+
+Além da execução completa do script, foram feitos testes manuais para conferir as principais regras e travas do banco.
+
+Nos testes de auditoria, a **A01 retornou 6 perdas com lote ainda a confirmar**, conforme previsto na massa de dados. A consulta complementar confirmou que nenhum produto ficou com saldo disponível negativo. As auditorias **A02 a A12 não encontraram inconsistências**.
+
+Também foram testadas algumas validações do banco:
+
+- tentativa de abrir venda em sessão de caixa fechada, bloqueada pela trigger;
+- tentativa de registrar quantidade fracionada para produto vendido por unidade, bloqueada pela trigger;
+- tentativa de retirar do lote uma quantidade maior que o saldo disponível, bloqueada pela trigger;
+- chamada da procedure `adicionar_lote_recebimento` com quantidade inválida, que foi recusada e não deixou registro após o rollback;
+- conferência das permissões dos perfis `role_caixa`, `role_retaguarda` e `role_gerencia`.
+
+Foi feito ainda um teste com duas conexões usando isolamento `READ COMMITTED` e `SELECT ... FOR UPDATE`. Enquanto a primeira conexão manteve um lote bloqueado, a segunda ficou aguardando a liberação. Após o `COMMIT` da primeira conexão, a segunda conseguiu continuar normalmente. Esse teste confirmou o funcionamento do bloqueio utilizado para evitar alterações concorrentes no mesmo lote.
+
+Na conferência das consultas gerenciais, também foram verificados os resultados da **G08**, referente ao cancelamento de vendas, e da **G11**, que apresentou **6 perdas pendentes entre 24 perdas válidas, correspondendo a 25%**.
+
 ### Consultas gerenciais e de auditoria
 
 O script contém as consultas gerenciais **G01 a G12** e as consultas de auditoria **A01 a A12**.
