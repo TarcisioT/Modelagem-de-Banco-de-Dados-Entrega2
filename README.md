@@ -282,7 +282,7 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 | RNF06 | Auditoria | Cancelamentos devem permitir identificar quem realizou e, quando necessário, quem autorizou a operação. |
 | RNF07 | Proteção de dados | Dados pessoais de funcionários devem ter acesso restrito e a massa de testes deve utilizar dados fictícios. |
 | RNF08 | Recuperação | O banco deve permitir cópia de segurança, restauração e recriação por meio do script SQL. |
-| RNF09 | Desempenho | As consultas mais utilizadas devem possuir índices nas colunas mais usadas em filtros e relacionamentos, considerando o volume aproximado de 1.800 vendas por dia informado pelo responsável. A consulta de vendas por data foi testada com volume equivalente a 1.800 vendas por dia, acumulado por 30 dias, mas esse teste não representa o desempenho completo do sistema. |
+| RNF09 | Desempenho | As consultas mais utilizadas devem possuir índices nas colunas mais usadas em filtros e relacionamentos, considerando o volume aproximado de 1.800 vendas por dia informado pelo responsável. |
 | RNF10 | Disponibilidade | Em uma situação real de uso, o banco precisaria ficar disponível durante o horário de funcionamento do mercado, inclusive aos domingos e feriados. Como este projeto é acadêmico, essa disponibilidade contínua não foi testada. |
 | RNF11 | Usabilidade | O registro de perdas deve ser simples e exigir somente as informações necessárias. |
 | RNF12 | Compatibilidade | O banco será desenvolvido em MySQL, utilizando InnoDB e `utf8mb4`. |
@@ -642,8 +642,6 @@ Os indicadores abaixo foram escolhidos porque podem ser calculados com os dados 
 | KPI10 | Contas em aberto | Soma do saldo a pagar das contas abertas | Por vencimento | G10 |
 | KPI11 | Perdas com lote a confirmar | Perdas pendentes ÷ total de perdas válidas × 100 | Mensal | G11 |
 
-As metas usadas durante a demonstração são apenas referências do grupo. Elas não foram definidas pelo responsável do mercado e não representam metas reais da organização.
-
 A consulta G12 acompanha promoções vigentes e encerradas. Ela foi mantida como uma consulta gerencial complementar e não como um KPI separado.
 
 #### Rastreabilidade entre problemas, indicadores e consultas
@@ -962,5 +960,3 @@ A apresentação foi organizada para durar cerca de **8 minutos**, mostrando pri
 **Arquivo da apresentação:** `apresentação/Hortifruti União — Apresentação Acadêmica — Entrega 2.pdf`
 
 Depois da apresentação, os integrantes ficam disponíveis para responder às perguntas sobre o modelo, principalmente sobre chaves, cardinalidades, normalização e decisões tomadas no banco.
-
-Depois do pitch todos os integrantes ficam para a defesa do modelo lógico, e cada um responde o que foi perguntado a ele. Cada aluno precisa saber explicar as partes do modelo, principalmente chaves, cardinalidades e as decisões de normalização.
