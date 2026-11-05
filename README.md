@@ -394,6 +394,8 @@ Cadastro de clientes, programa de fidelidade, vendas online, entregas e venda fi
 
 Não criamos regras para cadastro de clientes, fidelidade, vendas online, entrega e venda a prazo, porque o responsável confirmou que esses processos não fazem parte da rotina do mercado.
 
+- **Normas sanitárias:** não foram detalhadas no projeto porque esse assunto não foi levantado com o responsável.
+
 - **Aferição da balança (Inmetro):** o banco só guarda o peso informado na venda (RN22), e o grupo não confirmou com o responsável como a aferição é feita.
 
 ##### Rastreabilidade dos problemas P1 e P2
