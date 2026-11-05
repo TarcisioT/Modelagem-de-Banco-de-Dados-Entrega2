@@ -1,55 +1,119 @@
-##### Informações fornecidas pelo entrevistado
+# Levantamento — Hortifruti União
 
-Durante a entrevista, foram levantadas as seguintes informações:
+## Informações do levantamento
 
-- O estabelecimento utiliza um banco de dados para armazenar as informações de suas operações, por meio de um sistema ERP em nuvem (VR Software).
-- Quando um produto passa pelo caixa, os dados da venda são enviados ao servidor e armazenados no banco de dados.
-- O estoque é integrado ao sistema de vendas. Quando uma venda é concluída, a quantidade correspondente é automaticamente baixada do estoque.
-- O estabelecimento possui 7 caixas.
-- Os pedidos aos fornecedores são feitos por e-mail, e toda entrada de mercadoria vem acompanhada de nota fiscal.
-- O estabelecimento aceita dinheiro, cartão de débito e cartão de crédito, não aceita Pix, e o pagamento de uma compra pode ser dividido entre essas formas.
-- A alteração do preço de um produto pode ser realizada somente pelos líderes de setor, pelo gerente ou pelos proprietários.
-- As informações financeiras podem ser acessadas somente pelos funcionários do setor administrativo, pelo gerente e pelos proprietários.
-- A consulta de códigos de produtos e a geração de etiquetas podem ser realizadas pelos funcionários que utilizam os computadores disponíveis para essa atividade.
-- O cancelamento de uma venda é feito pelo gerente ou pelo fiscal de caixa.
-- Ao final do dia, é feito o fechamento do caixa: o operador faz a conferência inicial, contando o dinheiro físico e comparando com o saldo esperado em dinheiro pelo sistema, e o fiscal de caixa ou o gerente valida o fechamento. A comparação não usa o total vendido, porque parte das vendas é paga com cartão.
-- Os cargos do estabelecimento são: dono, gerente, administrativo, fiscal de caixa, caixa, repositor, líderes de setor (mercearia, hortifruti, açougue, padaria e confeitaria), padeiro, confeiteiro, açougueiro, segurança, serviços gerais e limpeza.
-- O estabelecimento realiza o lançamento de notas fiscais em razão de suas obrigações fiscais.
-- Produtos vencidos não podem ser disponibilizados para venda, pois isso é considerado crime.
+O levantamento foi feito com o Hortifruti União, unidade do Tatuapé, em São Paulo.
 
-##### Achados da observação presencial
+A entrevista inicial foi realizada em **22/09/2026**, por videochamada no WhatsApp, com **Guilherme Takemoto**, um dos proprietários do mercado. Em **30/09/2026**, foi feita uma visita presencial para observar o funcionamento do local e registrar evidências. Algumas informações também foram confirmadas por WhatsApp em **26/10/2026**.
 
-Durante a visita ao Hortifruti União – Tatuapé, Tarcisio observou a estrutura física do estabelecimento, incluindo a área de vendas e o estoque. A visita permitiu confirmar que a organização trabalha com quantidade e variedade significativas de mercadorias, tornando necessário o controle organizado dos produtos, do estoque e das datas de validade.
+## Informações fornecidas pelo responsável
 
-A observação presencial foi utilizada em conjunto com as respostas fornecidas pelo entrevistado. Informações que não foram confirmadas pelo entrevistado nem observadas no local foram tratadas como propostas de melhoria do grupo.
+Durante o levantamento, foram informados aproximadamente:
 
-##### Propostas de melhoria elaboradas pelo grupo
+- 110 funcionários;
+- 7 caixas;
+- 1.800 vendas por dia;
+- 340 fornecedores;
+- faturamento mensal estimado em R$ 5 milhões;
+- cerca de 6 mil itens diferentes vendidos por mês.
 
-Com base nos problemas identificados, o grupo propõe que o sistema:
+O mercado utiliza o **VR Software** para atividades como cadastro de produtos, pedidos, entrada de mercadorias, vendas, caixa, notas fiscais e controles financeiros.
 
-- registre os diferentes lotes de cada produto;
-- armazene a data de validade e a quantidade disponível de cada lote;
-- emita alertas sobre lotes próximos do vencimento;
+O sistema também possui recursos para lote, validade e perdas, mas, segundo o responsável, esses controles não são utilizados de forma organizada no dia a dia.
+
+O mercado aceita pagamento em:
+
+- dinheiro;
+- cartão de débito;
+- cartão de crédito;
+- Pix;
+- vale-alimentação (VA).
+
+Uma mesma venda pode utilizar mais de uma forma de pagamento. O mercado não realiza venda fiado.
+
+As vendas são feitas sem cadastro do cliente.
+
+Os pedidos de compra são feitos conforme a necessidade de reposição, considerando o giro dos produtos e os dias de estoque.
+
+Quando a mercadoria chega, a nota é conferida e os produtos aceitos entram no estoque. Produtos fora do padrão podem ser devolvidos ou trocados pelo fornecedor ou gerar abatimento.
+
+O cancelamento de uma venda exige autorização de um responsável, como fiscal de caixa ou gerente.
+
+No final do dia são feitos fechamento dos caixas, sangrias e conferência dos valores.
+
+## Problemas identificados
+
+### P1 — Falta de controle das perdas
+
+Produtos podem ser perdidos por vencimento, maturação, danos ou outros motivos.
+
+Na rotina observada, essas perdas não são registradas de forma organizada, dificultando saber quais produtos foram descartados, em qual quantidade, por qual motivo e em qual setor.
+
+### P2 — Falta de controle de validade
+
+O mercado trabalha com uma grande variedade de produtos e o acompanhamento das datas de validade é feito principalmente pela observação dos funcionários.
+
+Produtos próximos do vencimento podem receber promoção, mas não existe uma lista organizada que mostre antecipadamente quais lotes estão próximos da validade.
+
+Frutas, legumes e verduras normalmente não possuem validade impressa e são avaliados visualmente.
+
+## Observação presencial
+
+Durante a visita foi observado que:
+
+- o estoque é organizado por setor;
+- as datas de validade são conferidas diretamente nos produtos;
+- produtos próximos do vencimento podem receber promoção;
+- as perdas são descartadas sem um registro organizado;
+- os caixas estavam em funcionamento;
+- não foi observado registro de perdas ou validade no sistema durante a visita.
+
+Essas observações ficaram de acordo com o que havia sido informado pelo responsável.
+
+## Processos considerados no modelo
+
+O projeto representa principalmente:
+
+- produtos e setores;
+- fornecedores;
+- funcionários e escala;
+- pedidos de compra;
+- recebimento de mercadorias;
+- lotes e estoque;
+- devoluções, trocas e abatimentos;
+- vendas e pagamentos;
+- sessões de caixa, sangrias e troca de operador;
+- contas a pagar;
+- perdas;
+- validade;
+- promoções.
+
+## Processos que ficaram fora do modelo
+
+Não foram incluídos:
+
+- cadastro de clientes;
+- programa de fidelidade;
+- vendas online;
+- entregas;
+- venda fiado.
+
+Esses processos ficaram fora porque o responsável informou que não fazem parte da rotina considerada no projeto.
+
+## Propostas do grupo
+
+A partir do levantamento, o grupo propôs que o banco:
+
+- registre lotes e suas quantidades;
+- armazene a validade quando existir;
+- permita consultar produtos próximos do vencimento;
 - impeça a venda de lotes vencidos;
-- priorize a saída dos lotes válidos com vencimento mais próximo;
-- mantenha o histórico das alterações de preços;
-- registre o funcionário responsável pelas operações relevantes;
-- controle as permissões conforme o cargo do funcionário;
-- registre as perdas de estoque e seus respectivos motivos;
-- registre o fundo de caixa e a diferença apurada no fechamento do caixa;
-- faça cópia de segurança diária dos dados.
+- priorize os lotes com vencimento mais próximo nas vendas;
+- registre perdas e seus motivos;
+- mantenha o histórico das movimentações de estoque;
+- registre os funcionários responsáveis pelas principais operações;
+- controle permissões por perfil;
+- registre fechamento e diferença de caixa;
+- permita cópia de segurança, restauração e recriação do banco.
 
-Essas funcionalidades são propostas técnicas do grupo e não são apresentadas como procedimentos atualmente realizados pela organização.
-
-##### Mudanças em relação à Entrega 1
-
-| Apontamento da correção | O que mudou | Por quê |
-| :---- | :---- | :---- |
-| Fotos da entrevista e das evidências hospedadas fora do repositório | As fotos passaram a ser arquivos JPEG dentro do repositório, em imagens/evidencias | Só são consideradas as imagens que estão no repositório |
-| Entrevista sem relato do levantamento | Relato com quem, quando, onde e comprovação, separando as respostas do entrevistado da observação presencial | Permite distinguir o que foi dito do que foi observado |
-| Porte descrito sem números | Informados 110 funcionários, 7 caixas e faturamento mensal estimado | Os números justificam o tamanho do modelo e da massa de dados |
-| Problema declarado sem solução no modelo | Problemas numerados (P1 e P2), cada um ligado a requisitos e regras | Todo problema declarado precisa ser resolvido pelo modelo |
-| Processos com cobertura parcial | Oito processos, com os dados envolvidos em cada um, e lista dos não incluídos | Os processos sustentam os requisitos e as regras |
-| Requisitos incompletos e genéricos | RF01 a RF22 e RNF01 a RNF09, com os dados envolvidos e a ligação com as regras | Cobrem os processos e os problemas declarados |
-| Regras de negócio com cobertura parcial | RN01 a RN21, indicando a origem (entrevista ou proposta do grupo) | Evita apresentar propostas como procedimentos da organização |
-| Validade ligada ao produto | A data de validade passou a pertencer ao lote | Um mesmo produto tem lotes com validades diferentes |
+Esses controles fazem parte da solução acadêmica criada pelo grupo e não representam necessariamente funções utilizadas atualmente pelo Hortifruti União.
