@@ -203,7 +203,7 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 | :---- | :---- | :---- |
 | RF08 | Cadastrar, atualizar e inativar funcionários. | Nome, CPF, cargo, telefone, data de admissão, setor, perfil de acesso e situação. |
 | RF09 | Registrar a escala de trabalho. | Funcionário, data, tipo (trabalho ou folga) e horários, quando for dia de trabalho. |
-| RF10 | Consultar a escala por data, funcionário ou setor. | Funcionário, setor, data e horários. |
+| RF10 | Consultar a escala por data, funcionário ou setor. | Funcionário, escala, setor, data e horários. |
 
 ###### Compras e recebimento
 
@@ -240,7 +240,7 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 | RF29 | Registrar sangrias. | Sessão, valor, data, hora e funcionário. |
 | RF30 | Fechar a sessão do caixa com a conferência dos valores. | Data, hora, funcionário que fechou, valor contado, valor esperado e diferença. |
 | RF31 | Registrar os dados do documento fiscal relacionado à venda. | Venda, tipo, número, série, chave de acesso, data e situação. |
-| RF32 | Consultar vendas por período, caixa, operador e forma de pagamento. | Totais de vendas concluídas e canceladas. |
+| RF32 | Consultar vendas por caixa, operador e forma de pagamento. | Totais de vendas concluídas e canceladas. |
 
 ###### Financeiro
 
@@ -257,7 +257,7 @@ O banco será desenvolvido em MySQL como uma implementação acadêmica, indepen
 | :---- | :---- | :---- |
 | RF37 | Registrar perdas de produtos. | Data, produto, lote ou situação "lote a confirmar", quantidade, motivo, setor, funcionário, valor quando possível e observação. |
 | RF38 | Consultar perdas por setor, motivo, produto e período. | Quantidades, valores e perdas com lote ainda a confirmar. |
-| RF39 | Comparar perdas com mercadorias devolvidas, trocadas ou compensadas pelo fornecedor. | Período, fornecedor, setor, perdas e devoluções. |
+RF39 | Comparar perdas com devolucões, trocadas ou compensadas pelo fornecedor. (Só a estrutura existe: o banco separa perda e devolução em tabelas diferentes, mas não há consulta pronta no script.) | Período, fornecedor, setor, perdas e devoluções.|
 
 ###### Validade e promoções (P2)
 
@@ -408,7 +408,7 @@ Também ficaram de fora regras de processos que o banco não controla:
 
 | Problema | Requisitos funcionais | Regras de negócio | Como contribuem |
 | :---- | :---- | :---- | :---- |
-| **P1 – Falta de controle sobre a perda de produtos** | RF07, RF14, RF16, RF19, RF37 a RF39 | RN12, RN13, RN17, RN28, RN37 a RN44 e RN52 | Permitem registrar e consultar as perdas por produto, quantidade, motivo e setor, além de separar perdas de devoluções e compensações de fornecedores. |
+| **P1 – Falta de controle sobre a perda de produtos** | RF07, RF14, RF16, RF19, RF37 a RF38 | RN12, RN13, RN17, RN28, RN37 a RN44 e RN52 | Permitem registrar e consultar as perdas por produto, quantidade, motivo e setor, além de separar perdas de devoluções e compensações de fornecedores. |
 | **P2 – Falta de controle de validade dos produtos** | RF01, RF02, RF15, RF18 e RF40 a RF43 | RN14 a RN16, RN18, RN45 a RN48 e RN57 | Permitem registrar a validade dos lotes, identificar produtos próximos do vencimento ou vencidos e acompanhar promoções antes do vencimento. |
 
 A relação entre os problemas, as tabelas do banco e as consultas SQL será detalhada posteriormente na seção 1.6.
