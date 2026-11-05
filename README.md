@@ -409,197 +409,21 @@ A relação entre os problemas, as tabelas do banco e as consultas SQL será det
 
 #### DER conceitual revisado
 
-##### Como montamos o DER
+O DER conceitual foi revisado com base na entrevista, na visita ao Hortifruti União, nas confirmações feitas com o responsável e nos apontamentos recebidos na Entrega 1.
 
-Usamos a entrevista com o responsável, a visita ao mercado e as confirmações pelo WhatsApp. Além dos problemas P1 e P2, quisemos representar o resto da rotina do mercado: compras, recebimento, vendas, pagamentos, caixa e funcionários.
-
-O DER foi feito no brModelo - versão 3.2.0, (aplicativo instalado), na notação pedida pelo professor: entidades em retângulos, relacionamentos em losangos e atributos em círculos, com cardinalidades mínimas e máximas. As chaves estrangeiras não aparecem aqui, porque só entram no modelo lógico.
-
-O DER tem **22 entidades**. Os itens de pedido, de recebimento, de devolução e de venda, além do vínculo entre fornecedor e produto, são representados como associações com atributos, como explicamos mais abaixo. Com essa modelagem, o diagrama possui **48 relacionamentos**.
-
-**Ferramenta:** brModelo - 3.2.0, aplicativo instalado.
+O diagrama foi desenvolvido no **brModelo 3.2.0**, utilizando a notação conceitual solicitada: entidades, atributos, relacionamentos e cardinalidades mínimas e máximas. As chaves estrangeiras não aparecem no DER, pois são tratadas somente no modelo lógico.
 
 **Arquivo do diagrama:** [Visualizar DER Conceitual](diagramas/der.conceitual.png)
 
 ![DER Conceitual do Hortifruti União](diagramas/der.conceitual.png)
 
-##### Entidades e atributos
+O modelo representa os principais processos levantados no mercado, incluindo produtos, fornecedores, compras, recebimentos, lotes, estoque, perdas, vendas, pagamentos, caixa, funcionários e escala.
 
-São **22 entidades**, separadas por assunto. Cada uma tem um identificador, que no diagrama aparece como círculo preenchido.
+O DER possui **22 entidades** e cinco associações com atributos. Entre elas estão os itens de pedido, recebimento, devolução e venda, além da relação entre fornecedor e produto. No modelo lógico, essas associações são convertidas em tabelas próprias.
 
-###### Cadastros e funcionários
+A modelagem mantém **PERDA** separada de **DEVOLUCAO_FORNECEDOR**, porque uma representa prejuízo do mercado e a outra representa mercadoria devolvida, trocada ou compensada pelo fornecedor. A validade é registrada no **LOTE**, permitindo que diferentes recebimentos do mesmo produto tenham datas de validade diferentes.
 
-| Entidade | Identificador | Principais atributos |
-| :--- | :--- | :--- |
-| SETOR | id_setor | nome, descricao, dias_alerta_validade, vende_produto |
-| PRODUTO | id_produto | codigo_interno, codigo_barras, nome, preco_venda, estoque_minimo, tipo_venda, tem_validade_impressa, venda_restrita_idade, ativo |
-| FORNECEDOR | id_fornecedor | razao_social, cnpj, telefone, email, endereco, ativo |
-| FUNCIONARIO | id_funcionario | nome, cpf, cargo, telefone, data_admissao, perfil_acesso, ativo |
-| ESCALA | id_escala | data, tipo, hora_inicio, hora_fim |
-| FORMA_PAGAMENTO | id_forma | descricao, uso, ativo |
-| CAIXA | id_caixa | numero, ativo |
-
-- Nem todo produto tem código de barras (os vendidos a granel, por exemplo). Por isso o produto também tem um código interno (PLU), que não se repete. A `id_produto` é só o identificador usado pelo banco.
-- A ESCALA entrou porque o mercado abre todos os dias e precisa organizar horários e folgas. Não é um dos problemas principais, mas faz parte da rotina.
-- O `vende_produto` do SETOR separa os setores onde se vende produto (hortifruti, padaria, frios etc.) dos setores só de organização dos funcionários (Caixa e Retaguarda). Assim, Caixa e Retaguarda não viram categoria de produto (RN03).
-- O `uso` da FORMA_PAGAMENTO diz se a forma vale para venda, para fornecedor ou para os dois (RN08A). Isso evita ter duas tabelas de formas de pagamento.
-
-###### Compras, recebimentos e devoluções
-
-| Entidade | Identificador | Principais atributos |
-| :--- | :--- | :--- |
-| PEDIDO_COMPRA | id_pedido | data_pedido, status |
-| RECEBIMENTO | id_recebimento | numero_nf, serie, data_emissao, chave_acesso, data_recebimento, valor_total |
-| DEVOLUCAO_FORNECEDOR | id_devolucao | data, tipo, motivo, valor_abatimento, status |
-| CONTA_PAGAR | id_conta | data_vencimento, valor, data_pagamento, status |
-
-- Pedido e recebimento ficam separados porque nem tudo chega de uma vez, e também pode haver recebimento sem pedido.
-- Os itens de pedido, de recebimento e de devolução são associações (veja a tabela mais abaixo). O item recebido guarda o que veio na nota e o que o mercado aceitou. Um mesmo item pode gerar mais de um lote, se as validades forem diferentes, e a soma dos lotes tem que bater com a quantidade aceita. Se nada foi aceito, não se cria lote.
-- A devolução entrou porque o responsável contou que mercadoria fora do padrão é trocada ou vira abatimento na próxima nota. Isso não pode se misturar com perda.
-
-###### Estoque, perdas e validade
-
-| Entidade | Identificador | Principais atributos |
-| :--- | :--- | :--- |
-| LOTE | id_lote | codigo_lote, data_fabricacao, data_validade, quantidade_recebida, quantidade_atual, custo_unitario |
-| SAIDA_LOTE | id_saida_lote | quantidade, data_hora, tipo |
-| MOTIVO_PERDA | id_motivo | descricao, ativo |
-| PERDA | id_perda | data_hora, quantidade, valor_estimado, situacao_lote, status, observacao |
-| PROMOCAO | id_promocao | data_inicio, data_fim, preco_normal, preco_promocional |
-
-Essa é a parte mais ligada a P1 e P2.
-
-- A validade fica no **LOTE** e não no produto, porque o leite que chegou hoje pode ter validade diferente do que chegou na semana passada.
-- A **PERDA** guarda o produto, a quantidade, o motivo e quem registrou. O **MOTIVO_PERDA** organiza as ocorrências, como vencimento, maturação excessiva e dano causado por cliente.
-- A **SAIDA_LOTE** registra o que sai do lote por venda ou por perda. O `tipo` pode ser venda, perda ou estorno. Quando uma baixa precisa ser desfeita, o registro não é apagado: é criado um estorno que devolve a quantidade ao lote.
-- A **PROMOCAO** é para os produtos perto de vencer, ligada ao lote.
-
-###### Vendas e operação de caixa
-
-| Entidade | Identificador | Principais atributos |
-| :--- | :--- | :--- |
-| SESSAO_CAIXA | id_sessao | data_abertura, data_fechamento, fundo_inicial, valor_esperado, valor_contado, diferenca, status |
-| TROCA_OPERADOR | id_troca | data_hora |
-| SANGRIA | id_sangria | data_hora, valor |
-| VENDA | id_venda | data_hora, valor_total, status, motivo_cancelamento, data_hora_cancelamento |
-| PAGAMENTO | id_pagamento | valor |
-| DOCUMENTO_FISCAL | id_documento | tipo_documento, numero_documento, serie, chave_acesso, data_emissao, situacao |
-
-- O item de venda é uma associação entre VENDA e PRODUTO, porque uma venda tem vários produtos e o preço da hora pode ser diferente do preço atual do cadastro.
-- O pagamento continua como entidade, porque uma venda pode ser paga de mais de um jeito (parte no Pix, parte no cartão). O valor registrado é o que foi aplicado à venda, sem o troco.
-- Sessão de caixa, sangria e troca de operador guardam o histórico do caixa. Venda cancelada continua registrada.
-
-###### Associações com atributos (viram tabelas no lógico)
-
-Cinco ligações do negócio carregam dados próprios e por isso aparecem no DER como losangos com atributos, e não como entidades comuns. Duas delas (item recebido e item vendido) são desenhadas como entidade associativa, com um retângulo em volta do losango. No lógico, cada uma vira uma tabela com chave primária própria e uma chave estrangeira para cada ponta da ligação. A de venda ainda leva uma terceira, a do funcionário que cancela o item.
-
-| Associação | Liga | Cardinalidades | Atributos | Tabela no lógico |
-| :--- | :--- | :--- | :--- | :--- |
-| fornece | FORNECEDOR e PRODUTO | (0,n) e (0,n) | codigo_no_fornecedor, ultimo_custo | FORNECEDOR_PRODUTO |
-| contém (pedido) | PEDIDO_COMPRA e PRODUTO | (1,n) e (0,n) | quantidade, custo_previsto | ITEM_PEDIDO_COMPRA |
-| contém (recebimento) | RECEBIMENTO e PRODUTO | (1,n) e (0,n) | quantidade_nf, quantidade_aceita, quantidade_recusada, custo_unitario_nf, observacao_divergencia | ITEM_RECEBIMENTO |
-| devolve | DEVOLUCAO_FORNECEDOR e item recebido | (1,n) e (0,n) | quantidade, observacao | ITEM_DEVOLUCAO |
-| contém (venda) | VENDA e PRODUTO | (1,n) e (0,n) | quantidade_ou_peso, preco_unitario, subtotal, status, motivo_cancelamento, data_hora_cancelamento | ITEM_VENDA |
-
-Duas dessas associações, a do recebimento e a da venda, precisam ser **entidades associativas** (no brModelo, o retângulo em volta do losango): cada linha tem que poder ser apontada por outras coisas. O item recebido é ligado ao LOTE e à devolução, e o item vendido é ligado à SAIDA_LOTE e ao funcionário que cancelou a linha. Um relacionamento simples não tem identidade de linha, então a entidade associativa é o que deixa essas ligações existirem sem perder informação. A devolução também aponta para uma linha específica do recebimento, e é por isso que ela se liga ao item recebido, e não ao produto.
-
-O subtotal, o total da venda e a diferença do caixa são **atributos derivados**, porque dá para calcular a partir de outros dados. Outros cinco atributos também dariam para calcular, mas vamos guardar:
-
-- **quantidade_atual do lote:** para ver o saldo sem somar todas as movimentações toda vez (são cerca de 1.800 vendas por dia). Ela precisa ser atualizada junto com cada baixa ou estorno;
-- **valor_esperado do caixa:** fica gravado como estava no fechamento;
-- **valor_estimado da perda:** calculado pela quantidade e pelo custo do lote. Se o lote ainda não foi identificado, fica vazio até a confirmação;
-- **quantidade_nf e quantidade_recusada do item recebido:** seguem da conta "nota = aceita + recusada", e um `CHECK` confere que os três batem (explicado na seção 1.4). Contam como dois atributos.
-
-##### Relacionamentos e cardinalidades
-
-As cardinalidades mostram quantas vezes cada registro pode participar de um relacionamento. Por exemplo, um setor tem vários produtos, mas cada produto tem um único setor principal. O relacionamento 45 liga o estorno à baixa que ele corrige. "Item recebido" e "item vendido" são as entidades associativas descritas acima.
-
-| Nº | Relacionamento | Entidade A | Entidade B |
-| :--- | :--- | :--- | :--- |
-| 1 | possui | SETOR (0,n) | PRODUTO (1,1) |
-| 2 | é lotado em | SETOR (0,n) | FUNCIONARIO (1,1) |
-| 3 | possui | FUNCIONARIO (0,n) | ESCALA (1,1) |
-| 4 | fornece (codigo_no_fornecedor, ultimo_custo) | FORNECEDOR (0,n) | PRODUTO (0,n) |
-| 5 | recebe | FORNECEDOR (0,n) | PEDIDO_COMPRA (1,1) |
-| 6 | realiza | FUNCIONARIO (0,n) | PEDIDO_COMPRA (1,1) |
-| 7 | contém (quantidade, custo_previsto) | PEDIDO_COMPRA (1,n) | PRODUTO (0,n) |
-| 8 | entrega | FORNECEDOR (0,n) | RECEBIMENTO (1,1) |
-| 9 | origina | PEDIDO_COMPRA (0,n) | RECEBIMENTO (0,1) |
-| 10 | confere | FUNCIONARIO (0,n) | RECEBIMENTO (1,1) |
-| 11 | contém (dados da nota e da conferência) | RECEBIMENTO (1,n) | PRODUTO (0,n) |
-| 12 | gera | item recebido (0,n) | LOTE (1,1) |
-| 13 | possui | PRODUTO (0,n) | LOTE (1,1) |
-| 14 | gera | RECEBIMENTO (0,n) | CONTA_PAGAR (1,1) |
-| 15 | é paga com | FORMA_PAGAMENTO (0,n) | CONTA_PAGAR (0,1) |
-| 16 | origina | RECEBIMENTO (0,n) | DEVOLUCAO_FORNECEDOR (1,1) |
-| 17 | registra | FUNCIONARIO (0,n) | DEVOLUCAO_FORNECEDOR (1,1) |
-| 18 | devolve (quantidade, observacao) | DEVOLUCAO_FORNECEDOR (1,n) | item recebido (0,n) |
-| 19 | gera abatimento em | DEVOLUCAO_FORNECEDOR (0,1) | CONTA_PAGAR (0,n) |
-| 20 | é consumido em | LOTE (0,n) | SAIDA_LOTE (1,1) |
-| 21 | origina | item vendido (0,n) | SAIDA_LOTE (0,1) |
-| 22 | origina | PERDA (0,n) | SAIDA_LOTE (0,1) |
-| 23 | sofre | PRODUTO (0,n) | PERDA (1,1) |
-| 24 | registra ocorrência em | SETOR (0,n) | PERDA (1,1) |
-| 25 | classifica | MOTIVO_PERDA (0,n) | PERDA (1,1) |
-| 26 | registra | FUNCIONARIO (0,n) | PERDA (1,1) |
-| 27 | é afetado por | LOTE (0,n) | PERDA (0,1) |
-| 28 | recebe | LOTE (0,n) | PROMOCAO (1,1) |
-| 29 | registra | FUNCIONARIO (0,n) | PROMOCAO (1,1) |
-| 30 | possui | CAIXA (0,n) | SESSAO_CAIXA (1,1) |
-| 31 | abre | FUNCIONARIO (0,n) | SESSAO_CAIXA (1,1) |
-| 32 | possui | SESSAO_CAIXA (0,n) | TROCA_OPERADOR (1,1) |
-| 33 | é operador anterior em | FUNCIONARIO (0,n) | TROCA_OPERADOR (1,1) |
-| 34 | é novo operador em | FUNCIONARIO (0,n) | TROCA_OPERADOR (1,1) |
-| 35 | registra | SESSAO_CAIXA (0,n) | SANGRIA (1,1) |
-| 36 | realiza | FUNCIONARIO (0,n) | SANGRIA (1,1) |
-| 37 | possui | SESSAO_CAIXA (0,n) | VENDA (1,1) |
-| 38 | realiza | FUNCIONARIO (0,n) | VENDA (1,1) |
-| 39 | autoriza cancelamento | FUNCIONARIO (0,n) | VENDA (0,1) |
-| 40 | contém (quantidade_ou_peso, preco_unitario, status etc.) | VENDA (1,n) | PRODUTO (0,n) |
-| 41 | cancela | FUNCIONARIO (0,n) | item vendido (0,1) |
-| 42 | recebe | VENDA (0,n) | PAGAMENTO (1,1) |
-| 43 | classifica | FORMA_PAGAMENTO (0,n) | PAGAMENTO (1,1) |
-| 44 | possui | VENDA (0,1) | DOCUMENTO_FISCAL (1,1) |
-| 45 | estorna (autorrelacionamento) | SAIDA_LOTE original (0,1) | SAIDA_LOTE de estorno (0,1) |
-| 46 | fecha | FUNCIONARIO (0,n) | SESSAO_CAIXA (0,1) |
-| 47 | paga | FUNCIONARIO (0,n) | CONTA_PAGAR (0,1) |
-| 48 | substitui (autorrelacionamento) | PERDA original (0,n) | PERDA nova (0,1) |
-
-Os relacionamentos 46 e 47 permitem identificar quem fechou cada sessão de caixa e quem registrou o pagamento de cada conta (RN56). O mínimo é 0 do lado da sessão e da conta porque uma sessão aberta ainda não foi fechada e uma conta em aberto ainda não foi paga.
-
-O relacionamento 48 liga a perda nova à perda original que ela corrige ou divide (RN43 e RN52). A original continua guardada com `status = substituida` e sai dos totais.
-
-##### Decisões tomadas na modelagem
-
-- **Sem CLIENTE.** Chegamos a considerar, mas o responsável confirmou que o mercado não cadastra clientes nas vendas comuns.
-- **Validade no lote.** Como as mercadorias chegam em dias diferentes, cada lote tem a sua validade. Isso resolve o P2.
-- **Sem entidade ESTOQUE.** O saldo do produto é a soma dos saldos dos seus lotes, para não guardar a mesma informação em dois lugares.
-- **PERDA separada de DEVOLUCAO_FORNECEDOR.** Mercadoria descartada pelo mercado é diferente de mercadoria devolvida ou compensada pelo fornecedor. Misturar as duas esconderia o prejuízo real.
-- **Origem da baixa.** Cada baixa de venda ou de perda tem uma única origem (um item de venda ou uma perda). O estorno não tem origem própria: ele aponta para a baixa que corrige e devolve a quantidade inteira dela. Isso é garantido por um `CHECK` no tipo da baixa e pelo `UNIQUE` em `id_saida_original`, que impede estornar a mesma baixa duas vezes.
-- **Venda e pagamento (0,n).** Uma venda em andamento, ou cancelada antes de pagar, não tem pagamento. Para ser concluída, a venda precisa estar paga, e a soma dos pagamentos tem que bater com o total (RN24).
-- **Quem fecha o caixa e quem paga a conta.** Quem abriu a sessão pode não ser quem fechou, por causa da troca de operador. Por isso o fechamento e o pagamento da conta têm a própria ligação com FUNCIONARIO (relacionamentos 46 e 47), em vez de o grupo depender de log do banco.
-- **Perda corrigida ou dividida.** Para não apagar nem contar duas vezes, a perda original fica com `status = substituida` e a nova aponta para ela (relacionamento 48).
-- **Itens como associações, e PAGAMENTO e SAIDA_LOTE como entidades.** Fornecimento, itens de pedido, itens de recebimento, itens de devolução e itens de venda são associações com atributos, e não retângulos. Já PAGAMENTO e SAIDA_LOTE continuam como entidades: o pagamento é um fato próprio da venda (uma venda com mais de uma forma), e a SAIDA_LOTE tem o autorrelacionamento de estorno e duas origens possíveis, o que não cabe num relacionamento simples. A TROCA_OPERADOR também continua como entidade, porque precisa de histórico.
-- **Entidade associativa para item recebido e item vendido.** Preservamos a identificação de cada linha pela notação de entidade associativa, porque o item recebido precisa gerar lote e receber devolução, e o item vendido precisa ligar a baixa de estoque e o cancelamento por linha. No lógico, essas associações originam tabelas de itens com chaves próprias.
-
-Alguns caminhos se repetem no DER, e deixamos de propósito:
-
-- **PRODUTO – LOTE (13):** o produto também dá para descobrir pelo item recebido. Deixamos a ligação direta para facilitar as consultas por produto. No modelo lógico e no SQL, a regra de integridade adotada impede que o lote aponte para um produto diferente do item recebido.
-- **LOTE – PERDA (27):** a perda aponta para o lote quando ele é conhecido. Se não é, fica como "lote a confirmar" e ainda não tem saída de lote.
-- **SETOR – PERDA (24):** o setor também dá para descobrir pelo produto, mas guardamos na perda para manter o histórico caso o produto mude de setor.
-
-O relacionamento 45 não é um caminho repetido, é um autorrelacionamento de SAIDA_LOTE. Mantivemos (0,1) nas duas pontas porque nem toda baixa tem um estorno, e nem toda baixa aponta para outra (uma baixa de venda ou de perda não tem baixa original). Quando o tipo for estorno, porém, o banco vai exigir a ligação com uma baixa original e impedir que ela seja estornada mais de uma vez.
-
-As validações mais detalhadas, como não repetir pares em FORNECEDOR_PRODUTO e conferir as quantidades recebidas, vão para o dicionário de dados e para o banco.
-
-##### Relação do DER com os problemas
-
-| Problema | Entidades relacionadas | Como o modelo ajuda |
-| :--- | :--- | :--- |
-| **P1 – Perda de produtos** | PERDA, MOTIVO_PERDA, PRODUTO, SETOR, FUNCIONARIO, LOTE, SAIDA_LOTE, DEVOLUCAO_FORNECEDOR e a associação de devolução (ITEM_DEVOLUCAO no lógico) | Registra o que foi perdido, a quantidade, o motivo e o setor, e separa perda de devolução ao fornecedor. |
-| **P2 – Validade dos produtos** | PRODUTO, LOTE, SAIDA_LOTE, SETOR, PROMOCAO e a associação de recebimento (ITEM_RECEBIMENTO no lógico) | Acompanha validade e saldo de cada lote, mostra o que está perto de vencer e registra promoções. |
-
-Com isso, o mercado passa a poder consultar coisas que hoje não ficam registradas, como quais setores perdem mais, quais motivos aparecem mais e quais lotes estão perto de vencer. Os indicadores (KPIs) e a ligação deles com as consultas estão na seção 1.6, e as consultas ficam no script SQL (seção 3).
+Os detalhes da conversão das entidades, atributos, relacionamentos e cardinalidades para tabelas e chaves estão apresentados nas seções **1.2 e 1.3**.
 
 ##### Revisão em relação à Entrega 1
 
