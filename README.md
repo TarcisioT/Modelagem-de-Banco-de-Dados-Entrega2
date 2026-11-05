@@ -115,7 +115,7 @@
 
 - **O que mudou em relação à Entrega 1:** na Entrega 1, o único problema levantado era o controle de validade dos produtos. Com a entrevista e a visita desta etapa, encontramos um problema novo: a falta de controle sobre as perdas (P1). Os números do mercado continuam os mesmos. Mudaram também duas coisas: a lista de formas de pagamento, em que o Pix não aparecia e agora entrou porque o responsável confirmou que o mercado aceita Pix, e a composição do grupo, já que Victor Hugo dos Santos Maciel, Guilherme Damasceno dos Santos e Lucas Praxedes da Silva entraram, e Henrico e Nicole saíram.
 
-- **Comprovação:** As fotos tiradas na visita e os registros da entrevista e das confirmações ficam na pasta `imagens/evidencias/`. A entrevista de 22/09 foi realizada por videochamada no WhatsApp e é comprovada pelo [registro da videochamada](imagens/evidencias/entrevista_videochamada.jpeg). Como ela não aconteceu no ambiente do mercado, não temos uma foto da entrevista em si. A visita presencial de 30/09 está comprovada pelas fotos do local. Também incluímos os dois prints das confirmações feitas por WhatsApp em 26/10/2026: [primeiro print da confirmação](imagens/evidencias/resposta_proprietário1.jpeg) e [segundo print da confirmação](imagens/evidencias/resposta_proprietário2.jpeg).
+- **Comprovação:** As fotos tiradas na visita e os registros da entrevista e das confirmações ficam na pasta `imagens/evidencias/`. A entrevista de 22/09 foi realizada por videochamada no WhatsApp e é comprovada pelo [registro da videochamada](imagens/evidencias/entrevista_videochamada.jpeg). Como ela não aconteceu no ambiente do mercado, não temos uma foto da entrevista em si. A visita presencial de 30/09 está comprovada pelas fotos do local. Também incluímos os dois prints das confirmações feitas por WhatsApp em 26/10/2026: [primeiro print da confirmação](imagens/evidencias/resposta_proprietario1.jpeg) e [segundo print da confirmação](imagens/evidencias/resposta_proprietario2.jpeg).
   
 - **Resumo do levantamento:** Pelo que o responsável explicou, a rotina do mercado funciona assim:
   - **De manhã (retaguarda):** cadastro dos produtos (código de barras, preço, setor, venda por quilo ou por unidade), conferência da nota do fornecedor e entrada no estoque quando a carga chega, e pedidos de compra feitos olhando o giro e os dias de estoque. O fiscal e o financeiro (notas e contas a pagar) também passam pelo sistema. Quando chega algum item fora do padrão, ele pode ser devolvido ou trocado pelo fornecedor, ou então gerar um abatimento na próxima nota.
@@ -645,7 +645,7 @@ Os indicadores abaixo foram escolhidos porque podem ser calculados com os dados 
 | KPI07 | Produtos abaixo do estoque mínimo | Quantidade de produtos com saldo disponível abaixo do mínimo | Diário | G07 |
 | KPI08 | Taxa de cancelamento | Vendas canceladas ÷ total de vendas × 100 | Mensal | G08 |
 | KPI09 | Mercadorias recusadas | Soma das quantidades recusadas por fornecedor e unidade de medida | Por período | G09 |
-| KPI10 | Contas em aberto | Soma do saldo a pagar das contas abertas | Por vencimento | G10 |
+| KPI10 — Contas em aberto e vencidas | CONTA_PAGAR, DEVOLUCAO_FORNECEDOR | G10 |
 | KPI11 | Perdas com lote a confirmar | Perdas pendentes ÷ total de perdas válidas × 100 | Mensal | G11 |
 
 A consulta G12 acompanha promoções vigentes e encerradas. Ela foi mantida como uma consulta gerencial complementar e não como um KPI separado.
@@ -845,7 +845,7 @@ Os principais arquivos da entrega são:
 - `docs/Dicionario_Dados.md` – dicionário de dados;
 - `levantamento/levantamento.md` – levantamento feito com a organização;
 - `imagens/evidencias/` – fotos e registros usados como evidência;
-- `apresentação/Hortifruti União — Apresentação Acadêmica — Entrega 2.pdf` – apresentação final;
+- `apresentacao/Apresentacao_HortifrutiUniao_Entrega2.pptx` – apresentação final;
 - `interface/` – interface demonstrativa em PHP, HTML e CSS usada como complemento visual.
 
 O dicionário de dados foi mantido em um arquivo separado e reúne os campos, tipos e restrições das 27 tabelas.
@@ -966,8 +966,7 @@ Usamos IA como apoio na organização, revisão e validação do trabalho. As in
 | **Justificativa da escolha final** | A interface foi mantida apenas como complemento visual da apresentação. O script SQL, o modelo lógico e as consultas continuam sendo os principais artefatos da entrega. |
 | **Reflexão crítica** | A interface facilita a visualização dos dados, mas depende da conexão correta com o banco e não substitui os testes e a validação do SQL. Por isso ela foi usada apenas como apoio na demonstração. |
 
-## 7. Apresentação Corporativa Final
-
+## 7. Apresentação Acadêmica Final
 A apresentação foi organizada para durar cerca de **8 minutos**, mostrando primeiro os problemas encontrados no Hortifruti União e depois como o banco ajuda a organizar essas informações.
 
 ### Roteiro
