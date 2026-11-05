@@ -4,6 +4,10 @@
 
 ### 1. Apresentação
 
+**SGBD utilizado na validação:** MySQL 8.0.46  
+**Compatibilidade do script:** MySQL 8.0.16 ou superior  
+**Data da última revisão:** 05/11/2026
+
 Este documento descreve a estrutura final do banco `hortifruti_uniao`, conforme o arquivo `script.sql` da Entrega 2. O projeto é acadêmico, usa dados fictícios e não possui integração com o sistema operacional do mercado.
 
 A versão documentada contém **27 tabelas**, **193 colunas**, **27 chaves primárias** e **53 chaves estrangeiras**. O script também define **62 restrições `CHECK`**, **17 ocorrências de unicidade (`UNIQUE`)**, uma view de saldo, índices, triggers e procedures.
