@@ -918,6 +918,32 @@ Usamos IA como apoio na organização, revisão e validação do trabalho. As in
 | **Justificativa da escolha final** | O objetivo foi fazer com que README, DER, modelo lógico, regras e SQL descrevessem a mesma solução. |
 | **Reflexão crítica** | As IAs ajudaram a localizar divergências e discutir alternativas de modelagem, mas as decisões finais foram revisadas pela equipe com base no levantamento, no DER, no modelo lógico e no SQL. As sugestões foram tratadas como possibilidades de revisão, e não como decisões automáticas sobre a modelagem. |
 
+#### Uso 7 — ChatGPT: organização e revisão da apresentação final
+#### Uso 7 — ChatGPT: organização e revisão da apresentação final
+
+| Item | Registro |
+| :--- | :--- |
+| **Ferramenta e etapa** | ChatGPT, no apoio à organização e revisão da apresentação final, que depois foi montada no Canva. |
+| **Motivação** | Organizar o conteúdo do trabalho em uma apresentação de aproximadamente 8 minutos, seguindo a ordem pedida pelo professor e evitando slides com muito texto. |
+| **Prompt(s) utilizados** | "Me ajuda a organizar a apresentação final seguindo o que o professor pediu, deixando os slides mais visuais e com pouco texto."<br><br>"Revisa os slides do DER conceitual e do modelo lógico e vê se os dois assuntos estão separados corretamente."<br><br>"Me ajuda a reduzir os textos dos slides sem perder as informações principais do trabalho." |
+| **Resposta recebida** | Sugestões para organizar a sequência dos slides, reduzir textos e destacar os pontos principais, como os problemas do mercado, a solução proposta, o modelo lógico, o SQL, as consultas, os indicadores de BI/IA e os benefícios do projeto. |
+| **Fontes consultadas e verificadas** | As sugestões foram comparadas com o esqueleto do professor e com o conteúdo final do README, do DER, do modelo lógico e do script SQL. |
+| **Trechos corrigidos ou rejeitados** | Foram ajustados slides que misturavam informações do DER conceitual com o modelo lógico. Também reduzimos textos que estavam muito grandes para o tempo disponível e mantivemos apenas o que realmente seria apresentado. |
+| **Justificativa da escolha final** | Mantivemos uma apresentação mais simples e visual, mas sem retirar os itens exigidos pelo professor. |
+| **Reflexão crítica** | A IA ajudou a resumir e organizar o conteúdo, mas foi necessário conferir cada slide com o trabalho final para evitar informações diferentes do README, do modelo ou do SQL. |
+
+#### Uso 8 — ChatGPT: interface demonstrativa do banco
+
+| Item | Registro |
+| :--- | :--- |
+| **Ferramenta e etapa** | ChatGPT, no apoio à criação e revisão de uma interface demonstrativa em PHP, HTML e CSS conectada ao banco MySQL do projeto. |
+| **Motivação** | Criar uma forma mais visual de mostrar algumas informações do banco durante a apresentação, facilitando a demonstração dos dados sem substituir a execução do SQL. |
+| **Prompt(s) utilizados** | "Crie uma interface simples para demonstrar o nosso banco, com Dashboard, Perdas, Validade, Vendas, Estoque e Auditoria, usando as tabelas, consultas e procedures que já existem no script."<br><br>"Ajusta a interface para funcionar com o banco hortifruti_uniao no MySQL e deixa as telas simples para usar na apresentação." |
+| **Resposta recebida** | Foi gerada uma interface acadêmica com menu lateral, cards e páginas para visualizar dados de vendas, perdas, validade, estoque e auditoria do banco `hortifruti_uniao`. |
+| **Fontes consultadas e verificadas** | A interface foi comparada com o script SQL, com as tabelas do banco e com os dados da massa fictícia utilizada no projeto. |
+| **Trechos corrigidos ou rejeitados** | A conexão foi ajustada para o MySQL utilizado pelo grupo. Também conferimos nomes de tabelas, campos e consultas para evitar diferenças em relação ao script. O registro de perdas ficou desativado durante a apresentação para não alterar a massa de dados usada na demonstração. |
+| **Justificativa da escolha final** | A interface foi mantida apenas como complemento visual da apresentação. O script SQL, o modelo lógico e as consultas continuam sendo os principais artefatos da entrega. |
+| **Reflexão crítica** | A interface facilita a visualização dos dados, mas depende da conexão correta com o banco e não substitui os testes e a validação do SQL. Por isso ela foi usada apenas como apoio na demonstração. |
 
 ## 7. Apresentação Final
 
